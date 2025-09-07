@@ -1,0 +1,51 @@
+<!-- This is the landing page for the CITYdata API
+     Author: Rushin Makwana
+     Date: 2024-06-10 -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CITYdata Landing Page</title>
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="container">
+    <img src="/assets/logo.png" alt="CITYdata Logo" class="logo">
+    <h1>Welcome to CITYdata</h1>
+    <p class="intro">
+        CITYdata, as a part of the <a href="https://www.concordia.ca/research/cities-institute/initiatives/tools4cities.html" target="_blank">TOOLS4CITIES</a> tool suite, is a powerful middleware application for accessing and analyzing city-related data from different sources. <br> CITYData enables users to perform operations on data via the abstractions of Runner and Producer.
+    </p>
+
+    <div class="examples">
+        <h2>API Examples</h2>
+        <ul>
+            <li>
+                <b>List all operations:</b>
+                <code>GET /operations/list</code>
+            </li>
+            <li>
+                <b>List all producers:</b>
+                <code>GET /producers/list</code>
+            </li>
+            <li>
+                <b>Apply (sync):</b>
+                <code>POST /apply/sync</code>
+            </li>
+            <li>
+                <b>Apply (async):</b>
+                <code>POST /apply/async</code>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        For more info, visit our
+        <a href="https://github.com/ptidejteam/citydata/blob/master/Middleware/README.md" target="_blank">
+            GitHub page
+        </a>.
+    </div>
+</div>
+</body>
+</html>

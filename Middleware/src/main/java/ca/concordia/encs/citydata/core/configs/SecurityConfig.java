@@ -82,7 +82,7 @@ public class SecurityConfig {
         return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/authenticate", "/home", "assets/logo.png",  "/assets/**", "/health/ping", "producers/list", "/operations/list",
+                                .requestMatchers("/authenticate", "/home",  "/assets/**", "/health/ping", "producers/list", "/operations/list",
                                         "/routes/list", "/error")
                                 .permitAll().anyRequest().authenticated())
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)

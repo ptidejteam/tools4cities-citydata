@@ -18,6 +18,9 @@ import ca.concordia.encs.citydata.services.TokenService;
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025
+ * 
+ * Update: Multi-user authentication added
+ * Last Update: 25-09-2025
  */
 
 @RestController
@@ -25,14 +28,12 @@ public class AuthController {
 
 	private final TokenService tokenService;
 	private final AuthenticationManager authenticationManager;
-	//private final PasswordEncoder passwordEncoder;
 	private final SecurityConfig securityConfig;
 
 	public AuthController(TokenService tokenService, AuthenticationManager authenticationManager,
 			SecurityConfig securityConfig) {
 		this.tokenService = tokenService;
 		this.authenticationManager = authenticationManager;
-		//this.passwordEncoder = passwordEncoder;
 		this.securityConfig = securityConfig;
 	}
 

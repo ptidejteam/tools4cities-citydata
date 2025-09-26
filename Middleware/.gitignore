@@ -51,7 +51,7 @@ build/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**
-
+!META-INF/**
 ## Ignore JWT certs/keys
 Middleware/src/main/resources/certs/
 

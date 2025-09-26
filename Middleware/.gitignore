@@ -56,6 +56,6 @@ build/
 Middleware/src/main/resources/certs/
 
 ## Ignore user credentials
-Middleware/src/main/resources/credentials.txt
+Middleware/src/main/resources/Data/credentials.txt
 
 

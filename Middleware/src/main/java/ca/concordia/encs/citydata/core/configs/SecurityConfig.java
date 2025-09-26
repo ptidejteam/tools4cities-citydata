@@ -1,5 +1,9 @@
 package ca.concordia.encs.citydata.core.configs;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +14,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,20 +38,58 @@ import com.nimbusds.jose.proc.SecurityContext;
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025
+ * 
+ * Update: Multi-user authentication added
+ * Last Update: 25-09-2025
  */
 
-@Configuration
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
 	private final RsaKeyProperties rsaKeys;
-	public static final String DEFAULT_USERNAME = "citydata";
-	public static final String DEFAULT_PASSWORD = "citydata";
-
+	private String defaultUsername;
+	private String defaultPassword;
 	private String encodedDefaultPassword;
 
 	public SecurityConfig(RsaKeyProperties rsaKeys) {
 		this.rsaKeys = rsaKeys;
+		loadCredentialsFromTxt();
+	}
+
+	private void loadCredentialsFromTxt() {
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream("credentials.txt")) {
+			if (input == null) {
+				throw new RuntimeException("Unable to find credentials.txt in resources folder");
+			}
+
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+				reader.lines().forEach(line -> {
+					if (line.startsWith("username:")) {
+						this.defaultUsername = line.split(":", 2)[1].trim();
+					} else if (line.startsWith("password:")) {
+						this.defaultPassword = line.split(":", 2)[1].trim();
+					}
+				});
+			}
+
+			// fallback if file was missing values
+			if (this.defaultUsername == null)
+				this.defaultUsername = "defaultUser";
+			if (this.defaultPassword == null)
+				this.defaultPassword = "defaultPass";
+
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to load credentials.txt", e);
+		}
+	}
+
+	public String getDefaultUsername() {
+		return defaultUsername;
+	}
+
+	public String getDefaultPassword() {
+		return defaultPassword;
 	}
 
 	@Bean
@@ -58,11 +99,10 @@ public class SecurityConfig {
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
-		this.encodedDefaultPassword = encoder.encode(DEFAULT_PASSWORD);
-		UserDetails user = User.withUsername(DEFAULT_USERNAME).password(encodedDefaultPassword).authorities("read")
+		this.encodedDefaultPassword = encoder.encode(defaultPassword);
+		UserDetails user = User.withUsername(defaultUsername).password(encodedDefaultPassword).authorities("read")
 				.build();
 		return new InMemoryUserDetailsManager(user);
-
 	}
 
 	public String getEncodedDefaultPassword() {
@@ -82,10 +122,10 @@ public class SecurityConfig {
 		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
 						auth -> auth
-								.requestMatchers("/authenticate", "/home", "/health/ping", "producers/list", "/operations/list",
-										"/routes/list", "/error")
+								.requestMatchers("/authenticate", "/home", "/health/ping", "producers/list",
+										"/operations/list", "/routes/list", "/error")
 								.permitAll().anyRequest().authenticated())
-				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+				.oauth2ResourceServer(oauth2 -> oauth2.jwt())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
 	}
 

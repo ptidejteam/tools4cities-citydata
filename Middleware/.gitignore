@@ -54,3 +54,8 @@ build/
 
 ## Ignore JWT certs/keys
 Middleware/src/main/resources/certs/
+
+## Ignore user credentials
+Middleware/src/main/resources/credentials.txt
+
+

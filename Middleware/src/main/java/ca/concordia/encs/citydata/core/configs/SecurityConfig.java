@@ -1,9 +1,7 @@
 package ca.concordia.encs.citydata.core.configs;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +25,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -40,7 +40,7 @@ import com.nimbusds.jose.proc.SecurityContext;
  * Date: 18-07-2025
  * 
  * Update: Multi-user authentication added
- * Last Update: 25-09-2025
+ * Last Update: 28-09-2025
  */
 
 @EnableWebSecurity
@@ -50,7 +50,6 @@ public class SecurityConfig {
 	private final RsaKeyProperties rsaKeys;
 	private String defaultUsername;
 	private String defaultPassword;
-	private String encodedDefaultPassword;
 
 	public SecurityConfig(RsaKeyProperties rsaKeys) {
 		this.rsaKeys = rsaKeys;
@@ -58,26 +57,17 @@ public class SecurityConfig {
 	}
 
 	private void loadCredentialsFromTxt() {
-		try (InputStream input = getClass().getClassLoader().getResourceAsStream("credentials.txt")) {
+		try (InputStream input = getClass().getClassLoader()
+				.getResourceAsStream("scripts/credentials/credentials.txt")) {
 			if (input == null) {
 				throw new RuntimeException("Unable to find credentials.txt in resources folder");
 			}
 
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
-				reader.lines().forEach(line -> {
-					if (line.startsWith("username:")) {
-						this.defaultUsername = line.split(":", 2)[1].trim();
-					} else if (line.startsWith("password:")) {
-						this.defaultPassword = line.split(":", 2)[1].trim();
-					}
-				});
-			}
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = mapper.readTree(input);
 
-			// fallback if file was missing values
-			if (this.defaultUsername == null)
-				this.defaultUsername = "defaultUser";
-			if (this.defaultPassword == null)
-				this.defaultPassword = "defaultPass";
+			this.defaultUsername = node.has("username") ? node.get("username").asText() : "defaultUser";
+			this.defaultPassword = node.has("password") ? node.get("password").asText() : "$2a$10$dummyHash";
 
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load credentials.txt", e);
@@ -89,7 +79,7 @@ public class SecurityConfig {
 	}
 
 	public String getDefaultPassword() {
-		return defaultPassword;
+		return defaultPassword; // this is already a BCrypt hash
 	}
 
 	@Bean
@@ -99,14 +89,9 @@ public class SecurityConfig {
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
-		this.encodedDefaultPassword = encoder.encode(defaultPassword);
-		UserDetails user = User.withUsername(defaultUsername).password(encodedDefaultPassword).authorities("read")
-				.build();
+		UserDetails user = User.withUsername(defaultUsername).password(defaultPassword) // already BCrypt
+				.authorities("read").build();
 		return new InMemoryUserDetailsManager(user);
-	}
-
-	public String getEncodedDefaultPassword() {
-		return this.encodedDefaultPassword;
 	}
 
 	@Bean
@@ -122,7 +107,7 @@ public class SecurityConfig {
 		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
 						auth -> auth
-								.requestMatchers("/authenticate", "/home", "/health/ping", "producers/list",
+								.requestMatchers("/authenticate", "/home", "/health/ping", "/producers/list",
 										"/operations/list", "/routes/list", "/error")
 								.permitAll().anyRequest().authenticated())
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt())

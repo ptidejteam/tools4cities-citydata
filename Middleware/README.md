@@ -52,15 +52,18 @@ Before proceeding, ensure the following prerequisites are met:
 * `Python` is installed and added to your system's environment variables.
 * The `bcrypt` package is installed. If not, open your terminal (Bash) and run:
 
-	pip install bcrypt
+	`pip install bcrypt`
+	
 Once the above requirements are fulfilled, follow these steps to add, remove, or update users:
 
 - Open `Bash` and navigate to the following directory in the `citydata` project:
 
-	cd src/main/resources/scripts
+	`cd src/main/resources/scripts`
+	
 - Run the credentials manager script:
 
-	./credentials-manager.sh
+	`./credentials-manager.sh`
+	
 - An interactive menu will appear, allowing you to add, remove, or update users in `citydata`.
 
 

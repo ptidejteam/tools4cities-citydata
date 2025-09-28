@@ -20,7 +20,7 @@ import ca.concordia.encs.citydata.services.TokenService;
  * Date: 18-07-2025
  * 
  * Update: Multi-user authentication added
- * Last Update: 25-09-2025
+ * Last Update: 28-09-2025
  */
 
 @RestController

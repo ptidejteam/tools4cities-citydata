@@ -1,0 +1,166 @@
+/* Global Styles */
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f6f8;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  color: #0078d4;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: #005a9e;
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Logo */
+.logo {
+  width: 160px;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+/* Headings */
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #222;
+}
+p.intro {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* Example Section */
+.examples {
+  background: #f9fafc;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e1e4e8;
+}
+
+.examples h2 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.examples ul {
+  list-style: none;
+  padding: 0;
+}
+
+.examples li {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.examples li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+.examples b {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  color: #222;
+}
+
+/* Code editor style */
+.code-block {
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.code-header {
+    background: #2f2f2f;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.red { background: #ff5f56; }
+.yellow { background: #ffbd2e; }
+.green { background: #27c93f; }
+
+.filename {
+    color: #ccc;
+    font-size: 14px;
+    margin-left: 10px;
+    font-family: Consolas, monospace;
+}
+
+.copy-btn {
+    position: absolute;
+    right: 12px;
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #666;
+}
+
+pre {
+     background: #333;
+    color: #f5f5f5;
+    padding: 14px;
+    margin: 0;
+    overflow-x: auto;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.5em;
+}
+
+pre code {
+    white-space: pre-wrap;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 0.95rem;
+  color: #666;
+}
+

@@ -33,7 +33,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 /**
  * JWT Authentication Implementation
- * Author: Sikandar Ejaz 
+ * Author: Sikandar Ejaz, Rushin D. Makwana
  * Date: 18-07-2025
  */
 
@@ -41,63 +41,63 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final RsaKeyProperties rsaKeys;
-	public static final String DEFAULT_USERNAME = "citydata";
-	public static final String DEFAULT_PASSWORD = "citydata";
+    private final RsaKeyProperties rsaKeys;
+    public static final String DEFAULT_USERNAME = "citydata";
+    public static final String DEFAULT_PASSWORD = "citydata";
 
-	private String encodedDefaultPassword;
+    private String encodedDefaultPassword;
 
-	public SecurityConfig(RsaKeyProperties rsaKeys) {
-		this.rsaKeys = rsaKeys;
-	}
+    public SecurityConfig(RsaKeyProperties rsaKeys) {
+        this.rsaKeys = rsaKeys;
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
-		this.encodedDefaultPassword = encoder.encode(DEFAULT_PASSWORD);
-		UserDetails user = User.withUsername(DEFAULT_USERNAME).password(encodedDefaultPassword).authorities("read")
-				.build();
-		return new InMemoryUserDetailsManager(user);
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
+        this.encodedDefaultPassword = encoder.encode(DEFAULT_PASSWORD);
+        UserDetails user = User.withUsername(DEFAULT_USERNAME).password(encodedDefaultPassword).authorities("read")
+                .build();
+        return new InMemoryUserDetailsManager(user);
 
-	}
+    }
 
-	public String getEncodedDefaultPassword() {
-		return this.encodedDefaultPassword;
-	}
+    public String getEncodedDefaultPassword() {
+        return this.encodedDefaultPassword;
+    }
 
-	@Bean
-	public AuthenticationManager authManager(UserDetailsService userDetailsService, PasswordEncoder encoder) {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(encoder);
-		return new ProviderManager(authProvider);
-	}
+    @Bean
+    public AuthenticationManager authManager(UserDetailsService userDetailsService, PasswordEncoder encoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(encoder);
+        return new ProviderManager(authProvider);
+    }
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
-				.authorizeHttpRequests(
-						auth -> auth
-								.requestMatchers("/authenticate", "/home", "/health/ping", "producers/list", "/operations/list",
-										"/routes/list", "/error")
-								.permitAll().anyRequest().authenticated())
-				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
-	}
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        auth -> auth
+                                .requestMatchers("/authenticate", "/home",  "/assets/**", "/health/ping", "producers/list", "/operations/list",
+                                        "/routes/list", "/error")
+                                .permitAll().anyRequest().authenticated())
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+    }
 
-	@Bean
-	public JwtDecoder jwtDecoder() {
-		return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
-	}
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+    }
 
-	@Bean
-	public JwtEncoder jwtEncoder() {
-		JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
-		JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-		return new NimbusJwtEncoder(jwks);
-	}
+    @Bean
+    public JwtEncoder jwtEncoder() {
+        JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
+        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwks);
+    }
 }

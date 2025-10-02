@@ -25,7 +25,7 @@ public class TokenService {
 		this.encoder = encoder;
 	}
 
-	public String generateToken(Authentication authentication) {
+	public String generateToken(final Authentication authentication) {
 		Instant now = Instant.now();
 		String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(" "));

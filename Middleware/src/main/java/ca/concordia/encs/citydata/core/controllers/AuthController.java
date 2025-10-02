@@ -20,6 +20,7 @@ import ca.concordia.encs.citydata.services.TokenService;
  * Date: 18-07-2025
  * 
  * Update: Multi-user authentication added
+ * Author: Sikandar Ejaz
  * Last Update: 28-09-2025
  */
 
@@ -51,7 +52,7 @@ public class AuthController {
 
 			return ResponseEntity.ok(tokenService.generateToken(authentication));
 
-		} catch (AuthenticationException e) {
+		} catch (final AuthenticationException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 		}
 	}

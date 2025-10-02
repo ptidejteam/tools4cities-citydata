@@ -37,10 +37,11 @@ import com.nimbusds.jose.proc.SecurityContext;
 /**
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz, Rushin D. Makwana
- * Date: 18-07-2025
+ * Date: 2025-07-18
  * 
  * Update: Multi-user authentication added
- * Last Update: 28-09-2025
+ * Author: Sikandar Ejaz
+ * Last Update: 2025-09-28
  */
 
 @EnableWebSecurity

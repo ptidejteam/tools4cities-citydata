@@ -22,9 +22,16 @@ public class TestTokenGenerator {
 	@Autowired
 	private TokenService tokenService;
 
+	public static final String TEST_USERNAME = "citydata";
+
 	public String getToken() {
-		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-		Authentication auth = new UsernamePasswordAuthenticationToken("testuser", null, authorities);
+		final List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		final Authentication auth = new UsernamePasswordAuthenticationToken(TEST_USERNAME, null, authorities);
 		return tokenService.generateToken(auth);
+
+		//
+		// POST /authenticate route with username/password obtained from the environment
+		// Cf. https://stackoverflow.com/questions/71949369/how-to-use-github-secrets-or-github-environment-variables-in-build-gradle-file
+		// Cf. https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets
 	}
 }

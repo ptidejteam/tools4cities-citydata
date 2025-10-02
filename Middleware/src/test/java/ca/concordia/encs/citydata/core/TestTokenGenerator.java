@@ -1,5 +1,8 @@
 package ca.concordia.encs.citydata.core;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,7 @@ import ca.concordia.encs.citydata.services.TokenService;
  * 
  * Last Update: Fetch "username" for tests from GitHub secrets
  * Author: Sikandar Ejaz
- * Date: 2025-10-01
+ * Date: 2025-10-02
  */
 
 @SpringBootTest
@@ -26,14 +29,33 @@ public class TestTokenGenerator {
 	@Autowired
 	private TokenService tokenService;
 
-	public static final String TEST_USERNAME = loadUsernameFromEnv();
+	public static final String TEST_USERNAME = loadUsername();
 
-	private static String loadUsernameFromEnv() {
+	private static String loadUsername() {
+		// 1. Try environment variable first (GitHub Actions case)
 		String username = System.getenv("TEST_USERNAME");
-		if (username == null || username.isBlank()) {
-			username = "citydata";
+		if (username != null && !username.isBlank()) {
+			return username.trim();
 		}
-		return username;
+
+		// 2. Fallback: load from credentials file (local execution case)
+		try (InputStream in = TestTokenGenerator.class.getClassLoader()
+				.getResourceAsStream("scripts/credentials/credentials.txt")) {
+
+			if (in == null) {
+				throw new IllegalStateException("credentials.txt not found in resources");
+			}
+
+			String content = new String(in.readAllBytes()).trim();
+
+			int start = content.indexOf("\"username\"") + 11;
+			start = content.indexOf("\"", start) + 1;
+			int end = content.indexOf("\"", start);
+			return content.substring(start, end);
+
+		} catch (IOException e) {
+			throw new UncheckedIOException("Failed to load username from file", e);
+		}
 	}
 
 	public String getToken() {

@@ -118,9 +118,54 @@ The following routes are available:
 
 For now, the number of Producers, Operations and parameters is quite limited, but we intend to expand it in the future and also document it better. Your suggestions are more than welcome!
 
+
+## Accessing Private/Protected Routes
+
+To access the private or protected routes, follow these steps
+
+- Create a User Account:
+	* Follow the instructions in the "Adding Users" section above to create a username and password
+
+- Authenticate the User:
+	* Run the application and send a `POST` request to the following endpoint
+			
+			http://localhost:8080/authenticate
+		
+Include your username and password in the request body as JSON, for example
+	
+```json
+{
+"username": "yourUsername",
+"password": "yourPassword"
+}
+```
+			
+- Receive Authentication Token: 
+	* Upon successful authentication, a token will be returned in the response
+
+- Copy the Token:
+	* Copy the token from the response. You'll use this to access protected routes
+
+- Access Protected Routes:
+	* Use one of the following endpoints:
+		
+		POST http://localhost:8080/apply/sync
+		POST http://localhost:8080/apply/async
+
+- Add Authorization Header in Postman:
+	* In Postman (or any API client)
+	* Go to the Authorization tab
+	* Set Type to Bearer Token
+	* Paste the token into the Token field
+
+- Access Granted:
+	* If the token is valid, Spring Boot will authorize your request and grant access to the protected route
+
+
 ## Who do I talk to?
 
 Project manager: gabriel.cavalheiroullmann at concordia.ca
+
 
 ## Development Guidelines
 - The develop branch is the working branch for CityData middleware developers. To integrate your changes, please create a new branch based on develop, apply your changes, then open a **pull request** and set develop as a target.

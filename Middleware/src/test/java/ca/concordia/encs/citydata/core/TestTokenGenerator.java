@@ -1,8 +1,5 @@
 package ca.concordia.encs.citydata.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,25 +22,14 @@ public class TestTokenGenerator {
 	@Autowired
 	private TokenService tokenService;
 
-	public static final String TEST_USERNAME = loadUsernameFromFile();
+	public static final String TEST_USERNAME = loadUsernameFromEnv();
 
-	private static String loadUsernameFromFile() {
-		try (InputStream in = TestTokenGenerator.class.getClassLoader()
-				.getResourceAsStream("scripts/credentials/credentials.txt")) {
-
-			if (in == null) {
-				throw new IllegalStateException("credentials.txt not found in resources");
-			}
-			String content = new String(in.readAllBytes()).trim();
-
-			int start = content.indexOf("\"username\"") + 11;
-			start = content.indexOf("\"", start) + 1;
-			int end = content.indexOf("\"", start);
-			return content.substring(start, end);
-
-		} catch (IOException e) {
-			throw new UncheckedIOException("Failed to load username from file", e);
+	private static String loadUsernameFromEnv() {
+		String username = System.getenv("TEST_USERNAME");
+		if (username == null || username.isBlank()) {
+			throw new IllegalStateException("Environment variable TEST_USERNAME is not set");
 		}
+		return username;
 	}
 
 	public String getToken() {

@@ -13,8 +13,12 @@ import ca.concordia.encs.citydata.services.TokenService;
 
 /**
  * Added global token generation for running tests
- * @author Sikandar Ejaz 
- * @since 2025-07-18
+ * Author: Sikandar Ejaz 
+ * Date: 2025-07-18
+ * 
+ * Last Update: Fetch "username" for tests from GitHub secrets
+ * Author: Sikandar Ejaz
+ * Date: 2025-10-01
  */
 
 @SpringBootTest
@@ -27,7 +31,7 @@ public class TestTokenGenerator {
 	private static String loadUsernameFromEnv() {
 		String username = System.getenv("TEST_USERNAME");
 		if (username == null || username.isBlank()) {
-			throw new IllegalStateException("Environment variable TEST_USERNAME is not set");
+			username = "citydata";
 		}
 		return username;
 	}
@@ -36,10 +40,5 @@ public class TestTokenGenerator {
 		final List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 		final Authentication auth = new UsernamePasswordAuthenticationToken(TEST_USERNAME, null, authorities);
 		return tokenService.generateToken(auth);
-
-		//
-		// POST /authenticate route with username/password obtained from the environment
-		// Cf. https://stackoverflow.com/questions/71949369/how-to-use-github-secrets-or-github-environment-variables-in-build-gradle-file
-		// Cf. https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets
 	}
 }

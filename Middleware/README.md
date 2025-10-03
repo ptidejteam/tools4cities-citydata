@@ -36,7 +36,7 @@ To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYd
 
 Before generating the public and private keys, ensure you have `openssl` installed in your machine!
 
-- Step 1: Create a folder named `certs` inside the `src/main/resources` directory.
+- Step 1: Create a folder named `certs` inside the `src/main/resources/scripts` directory.
 - Step 2: Navigate to the `certs` folder and run the following commands to generate your public and private keys:
 
 ```bash

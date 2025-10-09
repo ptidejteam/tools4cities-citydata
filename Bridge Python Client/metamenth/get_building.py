@@ -12,6 +12,7 @@ room = floor.getRoomByName('Room 001')
 sensor = room.getTransducer('TMP 01')
 sensor_data = sensor.getData({})
 print(sensor_data)
+print(building)
 
 
 

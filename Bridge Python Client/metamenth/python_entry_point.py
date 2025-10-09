@@ -1,5 +1,7 @@
 import os
 import sys
+from metamenth.subsystems.hvac_system import HvacSystem
+from metamenth.subsystems.building_control_system import BuildingControlSystem
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -22,6 +24,7 @@ from metamenth.structure.material import Material
 from metamenth.structure.layer import Layer
 from metamenth.structure.cover import Cover
 from metamenth.structure.envelope import Envelope
+from metamenth.subsystems.hvac_components.duct import Duct
 
 
 class PythonEntryPoint:
@@ -97,6 +100,14 @@ class PythonEntryPoint:
 
     def createEnvelope(self):
         return Envelope()
+    
+    def createHvacSystem(self):
+        return HvacSystem()
+        
+    def createBuildingControlSystem(self, name: str, hvac_system: HvacSystem):
+        bcs =  BuildingControlSystem(name)
+        bcs.setHvacSystem(hvac_system)
+        return bcs
 
     class Java:
         implements = ['ca.concordia.ngci.tools4cities.metamenth.interfaces.PythonEntryPoint']

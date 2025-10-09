@@ -8,6 +8,7 @@ from metamenth.structure.envelope import Envelope
 from metamenth.utils.search.structure_entity_search import StructureEntitySearch
 from typing import List, Dict
 from py4j.java_gateway import JavaGateway
+from metamenth.subsystems.building_control_system import BuildingControlSystem
 
 
 class Building:
@@ -40,8 +41,10 @@ class Building:
         self._floors = gateway.jvm.java.util.ArrayList()
         self._meters = gateway.jvm.java.util.ArrayList()
         self._zones = gateway.jvm.java.util.ArrayList()
+        self._control_systems= gateway.jvm.java.util.ArrayList()
         self._weather_stations: [WeatherStation] = []
         self._envelope = None
+        
 
         # apply validation
         self.setConstructionYear(construction_year)
@@ -200,10 +203,17 @@ class Building:
         :return:
         """
         return self._structure_entity_search.search(self._meters, search_terms)
+    
+    def addControlSystem(self, control_system: BuildingControlSystem):
+        self._control_systems.append(control_system)
+        
+    def getBuildingControlSystem(self) -> [BuildingControlSystem]:
+        return self._control_systems
 
     def toString(self):
         floors_info = "\n".join([f"  - Floor {floor.getNumber()}: {floor}" for floor in self._floors])
         meter_info = "\n".join([f"  - {meter}" for meter in self._meters])
+        bcs_info = "\n".join([f"  - BCS {control_system}" for control_system in self._control_systems])
 
         return (f"Building("
                 f"UID: {self.getUID()}, "
@@ -216,7 +226,10 @@ class Building:
                 f"Envelope: {self.getEnvelope()}, "
                 f"Floor Count: {len(self._floors)}, "
                 f"Floors:\n{floors_info}, "
+                f"Building Control System:\n{bcs_info}, "
                 f"Meters:\n{meter_info})")
+    
+    
 
     class Java:
         implements = ['ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.IBuilding']

@@ -18,6 +18,8 @@ import ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.ILayer;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.IMaterial;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.IOpenSpace;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.IRoom;
+import ca.concordia.ngci.tools4cities.metamenth.interfaces.subsystems.IBuildingControlSystem;
+import ca.concordia.ngci.tools4cities.metamenth.interfaces.subsystems.IHvacSystem;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.transducers.ISensor;
 
 /**
@@ -27,24 +29,50 @@ import ca.concordia.ngci.tools4cities.metamenth.interfaces.transducers.ISensor;
  */
 
 public interface IPythonEntryPoint {
-    IMeasure createMeasure(String unit, double minimum);
-    IAbstractMeasure createMeasurement(IMeasure measure, String measureType);
-    IRoom createRoom(IAbstractMeasure area, String name, String roomType, String location);
-    IOpenSpace createOpenSpace(IAbstractMeasure area, String name, String spaceType, String location);
-    IFloor createFloor(IAbstractMeasure area, Object floorNumber, String floorType, IAbstractMeasure height, String des, IRoom room, IOpenSpace openSpace);
-    IMeter createMeter(double measurementFreq, String unit, String meterType, String measureMode);
-    IMeterMeasure createMeterMeasure(double value, String timestamp);
-    IPoint createCoordinates(double lat, double lon);
-    IAddress createAddress(String city, String street, String state, String zipCode, String country, IPoint coordinates);
-    IBuilding createBuilding(int constructionYear, IAbstractMeasure height, IAbstractMeasure floor_area, IAddress address, 
-    String buildingType, IFloor floor);
-    ISensor createSensor(String name, String measure, String unit, String measure_type, int data_frequency);
-    ISensorData createSensorData(double value, String timestamp);
-    IWeatherStation createWeatherStation(String name);
-    IWeatherData createWeatherData(IAbstractMeasure data, String timestamp);
-    IZone createZone(String name, String zone_type);
-    IMaterial createMaterial(String desc, String materialType, IAbstractMeasure density, IAbstractMeasure heatCapacity, IAbstractMeasure thermalTransmittance, IAbstractMeasure thermalResistance, double solarHeatGainCoefficient);
-    ILayer createLayer(IAbstractMeasure height, IAbstractMeasure length, IAbstractMeasure thickness, IMaterial IAbstractMeasure);
-    ICover createCover(String coverType);
-    IEnvelope createEnvelope();
+	IMeasure createMeasure(String unit, double minimum);
+
+	IAbstractMeasure createMeasurement(IMeasure measure, String measureType);
+
+	IRoom createRoom(IAbstractMeasure area, String name, String roomType, String location);
+
+	IOpenSpace createOpenSpace(IAbstractMeasure area, String name, String spaceType, String location);
+
+	IFloor createFloor(IAbstractMeasure area, Object floorNumber, String floorType, IAbstractMeasure height, String des,
+			IRoom room, IOpenSpace openSpace);
+
+	IMeter createMeter(double measurementFreq, String unit, String meterType, String measureMode);
+
+	IMeterMeasure createMeterMeasure(double value, String timestamp);
+
+	IPoint createCoordinates(double lat, double lon);
+
+	IAddress createAddress(String city, String street, String state, String zipCode, String country,
+			IPoint coordinates);
+
+	IBuilding createBuilding(int constructionYear, IAbstractMeasure height, IAbstractMeasure floor_area,
+			IAddress address, String buildingType, IFloor floor);
+
+	ISensor createSensor(String name, String measure, String unit, String measure_type, int data_frequency);
+
+	ISensorData createSensorData(double value, String timestamp);
+
+	IWeatherStation createWeatherStation(String name);
+
+	IWeatherData createWeatherData(IAbstractMeasure data, String timestamp);
+
+	IZone createZone(String name, String zone_type);
+
+	IMaterial createMaterial(String desc, String materialType, IAbstractMeasure density, IAbstractMeasure heatCapacity,
+			IAbstractMeasure thermalTransmittance, IAbstractMeasure thermalResistance, double solarHeatGainCoefficient);
+
+	ILayer createLayer(IAbstractMeasure height, IAbstractMeasure length, IAbstractMeasure thickness,
+			IMaterial IAbstractMeasure);
+
+	ICover createCover(String coverType);
+
+	IEnvelope createEnvelope();
+
+	IBuildingControlSystem createBuildingControlSystem(String name, IHvacSystem hvacSystem);
+
+	IHvacSystem createHvacSystem();
 }

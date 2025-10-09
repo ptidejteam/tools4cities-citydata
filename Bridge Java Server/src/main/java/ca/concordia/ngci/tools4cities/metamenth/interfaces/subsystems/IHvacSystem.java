@@ -1,8 +1,8 @@
-package ca.concordia.ngci.tools4cities.metamenth.interfaces.structure;
+package ca.concordia.ngci.tools4cities.metamenth.interfaces.subsystems;
 
 import java.util.List;
 
-public interface IHVAC {
+public interface IHvacSystem {
 
 	String getUID();
 

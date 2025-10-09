@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "add2204a-2ea3-4a55-a6a4-799b4c7f5ee6",
+		"name": "CITYdata",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38433140"
+	},
+	"item": [
+		{
+			"name": "1. Discovery",
+			"item": [
+				{
+					"name": "routes/list",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/routes/list",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"routes",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "operations/list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/operations/list",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"operations",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "producers/list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/producers/list",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"producers",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Auth",
+			"item": [
+				{
+					"name": "authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const token = pm.response.text();",
+									"pm.environment.set(\"token\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"citydata\",\n    \"password\": \"citydata\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/authenticate",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Apply",
+			"item": [
+				{
+					"name": "apply/sync",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/apply/sync",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"apply",
+								"sync"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apply/async",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/apply/async",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"apply",
+								"async"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "exists",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/exists/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"exists",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "apply/async/{runnerId}",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/apply/async/4901bb00-4f2a-4265-92dc-5504f2f136a5",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"apply",
+								"async",
+								"4901bb00-4f2a-4265-92dc-5504f2f136a5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Other",
+			"item": [
+				{
+					"name": "health/ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/health/ping",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"health",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "report/producers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/report/producers",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"report",
+								"producers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8080",
+			"type": "default"
+		}
+	]
+}

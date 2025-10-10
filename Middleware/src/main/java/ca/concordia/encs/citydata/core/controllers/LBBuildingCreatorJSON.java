@@ -33,7 +33,6 @@ public class LBBuildingCreatorJSON {
 			IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) entryServer.getGatewayServer()
 					.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
 
-			// Call the bridge method
 			IBuilding building = entryServer.getPythonObjectCreator().createBuildingFromJson(pythonEntryPoint,
 					rootNode);
 

@@ -31,5 +31,3 @@ class HvacSystem:
     
     class Java:
         implements = {"ca.concordia.ngci.tools4cities.metamenth.interfaces.subsystems.IHvacSystem"}
-        
-    

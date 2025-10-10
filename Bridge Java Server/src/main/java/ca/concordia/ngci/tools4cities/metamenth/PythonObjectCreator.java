@@ -178,6 +178,8 @@ public class PythonObjectCreator {
 			IBuildingControlSystem bcs = pythonEntryPoint.createBuildingControlSystem(ctrl.get("name").asText(), hvac);
 			building.addControlSystem(bcs);
 
+			//building.writeJson("C:\kjkjkkjkjk");
+
 			return building;
 
 		} catch (Exception e) {

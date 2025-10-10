@@ -1,6 +1,6 @@
 package ca.concordia.ngci.tools4cities.metamenth;
 
-import org.springframework.core.io.ClassPathResource;
+import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +33,7 @@ public class PythonEntryServer {
 	 * and Middleare operations and productions
 	 * @param pythonEntryPoint, python object to provides access to MetamEnTh classes
 	 */
+
 	public void createLBBuilding(IPythonEntryPoint pythonEntryPoint) {
 		building = pythonObjectCreator.createLBBuilding(pythonEntryPoint);
 	}
@@ -42,10 +43,15 @@ public class PythonEntryServer {
 	}
 
 	public void createBuildingFromJson(IPythonEntryPoint pythonEntryPoint) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode buildingJson = mapper
-					.readTree(new ClassPathResource("src/main/resources/BuildingData.json").getFile());
+		ObjectMapper mapper = new ObjectMapper();
+		try (InputStream inputStream = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("LBBuilding.json")) {
+
+			if (inputStream == null) {
+				throw new IllegalStateException("Could not find BuildingData.json in resources folder");
+			}
+
+			JsonNode buildingJson = mapper.readTree(inputStream);
 
 			building = pythonObjectCreator.createBuildingFromJson(pythonEntryPoint, buildingJson);
 
@@ -67,6 +73,14 @@ public class PythonEntryServer {
 			return null;
 		}
 	}
+
+	/*	public GatewayServer getGatewayServer() {
+			return this.gatewayServer;
+		}
+	
+		public PythonObjectCreator getPythonObjectCreator() {
+			return this.pythonObjectCreator;
+		}*/
 
 	public static void main(String[] args) {
 

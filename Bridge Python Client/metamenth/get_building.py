@@ -1,7 +1,10 @@
 from py4j.java_gateway import JavaGateway, GatewayParameters
 
+# gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
+# building = gateway.entry_point.getLBBuilding()
+
 gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
-building = gateway.entry_point.getLBBuilding()
+building = gateway.entry_point.getBuildingFromJson()
 weather_station = building.getWeatherStation('LB WS')
 weather_data = weather_station.getWeatherData({})
 print(weather_data)
@@ -13,6 +16,3 @@ sensor = room.getTransducer('TMP 01')
 sensor_data = sensor.getData({})
 print(sensor_data)
 print(building)
-
-
-

@@ -45,10 +45,10 @@ public class PythonEntryServer {
 	public void createBuildingFromJson(IPythonEntryPoint pythonEntryPoint) {
 		ObjectMapper mapper = new ObjectMapper();
 		try (InputStream inputStream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("LBBuilding.json")) {
+				.getResourceAsStream("src/main/resources/LBBuilding.json")) {
 
 			if (inputStream == null) {
-				throw new IllegalStateException("Could not find BuildingData.json in resources folder");
+				throw new IllegalStateException("Could not find LBBuilding.json in resources folder");
 			}
 
 			JsonNode buildingJson = mapper.readTree(inputStream);
@@ -74,13 +74,13 @@ public class PythonEntryServer {
 		}
 	}
 
-	/*	public GatewayServer getGatewayServer() {
-			return this.gatewayServer;
-		}
-	
-		public PythonObjectCreator getPythonObjectCreator() {
-			return this.pythonObjectCreator;
-		}*/
+	public GatewayServer getGatewayServer() {
+		return this.gatewayServer;
+	}
+
+	public PythonObjectCreator getPythonObjectCreator() {
+		return this.pythonObjectCreator;
+	}
 
 	public static void main(String[] args) {
 

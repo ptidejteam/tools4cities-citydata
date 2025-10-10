@@ -20,16 +20,44 @@
                 </includes>
             </configuration>
         </plugin>
+        
+        <plugin>
+        <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
     </plugins>
+    
+
 </build>
 
-
+<parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/> <!-- look up parent from repository -->
+    </parent>
+    
+    
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+
     <dependencies>
+        <!-- Core Spring Boot starter (includes Spring framework) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Optional: for JSON handling -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -42,6 +70,7 @@
             <artifactId>py4j</artifactId>
             <version>0.10.9.7</version>
         </dependency>
+
 
     </dependencies>
 </project>

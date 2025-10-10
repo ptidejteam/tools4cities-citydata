@@ -1,10 +1,13 @@
 package ca.concordia.ngci.tools4cities.metamenth;
 
+import org.springframework.core.io.ClassPathResource;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.IPythonEntryPoint;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.IBuilding;
 import py4j.GatewayServer;
-
 
 /**
  * A Java client that creates Python objects by 
@@ -15,37 +18,63 @@ import py4j.GatewayServer;
  * @author Peter Yefi
  */
 public class PythonEntryServer {
-    
-    private PythonObjectCreator pythonObjectCreator = new PythonObjectCreator();
-    private GatewayServer gatewayServer;
-    private IBuilding building;
 
-    public PythonEntryServer(){
-      this.gatewayServer = new GatewayServer(this);
-      this.gatewayServer.start();
-    }
-    
-    /**
-     * Creates the LB building by access the relevant MetamEnTh class
-     * and Middleare operations and productions
-     * @param pythonEntryPoint, python object to provides access to MetamEnTh classes
-     */
-    public void createLBBuilding(IPythonEntryPoint pythonEntryPoint){
-      building = pythonObjectCreator.createLBBuilding(pythonEntryPoint);
-    }
+	private PythonObjectCreator pythonObjectCreator = new PythonObjectCreator();
+	private GatewayServer gatewayServer;
+	private IBuilding building;
 
-    public IBuilding getLBBuilding(){
-      return building;
-    }
+	public PythonEntryServer() {
+		this.gatewayServer = new GatewayServer(this);
+		this.gatewayServer.start();
+	}
 
-    
+	/**
+	 * Creates the LB building by access the relevant MetamEnTh class
+	 * and Middleare operations and productions
+	 * @param pythonEntryPoint, python object to provides access to MetamEnTh classes
+	 */
+	public void createLBBuilding(IPythonEntryPoint pythonEntryPoint) {
+		building = pythonObjectCreator.createLBBuilding(pythonEntryPoint);
+	}
 
+	public IBuilding getLBBuilding() {
+		return building;
+	}
 
-    public static void main(String[] args) {
-    
-        PythonEntryServer pythonEntryServer = new PythonEntryServer();
-        IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) pythonEntryServer.gatewayServer.getPythonServerEntryPoint(new Class[]{ IPythonEntryPoint.class });
-        pythonEntryServer.createLBBuilding(pythonEntryPoint);
-        System.out.println("Server is running!!!");
-  }
+	public void createBuildingFromJson(IPythonEntryPoint pythonEntryPoint) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode buildingJson = mapper
+					.readTree(new ClassPathResource("src/main/resources/BuildingData.json").getFile());
+
+			building = pythonObjectCreator.createBuildingFromJson(pythonEntryPoint, buildingJson);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public IBuilding getBuildingFromJson() {
+		try {
+			// Get the Python-side entry point (so that Java can call its methods)
+			IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) gatewayServer
+					.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
+
+			createBuildingFromJson(pythonEntryPoint);
+			return building;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static void main(String[] args) {
+
+		PythonEntryServer pythonEntryServer = new PythonEntryServer();
+		IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) pythonEntryServer.gatewayServer
+				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
+		pythonEntryServer.createLBBuilding(pythonEntryPoint);
+		System.out.println("Server is running!!!");
+	}
 }

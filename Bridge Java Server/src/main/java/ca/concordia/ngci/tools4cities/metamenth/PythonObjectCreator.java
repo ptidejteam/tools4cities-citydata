@@ -3,6 +3,8 @@ package ca.concordia.ngci.tools4cities.metamenth;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import ca.concordia.ngci.tools4cities.metamenth.enums.BuildingType;
 import ca.concordia.ngci.tools4cities.metamenth.enums.DataMeasurementType;
 import ca.concordia.ngci.tools4cities.metamenth.enums.FloorType;
@@ -102,5 +104,96 @@ public class PythonObjectCreator {
 		building.addControlSystem(bcs);
 
 		return building;
+	}
+
+	public IBuilding createBuildingFromJson(IPythonEntryPoint pythonEntryPoint, JsonNode rootNode) {
+		try {
+			JsonNode buildingNode = rootNode.get("building");
+
+			// Parse building-level info
+			int yearBuilt = buildingNode.get("yearBuilt").asInt();
+			String buildingType = buildingNode.get("type").asText();
+
+			// Create address
+			JsonNode addressNode = buildingNode.get("address");
+			JsonNode coords = addressNode.get("coordinates");
+			IPoint point = pythonEntryPoint.createCoordinates(coords.get("x").asDouble(), coords.get("y").asDouble());
+			IAddress address = pythonEntryPoint.createAddress(addressNode.get("city").asText(),
+					addressNode.get("street").asText(), addressNode.get("province").asText(),
+					addressNode.get("postalCode").asText(), addressNode.get("country").asText(), point);
+
+			// Create building height and area
+			IMeasure heightMeasure = pythonEntryPoint.createMeasure(buildingNode.get("height").get("unit").asText(),
+					buildingNode.get("height").get("value").asDouble());
+			IBinaryMeasure height = (IBinaryMeasure) pythonEntryPoint.createMeasurement(heightMeasure, "Binary");
+
+			IMeasure areaMeasure = pythonEntryPoint.createMeasure(buildingNode.get("floorArea").get("unit").asText(),
+					buildingNode.get("floorArea").get("value").asDouble());
+			IBinaryMeasure area = (IBinaryMeasure) pythonEntryPoint.createMeasurement(areaMeasure, "Binary");
+
+			// Build first floor (simplified for clarity)
+			JsonNode floorNode = buildingNode.get("floors").get(0);
+			IMeasure floorSize = pythonEntryPoint.createMeasure(floorNode.get("size").get("unit").asText(),
+					floorNode.get("size").get("value").asDouble());
+			IBinaryMeasure floorMeasurement = (IBinaryMeasure) pythonEntryPoint.createMeasurement(floorSize, "Binary");
+
+			// Create room(s)
+			JsonNode roomNode = floorNode.get("rooms").get(0);
+			IMeasure roomSize = pythonEntryPoint.createMeasure(roomNode.get("size").get("unit").asText(),
+					roomNode.get("size").get("value").asDouble());
+			IBinaryMeasure roomMeasurement = (IBinaryMeasure) pythonEntryPoint.createMeasurement(roomSize, "Binary");
+			IRoom room = pythonEntryPoint.createRoom(roomMeasurement, roomNode.get("name").asText(),
+					roomNode.get("type").asText(), "hei.ies.ies");
+
+			// Create sensor(s)
+			JsonNode sensorNode = roomNode.get("sensors").get(0);
+			ISensor sensor = pythonEntryPoint.createSensor(sensorNode.get("id").asText(),
+					sensorNode.get("measure").asText(), sensorNode.get("unit").asText(),
+					sensorNode.get("type").asText(), sensorNode.get("frequency").asInt());
+			List<Object> sensorData = new ArrayList<>();
+			for (JsonNode value : sensorNode.get("data")) {
+				sensorData.add(pythonEntryPoint.createSensorData(value.asDouble(), null));
+			}
+			sensor.addData(sensorData);
+			room.addTransducer(sensor);
+
+			// Create floor and add room
+			IFloor floor = pythonEntryPoint.createFloor(roomMeasurement, floorNode.get("number").asInt(),
+					floorNode.get("type").asText(), floorMeasurement, floorNode.get("description").asText(), room,
+					null);
+
+			// Create building
+			IBuilding building = pythonEntryPoint.createBuilding(yearBuilt, height, area, address, buildingType, floor);
+
+			// Add meter
+			JsonNode meterNode = buildingNode.get("meters").get(0);
+			IMeter meter = pythonEntryPoint.createMeter(meterNode.get("value").asDouble(),
+					meterNode.get("unit").asText(), meterNode.get("type").asText(), meterNode.get("mode").asText());
+			building.addMeter(meter);
+
+			// Add weather station
+			JsonNode wsNode = buildingNode.get("weatherStation");
+			IWeatherStation ws = pythonEntryPoint.createWeatherStation(wsNode.get("id").asText());
+			List<IWeatherData> wsDataList = new ArrayList<>();
+			for (JsonNode wd : wsNode.get("data")) {
+				IMeasure wdm = pythonEntryPoint.createMeasure(wd.get("measure").asText(), wd.get("value").asDouble());
+				IBinaryMeasure bm = (IBinaryMeasure) pythonEntryPoint.createMeasurement(wdm, "Binary");
+				wsDataList.add(pythonEntryPoint.createWeatherData(bm, null));
+			}
+			ws.addWeatherData(wsDataList);
+			building.addWeatherStation(ws);
+
+			// Add control system
+			JsonNode ctrl = buildingNode.get("controlSystems").get(0);
+			IHvacSystem hvac = pythonEntryPoint.createHvacSystem();
+			IBuildingControlSystem bcs = pythonEntryPoint.createBuildingControlSystem(ctrl.get("name").asText(), hvac);
+			building.addControlSystem(bcs);
+
+			return building;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

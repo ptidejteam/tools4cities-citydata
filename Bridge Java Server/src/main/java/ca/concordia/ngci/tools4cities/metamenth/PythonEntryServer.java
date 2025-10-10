@@ -56,7 +56,6 @@ public class PythonEntryServer {
 
 	public IBuilding getBuildingFromJson() {
 		try {
-			// Get the Python-side entry point (so that Java can call its methods)
 			IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) gatewayServer
 					.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
 

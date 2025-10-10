@@ -110,11 +110,9 @@ public class PythonObjectCreator {
 		try {
 			JsonNode buildingNode = rootNode.get("building");
 
-			// Parse building-level info
 			int yearBuilt = buildingNode.get("yearBuilt").asInt();
 			String buildingType = buildingNode.get("type").asText();
 
-			// Create address
 			JsonNode addressNode = buildingNode.get("address");
 			JsonNode coords = addressNode.get("coordinates");
 			IPoint point = pythonEntryPoint.createCoordinates(coords.get("x").asDouble(), coords.get("y").asDouble());
@@ -122,7 +120,6 @@ public class PythonObjectCreator {
 					addressNode.get("street").asText(), addressNode.get("province").asText(),
 					addressNode.get("postalCode").asText(), addressNode.get("country").asText(), point);
 
-			// Create building height and area
 			IMeasure heightMeasure = pythonEntryPoint.createMeasure(buildingNode.get("height").get("unit").asText(),
 					buildingNode.get("height").get("value").asDouble());
 			IBinaryMeasure height = (IBinaryMeasure) pythonEntryPoint.createMeasurement(heightMeasure, "Binary");
@@ -131,13 +128,11 @@ public class PythonObjectCreator {
 					buildingNode.get("floorArea").get("value").asDouble());
 			IBinaryMeasure area = (IBinaryMeasure) pythonEntryPoint.createMeasurement(areaMeasure, "Binary");
 
-			// Build first floor (simplified for clarity)
 			JsonNode floorNode = buildingNode.get("floors").get(0);
 			IMeasure floorSize = pythonEntryPoint.createMeasure(floorNode.get("size").get("unit").asText(),
 					floorNode.get("size").get("value").asDouble());
 			IBinaryMeasure floorMeasurement = (IBinaryMeasure) pythonEntryPoint.createMeasurement(floorSize, "Binary");
 
-			// Create room(s)
 			JsonNode roomNode = floorNode.get("rooms").get(0);
 			IMeasure roomSize = pythonEntryPoint.createMeasure(roomNode.get("size").get("unit").asText(),
 					roomNode.get("size").get("value").asDouble());
@@ -145,7 +140,6 @@ public class PythonObjectCreator {
 			IRoom room = pythonEntryPoint.createRoom(roomMeasurement, roomNode.get("name").asText(),
 					roomNode.get("type").asText(), "hei.ies.ies");
 
-			// Create sensor(s)
 			JsonNode sensorNode = roomNode.get("sensors").get(0);
 			ISensor sensor = pythonEntryPoint.createSensor(sensorNode.get("id").asText(),
 					sensorNode.get("measure").asText(), sensorNode.get("unit").asText(),
@@ -157,21 +151,17 @@ public class PythonObjectCreator {
 			sensor.addData(sensorData);
 			room.addTransducer(sensor);
 
-			// Create floor and add room
 			IFloor floor = pythonEntryPoint.createFloor(roomMeasurement, floorNode.get("number").asInt(),
 					floorNode.get("type").asText(), floorMeasurement, floorNode.get("description").asText(), room,
 					null);
 
-			// Create building
 			IBuilding building = pythonEntryPoint.createBuilding(yearBuilt, height, area, address, buildingType, floor);
 
-			// Add meter
 			JsonNode meterNode = buildingNode.get("meters").get(0);
 			IMeter meter = pythonEntryPoint.createMeter(meterNode.get("value").asDouble(),
 					meterNode.get("unit").asText(), meterNode.get("type").asText(), meterNode.get("mode").asText());
 			building.addMeter(meter);
 
-			// Add weather station
 			JsonNode wsNode = buildingNode.get("weatherStation");
 			IWeatherStation ws = pythonEntryPoint.createWeatherStation(wsNode.get("id").asText());
 			List<IWeatherData> wsDataList = new ArrayList<>();
@@ -183,7 +173,6 @@ public class PythonObjectCreator {
 			ws.addWeatherData(wsDataList);
 			building.addWeatherStation(ws);
 
-			// Add control system
 			JsonNode ctrl = buildingNode.get("controlSystems").get(0);
 			IHvacSystem hvac = pythonEntryPoint.createHvacSystem();
 			IBuildingControlSystem bcs = pythonEntryPoint.createBuildingControlSystem(ctrl.get("name").asText(), hvac);

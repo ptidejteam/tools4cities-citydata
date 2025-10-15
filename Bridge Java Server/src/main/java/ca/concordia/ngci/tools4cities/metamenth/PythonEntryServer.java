@@ -1,10 +1,5 @@
 package ca.concordia.ngci.tools4cities.metamenth;
 
-import java.io.InputStream;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.IPythonEntryPoint;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.structure.IBuilding;
 import py4j.GatewayServer;
@@ -17,6 +12,75 @@ import py4j.GatewayServer;
   * the appropriate Java objects
  * @author Peter Yefi
  */
+/*public class PythonEntryServer {
+
+	private PythonObjectCreator pythonObjectCreator = new PythonObjectCreator();
+	private GatewayServer gatewayServer;
+	private IBuilding building;
+
+	public PythonEntryServer() {
+		this.gatewayServer = new GatewayServer(this);
+		this.gatewayServer.start();
+	}
+
+	*//**
+		* Creates the LB building by access the relevant MetamEnTh class
+		* and Middleare operations and productions
+		* @param pythonEntryPoint, python object to provides access to MetamEnTh classes
+		*/
+/*
+
+public void createLBBuilding(IPythonEntryPoint pythonEntryPoint) {
+building = pythonObjectCreator.createLBBuilding(pythonEntryPoint);
+}
+
+*//**
+	* Creates a building from JSON string
+	* @param pythonEntryPoint python object to provides access to MetamEnTh classes
+	* @param jsonString JSON string containing building data
+	*/
+
+/*
+public void createBuildingFromJson(IPythonEntryPoint pythonEntryPoint, String jsonString) {
+building = pythonObjectCreator.createBuildingFromJson(pythonEntryPoint, jsonString);
+}
+
+*//**
+	* Creates a building from JSON file in resources
+	* @param pythonEntryPoint python object to provides access to MetamEnTh classes
+	* @param jsonFileName name of JSON file in resources folder
+	*//*
+		public void createBuildingFromJsonFile(IPythonEntryPoint pythonEntryPoint, String jsonFileName) {
+		building = pythonObjectCreator.createBuildingFromJsonFile(pythonEntryPoint, jsonFileName);
+		}
+		
+		public IBuilding getLBBuilding() {
+		return building;
+		}
+		
+		public IBuilding getBuilding() {
+		return building;
+		}
+		
+		public GatewayServer getGatewayServer() {
+		return this.gatewayServer;
+		}
+		
+		public PythonObjectCreator getPythonObjectCreator() {
+		return this.pythonObjectCreator;
+		}
+		
+		public static void main(String[] args) {
+		PythonEntryServer pythonEntryServer = new PythonEntryServer();
+		
+		IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) pythonEntryServer.gatewayServer
+				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
+		pythonEntryServer.createLBBuilding(pythonEntryPoint);
+		System.out.println("Server is running!!!");
+		}
+		
+		}*/
+
 public class PythonEntryServer {
 
 	private PythonObjectCreator pythonObjectCreator = new PythonObjectCreator();
@@ -29,49 +93,48 @@ public class PythonEntryServer {
 	}
 
 	/**
-	 * Creates the LB building by access the relevant MetamEnTh class
-	 * and Middleare operations and productions
-	 * @param pythonEntryPoint, python object to provides access to MetamEnTh classes
+	 * Creates the LB building by accessing the relevant MetamEnTh class
+	 * and Middleware operations and productions
+	 * @param pythonEntryPoint python object to provides access to MetamEnTh classes
 	 */
-
 	public void createLBBuilding(IPythonEntryPoint pythonEntryPoint) {
 		building = pythonObjectCreator.createLBBuilding(pythonEntryPoint);
+	}
+
+	/**
+	 * Creates a building from JSON string
+	 * @param jsonString JSON string containing building data
+	 */
+	public void createBuildingFromJson(String jsonString) {
+		IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) this.gatewayServer
+				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
+		building = pythonObjectCreator.createBuildingFromJson(pythonEntryPoint, jsonString);
+	}
+
+	/**
+	 * Creates a building from JSON file in resources
+	 * @param jsonFileName name of JSON file in resources folder
+	 */
+	public void createBuildingFromJsonFile(String jsonFileName) {
+		IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) this.gatewayServer
+				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
+		building = pythonObjectCreator.createBuildingFromJsonFile(pythonEntryPoint, jsonFileName);
+	}
+
+	public IBuilding createBuildingFromJson() {
+		return building;
+	}
+
+	public IBuilding createBuildingFromJsonFile() {
+		return building;
 	}
 
 	public IBuilding getLBBuilding() {
 		return building;
 	}
 
-	public void createBuildingFromJson(IPythonEntryPoint pythonEntryPoint) {
-		ObjectMapper mapper = new ObjectMapper();
-		try (InputStream inputStream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("src/main/resources/LBBuilding.json")) {
-
-			if (inputStream == null) {
-				throw new IllegalStateException("Could not find LBBuilding.json in resources folder");
-			}
-
-			JsonNode buildingJson = mapper.readTree(inputStream);
-
-			building = pythonObjectCreator.createBuildingFromJson(pythonEntryPoint, buildingJson);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public IBuilding getBuildingFromJson() {
-		try {
-			IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) gatewayServer
-					.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
-
-			createBuildingFromJson(pythonEntryPoint);
-			return building;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+	public IBuilding getBuilding() {
+		return building;
 	}
 
 	public GatewayServer getGatewayServer() {
@@ -83,8 +146,8 @@ public class PythonEntryServer {
 	}
 
 	public static void main(String[] args) {
-
 		PythonEntryServer pythonEntryServer = new PythonEntryServer();
+
 		IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) pythonEntryServer.gatewayServer
 				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
 		pythonEntryServer.createLBBuilding(pythonEntryPoint);

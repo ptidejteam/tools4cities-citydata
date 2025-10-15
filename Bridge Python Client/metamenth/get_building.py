@@ -4,7 +4,7 @@ from py4j.java_gateway import JavaGateway, GatewayParameters
 # building = gateway.entry_point.getLBBuilding()
 
 gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
-building = gateway.entry_point.getBuildingFromJson()
+building = gateway.entry_point.createBuildingFromJson()
 weather_station = building.getWeatherStation('LB WS')
 weather_data = weather_station.getWeatherData({})
 print(weather_data)

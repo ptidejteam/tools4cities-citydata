@@ -2,7 +2,9 @@ from py4j.java_gateway import JavaGateway, CallbackServerParameters
 from metamenth.python_entry_point import PythonEntryPoint
 
 
+
 class Server:
+
     def __init__(self):
         self.gateway = JavaGateway(
             callback_server_parameters=CallbackServerParameters(),
@@ -18,3 +20,5 @@ class Server:
 if __name__ == "__main__":
     server = Server()
     server.start()
+    
+

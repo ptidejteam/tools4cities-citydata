@@ -1,6 +1,5 @@
 package ca.concordia.ngci.tools4cities.metamenth;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,35 +110,13 @@ public class PythonObjectCreator {
 		return building;
 	}
 
-	public IBuilding createBuildingFromJson(IPythonEntryPoint pythonEntryPoint, String jsonString) {
+	public IBuilding createBuildingFromJson(final IPythonEntryPoint pythonEntryPoint, final String jsonString) {
 		try {
-			JsonNode rootNode = objectMapper.readTree(jsonString);
-			JsonNode buildingNode = rootNode.get("building");
+			final JsonNode rootNode = objectMapper.readTree(jsonString);
+			final JsonNode buildingNode = rootNode.get("building");
 
 			return parseBuildingFromJson(pythonEntryPoint, buildingNode);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Creates a building model from JSON file in resources
-	 * @param pythonEntryPoint Python object with method to create MetamEnTh objects
-	 * @param jsonFileName Name of JSON file in resources folder
-	 * @return IBuilding object
-	 */
-	public IBuilding createBuildingFromJsonFile(IPythonEntryPoint pythonEntryPoint, String jsonFileName) {
-		try {
-			InputStream inputStream = getClass().getClassLoader().getResourceAsStream(jsonFileName);
-			if (inputStream == null) {
-				throw new RuntimeException("JSON file not found: " + jsonFileName);
-			}
-			JsonNode rootNode = objectMapper.readTree(inputStream);
-			JsonNode buildingNode = rootNode.get("building");
-
-			return parseBuildingFromJson(pythonEntryPoint, buildingNode);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
 		}

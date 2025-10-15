@@ -11,31 +11,7 @@ import ca.concordia.ngci.tools4cities.metamenth.interfaces.measureinstruments.IW
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.subsystems.IBuildingControlSystem;
 
 public interface IBuilding {
-	String getUID();
-
-	int getConstructionYear();
-
-	void setConstructionYear(int year);
-
-	IAbstractMeasure getHeight();
-
-	void setHeight(IAbstractMeasure height);
-
-	IAbstractMeasure getFloorArea();
-
-	void setFloorArea(IAbstractMeasure floorArea);
-
-	IAbstractMeasure getInternalMass();
-
-	void setInternalMass(IAbstractMeasure internalMass);
-
-	IAddress getAddress();
-
-	void setAddress(IAddress address);
-
-	String getBuildingType();
-
-	void setBuildingType(String buildingType);
+	void addControlSystem(IBuildingControlSystem buildingControlSystem);
 
 	void addFloor(IFloor floor);
 
@@ -43,15 +19,17 @@ public interface IBuilding {
 
 	IBuilding addWeatherStation(IWeatherStation weatherStation);
 
-	IWeatherStation getWeatherStation(String name);
+	IAddress getAddress();
 
-	Boolean removeWeatherStation(IWeatherStation weatherStation);
+	List<IBuildingControlSystem> getBuildingControlSystem();
+
+	String getBuildingType();
+
+	int getConstructionYear();
 
 	IEnvelope getEnvelope();
 
-	void setEnvelope(IEnvelope envelope);
-
-	IZone getZones();
+	IAbstractMeasure getFloorArea();
 
 	IFloor getFloorById(String id);
 
@@ -59,16 +37,38 @@ public interface IBuilding {
 
 	List<IFloor> getFloors(Map<String, Object> searchTerms);
 
+	IAbstractMeasure getHeight();
+
+	IAbstractMeasure getInternalMass();
+
 	IMeter getMeterById(String id);
 
 	List<IMeter> getMeterByType(String meterType);
 
 	List<IMeter> getMeters(Map<String, Object> searchTerms);
 
+	String getUID();
+
+	IWeatherStation getWeatherStation(String name);
+
+	IZone getZones();
+
+	Boolean removeWeatherStation(IWeatherStation weatherStation);
+
+	void setAddress(IAddress address);
+
+	void setBuildingType(String buildingType);
+
+	void setConstructionYear(int year);
+
+	void setEnvelope(IEnvelope envelope);
+
+	void setFloorArea(IAbstractMeasure floorArea);
+
+	void setHeight(IAbstractMeasure height);
+
+	void setInternalMass(IAbstractMeasure internalMass);
+
 	String toString();
-
-	void addControlSystem(IBuildingControlSystem buildingControlSystem);
-
-	List<IBuildingControlSystem> getBuildingControlSystem();
 
 }

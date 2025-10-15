@@ -1,9 +1,10 @@
 package ca.concordia.ngci.tools4cities.metamenth.interfaces.datatypes;
 
-public interface IBinaryMeasure extends IAbstractMeasure {
+public interface IDataMeasure extends IAbstractMeasure {
 	void setValue(double value);
 
 	double getValue();
 
-	String toString(); // TODO Remove unnecessary declaration
+	String toString();
+
 }

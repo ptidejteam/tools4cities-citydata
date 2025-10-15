@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ca.concordia.ngci.tools4cities.metamenth.PythonEntryServer;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.datatypes.IAddress;
+import ca.concordia.ngci.tools4cities.metamenth.interfaces.datatypes.IBinaryMeasure;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.measureinstruments.IMeter;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.measureinstruments.IWeatherData;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.measureinstruments.IWeatherStation;
@@ -60,36 +61,36 @@ public class BuildingController {
 		}
 	}
 
-	private String convertBuildingToJson(IBuilding building) {
+	private String convertBuildingToJson(final IBuilding building) {
 		try {
-			ObjectNode rootNode = objectMapper.createObjectNode();
-			ObjectNode buildingNode = objectMapper.createObjectNode();
+			final ObjectNode rootNode = objectMapper.createObjectNode();
+			final ObjectNode buildingNode = objectMapper.createObjectNode();
 
 			// Basic building info
-			buildingNode.put("uid", building.getUID());
+			// buildingNode.put("uid", building.getUID());
 			buildingNode.put("yearBuilt", building.getConstructionYear());
 			buildingNode.put("type", building.getBuildingType());
 
 			// Height
 			if (building.getHeight() != null) {
-				ObjectNode heightNode = objectMapper.createObjectNode();
+				final ObjectNode heightNode = objectMapper.createObjectNode();
 				heightNode.put("unit", building.getHeight().getMeasurementUnit());
-				heightNode.put("value", building.getHeight().toString());
+				heightNode.put("value", ((IBinaryMeasure) building.getHeight()).getValue());
 				buildingNode.set("height", heightNode);
 			}
 
 			// Floor area
 			if (building.getFloorArea() != null) {
-				ObjectNode floorAreaNode = objectMapper.createObjectNode();
+				final ObjectNode floorAreaNode = objectMapper.createObjectNode();
 				floorAreaNode.put("unit", building.getFloorArea().getMeasurementUnit());
-				floorAreaNode.put("value", building.getFloorArea().toString());
+				floorAreaNode.put("value", ((IBinaryMeasure) building.getFloorArea()).getValue());
 				buildingNode.set("floorArea", floorAreaNode);
 			}
 
 			// Address
 			if (building.getAddress() != null) {
-				IAddress address = building.getAddress();
-				ObjectNode addressNode = objectMapper.createObjectNode();
+				final IAddress address = building.getAddress();
+				final ObjectNode addressNode = objectMapper.createObjectNode();
 				addressNode.put("city", address.getCity());
 				addressNode.put("street", address.getStreet());
 				addressNode.put("province", address.getState());
@@ -97,7 +98,7 @@ public class BuildingController {
 				addressNode.put("country", address.getCountry());
 
 				if (address.getGeocoordinates() != null) {
-					ObjectNode coordsNode = objectMapper.createObjectNode();
+					final ObjectNode coordsNode = objectMapper.createObjectNode();
 					coordsNode.put("x", address.getGeocoordinates().getLatitude());
 					coordsNode.put("y", address.getGeocoordinates().getLongitude());
 					addressNode.set("coordinates", coordsNode);
@@ -110,52 +111,55 @@ public class BuildingController {
 			if (floors != null && !floors.isEmpty()) {
 				ArrayNode floorsArray = objectMapper.createArrayNode();
 				for (IFloor floor : floors) {
-					ObjectNode floorNode = objectMapper.createObjectNode();
-					floorNode.put("uid", floor.getUID());
+					final ObjectNode floorNode = objectMapper.createObjectNode();
+					// floorNode.put("uid", floor.getUID());
 					floorNode.put("number", floor.getNumber().toString());
 					floorNode.put("type", floor.getFloorType());
 					floorNode.put("description", floor.getDescription());
 
 					if (floor.getHeight() != null) {
-						ObjectNode sizeNode = objectMapper.createObjectNode();
+						final ObjectNode sizeNode = objectMapper.createObjectNode();
 						sizeNode.put("unit", floor.getHeight().getMeasurementUnit());
-						sizeNode.put("value", floor.getHeight().toString());
+						sizeNode.put("value", ((IBinaryMeasure) floor.getHeight()).getValue());
 						floorNode.set("size", sizeNode);
 					}
 
 					// Rooms
-					List<IRoom> rooms = floor.getRooms(new HashMap<>());
+					final List<IRoom> rooms = floor.getRooms(new HashMap<>());
 					if (rooms != null && !rooms.isEmpty()) {
-						ArrayNode roomsArray = objectMapper.createArrayNode();
-						for (IRoom room : rooms) {
-							ObjectNode roomNode = objectMapper.createObjectNode();
-							roomNode.put("uid", room.getUID());
+						final ArrayNode roomsArray = objectMapper.createArrayNode();
+						for (final IRoom room : rooms) {
+							final ObjectNode roomNode = objectMapper.createObjectNode();
+							// roomNode.put("uid", room.getUID());
 							roomNode.put("name", room.getName());
 							roomNode.put("type", room.getRoomType());
 
 							if (room.getArea() != null) {
 								ObjectNode roomSizeNode = objectMapper.createObjectNode();
 								roomSizeNode.put("unit", room.getArea().getMeasurementUnit());
-								roomSizeNode.put("value", room.getArea().toString());
+								roomSizeNode.put("value", ((IBinaryMeasure) room.getArea()).getValue());
 								roomNode.set("size", roomSizeNode);
 							}
 
+							// TODO Do not hardcode this particular sensor name, iterate through all sensors
 							// Get sensor by name (TMP 01 from the JSON example)
-							ArrayNode sensorsArray = objectMapper.createArrayNode();
-							IAbstractTransducer transducer = room.getTransducer("TMP 01");
+							final ArrayNode sensorsArray = objectMapper.createArrayNode();
+							final IAbstractTransducer transducer = room.getTransducer("TMP 01");
 							if (transducer != null && transducer instanceof ISensor) {
 								ISensor sensor = (ISensor) transducer;
-								ObjectNode sensorNode = objectMapper.createObjectNode();
-								sensorNode.put("id", sensor.getUID());
+								final ObjectNode sensorNode = objectMapper.createObjectNode();
+								// sensorNode.put("id", sensor.getUID());
 								sensorNode.put("measure", sensor.getMeasure());
 								sensorNode.put("unit", sensor.getUnit());
 								sensorNode.put("type", sensor.getMeasureType());
 								sensorNode.put("frequency", sensor.getDataFrequency());
 
-								List<Object> sensorDataList = sensor.getData(new HashMap<>());
+								final List<Object> sensorDataList = sensor.getData(new HashMap<>());
 								if (sensorDataList != null && !sensorDataList.isEmpty()) {
-									ArrayNode dataArray = objectMapper.createArrayNode();
-									for (Object dataObj : sensorDataList) {
+									final ArrayNode dataArray = objectMapper.createArrayNode();
+									for (final Object dataObj : sensorDataList) {
+										// Create the missing IDataMeasure interface
+										// dataArray.add(((IDataMeasure) dataObj).getValue());
 										dataArray.add(dataObj.toString());
 									}
 									sensorNode.set("data", dataArray);
@@ -179,15 +183,17 @@ public class BuildingController {
 			}
 
 			// Meters
-			List<IMeter> meters = building.getMeters(new HashMap<>());
+			final List<IMeter> meters = building.getMeters(new HashMap<>());
 			if (meters != null && !meters.isEmpty()) {
-				ArrayNode metersArray = objectMapper.createArrayNode();
-				for (IMeter meter : meters) {
-					ObjectNode meterNode = objectMapper.createObjectNode();
-					meterNode.put("id", meter.getUID());
+				final ArrayNode metersArray = objectMapper.createArrayNode();
+				for (final IMeter meter : meters) {
+					final ObjectNode meterNode = objectMapper.createObjectNode();
+					// TODO Create the missing getID() method (different from getUID())
+					// meterNode.put("uid", meter.getID());
+					//meterNode.put("id", meter.getDeviceID());
 					meterNode.put("type", meter.getMeterType());
 					meterNode.put("unit", meter.getMeasurementUnit());
-					meterNode.put("mode", meter.getMeasureMode().toString());
+					meterNode.put("mode", meter.getMeasureMode());
 					meterNode.put("frequency", meter.getMeasurementFrequency());
 					metersArray.add(meterNode);
 				}
@@ -195,19 +201,20 @@ public class BuildingController {
 			}
 
 			// Weather Station
-			IWeatherStation weatherStation = building.getWeatherStation("LB WS");
+			// Do NOT hardcode weather station name but iterate through all stations
+			final IWeatherStation weatherStation = building.getWeatherStation("LB WS");
 			if (weatherStation != null) {
-				ObjectNode wsNode = objectMapper.createObjectNode();
+				final ObjectNode wsNode = objectMapper.createObjectNode();
 				wsNode.put("id", weatherStation.getName());
 
-				List<IWeatherData> weatherDataList = weatherStation.getWeatherData(new HashMap<>());
+				final List<IWeatherData> weatherDataList = weatherStation.getWeatherData(new HashMap<>());
 				if (weatherDataList != null && !weatherDataList.isEmpty()) {
-					ArrayNode dataArray = objectMapper.createArrayNode();
-					for (IWeatherData data : weatherDataList) {
+					final ArrayNode dataArray = objectMapper.createArrayNode();
+					for (final IWeatherData data : weatherDataList) {
 						ObjectNode dataNode = objectMapper.createObjectNode();
 						if (data.getData() != null) {
 							dataNode.put("measure", data.getData().getMeasureType());
-							dataNode.put("value", data.getData().toString());
+							dataNode.put("value", ((IBinaryMeasure) data.getData()).getValue());
 						}
 						dataArray.add(dataNode);
 					}
@@ -217,11 +224,11 @@ public class BuildingController {
 			}
 
 			// Control Systems
-			List<IBuildingControlSystem> controlSystems = building.getBuildingControlSystem();
+			final List<IBuildingControlSystem> controlSystems = building.getBuildingControlSystem();
 			if (controlSystems != null && !controlSystems.isEmpty()) {
-				ArrayNode csArray = objectMapper.createArrayNode();
-				for (IBuildingControlSystem cs : controlSystems) {
-					ObjectNode csNode = objectMapper.createObjectNode();
+				final ArrayNode csArray = objectMapper.createArrayNode();
+				for (final IBuildingControlSystem cs : controlSystems) {
+					final ObjectNode csNode = objectMapper.createObjectNode();
 					csNode.put("name", cs.getName());
 					csNode.put("type", cs.getHvacSystem() != null ? "HVAC" : "UNKNOWN");
 					csArray.add(csNode);
@@ -231,7 +238,7 @@ public class BuildingController {
 
 			rootNode.set("building", buildingNode);
 			return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			return "{\"error\": \"Failed to convert building to JSON: " + e.getMessage() + "\"}";
 		}

@@ -1,0 +1,77 @@
+{
+  "building": {
+    "yearBuilt": 1996,
+    "type": "NON_COMMERCIAL",
+    "height": {
+      "unit": "METERS",
+      "value": 15
+    },
+    "floorArea": {
+      "unit": "SQUARE_METERS",
+      "value": 50591.3
+    },
+    "address": {
+      "city": "Montreal",
+      "street": "1400 de Maisonneuve Blvd. W.",
+      "province": "QC",
+      "postalCode": "H3G 1M8",
+      "country": "Canada",
+      "coordinates": {
+        "x": 45.497,
+        "y": -73.578
+      }
+    },
+    "floors": [
+      {
+        "number": 1,
+        "type": "REGULAR",
+        "description": "First floor of the building",
+        "size": { "unit": "SQUARE_METERS", "value": 150 },
+        "rooms": [
+          {
+            "name": "Room 001",
+            "type": "Office",
+            "size": { "unit": "SQUARE_METERS", "value": 20 },
+            "sensors": [
+              {
+                "id": "TMP 01",
+                "measure": "TEMPERATURE",
+                "unit": "DEGREE_CELSIUS",
+                "type": "THERMO_COUPLE_TYPE_A",
+                "frequency": 900,
+                "data": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "meters": [
+      {
+        "id": "ELECTRICITY_01",
+        "type": "ELECTRICITY",
+        "unit": "KILOWATTS_PER_HOUR",
+        "mode": "AUTOMATIC",
+        "value": 90
+      }
+    ],
+    "weatherStation": {
+      "id": "LB WS",
+      "data": [
+        { "measure": "RELATIVE_HUMIDITY", "value": 40 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 41 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 42 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 43 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 44 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 45 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 46 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 47 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 48 },
+        { "measure": "RELATIVE_HUMIDITY", "value": 49 }
+      ]
+    },
+    "controlSystems": [
+      { "name": "HVAC System", "type": "HVAC" }
+    ]
+  }
+}

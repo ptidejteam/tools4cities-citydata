@@ -108,7 +108,7 @@ public class SecurityConfig {
 		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/authenticate", "/home", "/health/ping", "/producers/list",
-								"/operations/list", "/routes/list", "/error", "api/building/create")
+								"/operations/list", "/routes/list", "/error", "/api/building/create")
 						.permitAll().anyRequest().authenticated())
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();

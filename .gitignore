@@ -236,3 +236,4 @@ cython_debug/
 .DS_Store
 
 certs/
+MyNewGithubToken.txt

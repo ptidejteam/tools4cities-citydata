@@ -35,9 +35,9 @@ public class PythonEntryServer {
 		this.gatewayServer.start();
 	}
 
-	/*	public IBuilding createBuildingFromJson() {
-			return building;
-		}*/
+	public IBuilding createBuildingFromJson() {
+		return building;
+	}
 
 	public void createBuildingFromJson(String jsonString) {
 		IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) this.gatewayServer
@@ -57,9 +57,9 @@ public class PythonEntryServer {
 		return this.gatewayServer;
 	}
 
-	/*	public IBuilding getLBBuilding() {
-			return building;
-		}*/
+	public IBuilding getLBBuilding() {
+		return building;
+	}
 
 	public PythonObjectCreator getPythonObjectCreator() {
 		return this.pythonObjectCreator;

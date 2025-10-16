@@ -158,9 +158,8 @@ public class BuildingController {
 								if (sensorDataList != null && !sensorDataList.isEmpty()) {
 									final ArrayNode dataArray = objectMapper.createArrayNode();
 									for (final Object dataObj : sensorDataList) {
-										// Create the missing IDataMeasure interface
-										// dataArray.add(((IDataMeasure) dataObj).getValue());
-										dataArray.add(dataObj.toString());
+										ObjectMapper mapper = new ObjectMapper();
+										dataArray.add(mapper.valueToTree(dataObj));
 									}
 									sensorNode.set("data", dataArray);
 								}

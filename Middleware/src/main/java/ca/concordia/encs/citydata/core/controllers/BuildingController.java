@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -154,7 +155,7 @@ public class BuildingController {
 								sensorNode.put("type", sensor.getMeasureType());
 								sensorNode.put("frequency", sensor.getDataFrequency());
 
-								final List<Object> sensorDataList = sensor.getData(new HashMap<>());
+								/*final List<Object> sensorDataList = sensor.getData(new HashMap<>());
 								if (sensorDataList != null && !sensorDataList.isEmpty()) {
 									final ArrayNode dataArray = objectMapper.createArrayNode();
 									for (final Object dataObj : sensorDataList) {
@@ -162,6 +163,27 @@ public class BuildingController {
 										dataArray.add(mapper.valueToTree(dataObj));
 									}
 									sensorNode.set("data", dataArray);
+								}
+								
+								sensorsArray.add(sensorNode);
+								}
+								
+								if (sensorsArray.size() > 0) {
+								roomNode.set("sensors", sensorsArray);
+								}*/
+
+								final List<Object> sensorDataList = sensor.getData(new HashMap<>());
+								if (sensorDataList != null && !sensorDataList.isEmpty()) {
+									final ArrayNode valueArray = objectMapper.createArrayNode();
+									for (final Object dataObj : sensorDataList) {
+										JsonNode dataNode = objectMapper.valueToTree(dataObj);
+										if (dataNode.has("value")) {
+											valueArray.add(dataNode.get("value"));
+										} else if (dataNode.path("data").has("value")) {
+											valueArray.add(dataNode.path("data").get("value"));
+										}
+									}
+									sensorNode.set("data", valueArray);
 								}
 
 								sensorsArray.add(sensorNode);

@@ -33,6 +33,8 @@ public interface IMeter {
 
 	String getUID();
 
+	void setDeviceID(String deviceID);
+
 	void setAccumulationFrequency(String accummulationFrequency);
 
 	void setDataAccumulated(boolean dataAccummulated);

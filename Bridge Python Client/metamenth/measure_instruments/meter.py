@@ -13,7 +13,7 @@ class Meter:
     Email: peteryefi@gmail.com
     """
 
-    def __init__(self, measurement_frequency: float,
+    def __init__(self, deviceID: str, measurement_frequency: float,
                  measurement_unit: str, meter_type: str, 
                  measure_mode: str, data_accumulated: bool = False,
                  accumulation_frequency: str = MeterAccumulationFrequency.NONE.value,
@@ -30,7 +30,7 @@ class Meter:
         :param data_accumulated: indicate whether the data is accummulate or not
         :param accumulation_frequency: the frequency at which data is accumulated
         """
-        self._device_id = None
+        self.deviceID = None
         self._UID = str(uuid.uuid4())
         self._meter_location = meter_location
         self._manufacturer = None
@@ -44,6 +44,7 @@ class Meter:
         self._structure_entity_search = StructureEntitySearch()
 
         # Apply validation
+        self.setDeviceID(deviceID)
         self.setManufacturer(manufacturer)
         self.setMeasurementFrequency(measurement_frequency)
         self.setMeasurementUnit(measurement_unit)
@@ -56,6 +57,12 @@ class Meter:
 
     def setMeterLocation(self, value):
         self._meter_location = value
+        
+    def getDeviceID(self):
+        return self.deviceID
+    
+    def setDeviceID(self, deviceID):
+        self.deviceID = deviceID
         
     def getUID(self):
         return self._UID
@@ -150,7 +157,7 @@ class Meter:
         # Meters are equal if they share the same UID
         if isinstance(other, Meter):
             # Check for equality based on the 'UID' attribute
-            return self.getUID() == other.getUID() and self.getMeterLocation() == other.getMeterType() \
+            return self.getUID() == other.getUID() and self.getDeviceID() == other.getDeviceID() and self.getMeterLocation() == other.getMeterType() \
                    and self.getManufacturer() == other.getManufacturer() and self.getMeasureMode() == other.getMeasureMode() \
                    and self.getAccumulationFrequency() == other.getAccumulationFrequency()
         return False
@@ -159,7 +166,7 @@ class Meter:
         """
         :return: A formatted string representing the meter.
         """
-        meter_details = (f"UID: {self.getUID()}, Location: {self.getMeterLocation()}, "
+        meter_details = (f"UID: {self.getUID()}, ID: {self.getDeviceID()}, Location: {self.getMeterLocation()}, "
                          f"Manufacturer: {self.getManufacturer()}, Frequency: {self.getMeasurementFrequency()}, "
                          f"Unit: {self.getMeasurementUnit()}, Type: {self.getMeterType()}, "
                          f"Measure Mode: {self.getMeasureMode()}, Data Accumulated: {self.getDataAccumulated()}, "

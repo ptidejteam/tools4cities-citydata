@@ -55,8 +55,8 @@ class PythonEntryPoint:
                     des: str, room: Room, open_space: OpenSpace):
         return Floor(area, floor_number, floor_type, height, des, room=room, open_space=open_space)
 
-    def createMeter(self, measurement_freq: float, unit: str, meter_type: str, measure_mode: str):
-        return Meter(measurement_freq, unit, meter_type, measure_mode)
+    def createMeter(self, deviceID: str, measurement_freq: float, unit: str, meter_type: str, measure_mode: str):
+        return Meter(deviceID, measurement_freq, unit, meter_type, measure_mode)
 
     def createMeterMeasure(self, value: float, timestamp: str = None):
         return MeterMeasure(value, timestamp)
@@ -110,4 +110,4 @@ class PythonEntryPoint:
         return bcs
 
     class Java:
-        implements = ['ca.concordia.ngci.tools4cities.metamenth.interfaces.PythonEntryPoint']
+        implements = ['ca.concordia.ngci.tools4cities.metamenth.interfaces.IPythonEntryPoint']

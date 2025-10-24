@@ -219,9 +219,6 @@ public class BuildingControllerIntegrationTest {
 		assertNotNull(outputSensors, "Sensors should not be null");
 		assertTrue(outputSensors.isArray(), "Sensors should be an array");
 
-		// Note: Output might not include sensor ID in the JSON based on your controller code
-		// Adjust based on actual output structure
-
 		for (int i = 0; i < inputSensors.size(); i++) {
 			JsonNode inputSensor = inputSensors.get(i);
 			JsonNode outputSensor = outputSensors.get(i);
@@ -266,9 +263,6 @@ public class BuildingControllerIntegrationTest {
 			assertEquals(inputMeter.get("unit").asText(), outputMeter.get("unit").asText(), "Meter unit should match");
 
 			assertEquals(inputMeter.get("mode").asText(), outputMeter.get("mode").asText(), "Meter mode should match");
-
-			// Note: Input has "value" but output might have "frequency" based on controller
-			// Adjust based on actual output structure
 		}
 	}
 

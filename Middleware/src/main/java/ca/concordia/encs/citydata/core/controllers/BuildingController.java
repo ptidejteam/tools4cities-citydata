@@ -157,6 +157,7 @@ public class BuildingController {
 								ISensor sensor = (ISensor) transducer;
 								final ObjectNode sensorNode = objectMapper.createObjectNode();
 								// sensorNode.put("id", sensor.getUID());
+								sensorNode.put("id", sensor.getName());
 								sensorNode.put("measure", sensor.getMeasure());
 								sensorNode.put("unit", sensor.getUnit());
 								sensorNode.put("type", sensor.getMeasureType());
@@ -201,14 +202,16 @@ public class BuildingController {
 					final ObjectNode meterNode = objectMapper.createObjectNode();
 					// TODO Create the missing getID() method (different from getUID())
 					// meterNode.put("uid", meter.getID());
-					//meterNode.put("id", meter.getDeviceID());
+					meterNode.put("id", meter.getDeviceID());
 					meterNode.put("type", meter.getMeterType());
 					meterNode.put("unit", meter.getMeasurementUnit());
 					meterNode.put("mode", meter.getMeasureMode());
 					meterNode.put("frequency", meter.getMeasurementFrequency());
 					metersArray.add(meterNode);
+
 				}
 				buildingNode.set("meters", metersArray);
+
 			}
 
 			// Weather Station

@@ -28,6 +28,13 @@ import ca.concordia.ngci.tools4cities.metamenth.interfaces.subsystems.IBuildingC
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.transducers.IAbstractTransducer;
 import ca.concordia.ngci.tools4cities.metamenth.interfaces.transducers.ISensor;
 
+/**
+ * Controller that creates building by sending JSON input to Metamenth via Java-Python Bridge
+ * 
+ * Author: Sikandar Ejaz 
+ * Date: 2025-10-23
+ */
+
 @RestController
 @RequestMapping("/api/building")
 public class BuildingController {
@@ -154,23 +161,6 @@ public class BuildingController {
 								sensorNode.put("unit", sensor.getUnit());
 								sensorNode.put("type", sensor.getMeasureType());
 								sensorNode.put("frequency", sensor.getDataFrequency());
-
-								/*final List<Object> sensorDataList = sensor.getData(new HashMap<>());
-								if (sensorDataList != null && !sensorDataList.isEmpty()) {
-									final ArrayNode dataArray = objectMapper.createArrayNode();
-									for (final Object dataObj : sensorDataList) {
-										ObjectMapper mapper = new ObjectMapper();
-										dataArray.add(mapper.valueToTree(dataObj));
-									}
-									sensorNode.set("data", dataArray);
-								}
-								
-								sensorsArray.add(sensorNode);
-								}
-								
-								if (sensorsArray.size() > 0) {
-								roomNode.set("sensors", sensorsArray);
-								}*/
 
 								final List<Object> sensorDataList = sensor.getData(new HashMap<>());
 								if (sensorDataList != null && !sensorDataList.isEmpty()) {

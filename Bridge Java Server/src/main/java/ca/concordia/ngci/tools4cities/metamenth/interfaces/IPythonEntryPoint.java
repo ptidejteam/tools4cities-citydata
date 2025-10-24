@@ -40,7 +40,7 @@ public interface IPythonEntryPoint {
 	IFloor createFloor(IAbstractMeasure area, Object floorNumber, String floorType, IAbstractMeasure height, String des,
 			IRoom room, IOpenSpace openSpace);
 
-	IMeter createMeter(double measurementFreq, String unit, String meterType, String measureMode);
+	IMeter createMeter(String deviceID, double measurementFreq, String unit, String meterType, String measureMode);
 
 	IMeterMeasure createMeterMeasure(double value, String timestamp);
 

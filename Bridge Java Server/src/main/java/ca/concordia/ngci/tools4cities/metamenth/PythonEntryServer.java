@@ -54,6 +54,7 @@ public class PythonEntryServer {
 		final IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) this.gatewayServer
 				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
 		building = createBuildingFromJson(pythonEntryPoint, jsonString);
+
 		return building;
 	}
 

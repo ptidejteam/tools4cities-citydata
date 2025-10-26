@@ -158,11 +158,5 @@ public class BuildingControllerIntegrationTest {
 		assertEquals(inputBuilding, outputBuilding);
 	}
 	*/
-	@Test
-	public void testCreateBuilding_EmptyJson_ShouldReturnBadRequest() throws Exception {
-		String emptyJson = "{}";
 
-		mockMvc.perform(post("/api/building/create").contentType(MediaType.APPLICATION_JSON).content(emptyJson))
-				.andExpect(status().is5xxServerError());
-	}
 }

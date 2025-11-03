@@ -55,6 +55,10 @@ public interface IBuilding {
 
 	Boolean removeWeatherStation(IWeatherStation weatherStation);
 
+	boolean equals(Object other);
+
+	int hashCode();
+
 	void setAddress(IAddress address);
 
 	void setBuildingType(String buildingType);

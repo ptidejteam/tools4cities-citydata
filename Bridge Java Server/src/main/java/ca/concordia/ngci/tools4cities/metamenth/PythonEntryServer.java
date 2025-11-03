@@ -32,25 +32,28 @@ import py4j.GatewayServer;
  * @author Peter Yefi
  */
 
-// TODO Make it a thread-safe Singleton
-public class PythonEntryServer {
+//Thread-safe Singleton
+public enum PythonEntryServer {
 
-	private ObjectMapper objectMapper = new ObjectMapper();
-	private IBuilding building;
-	private GatewayServer gatewayServer;
+	INSTANCE;
 
-	public static void main(final String[] args) {
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	private volatile IBuilding building;
+	private final GatewayServer gatewayServer;
 
-		System.out.println("Server is running!!!");
-	}
-
-	public PythonEntryServer() {
+	PythonEntryServer() {
 		this.gatewayServer = new GatewayServer(this);
 		this.gatewayServer.start();
 	}
 
-	// TODO MUST return an instance of IBuilding
-	public IBuilding createBuildingFromJson(final String jsonString) {
+	public static void main(final String[] args) {
+
+		System.out.println("Server is running!!!");
+
+		PythonEntryServer.INSTANCE.getGatewayServer();
+	}
+
+	public synchronized IBuilding createBuildingFromJson(final String jsonString) {
 		final IPythonEntryPoint pythonEntryPoint = (IPythonEntryPoint) this.gatewayServer
 				.getPythonServerEntryPoint(new Class[] { IPythonEntryPoint.class });
 		building = createBuildingFromJson(pythonEntryPoint, jsonString);

@@ -45,6 +45,9 @@ import com.nimbusds.jose.proc.SecurityContext;
  * Update: Multi-user authentication added
  * Author: Sikandar Ejaz
  * Last Update: 2025-09-28
+ * 
+ * Last update: 2025-11-03
+ * Fixed issue is user credentials management
  */
 
 @EnableWebSecurity

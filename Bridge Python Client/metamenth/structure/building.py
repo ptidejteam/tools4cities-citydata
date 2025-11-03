@@ -209,6 +209,27 @@ class Building:
         
     def getBuildingControlSystem(self) -> [BuildingControlSystem]:
         return self._control_systems
+    
+        """
+        Equals method added below to run Test
+        """
+    def equals(self, other) -> bool:
+        if other is None:
+            return False
+    
+        if not hasattr(other, 'getUID'):
+            return False
+    
+        return self.getUID() == other.getUID()
+
+    def __eq__(self, other):
+        return self.equals(other)
+
+    def hashCode(self) -> int:
+        return hash(self.getUID())
+
+    def __hash__(self):
+        return self.hashCode()
 
     def toString(self):
         floors_info = "\n".join([f"  - Floor {floor.getNumber()}: {floor}" for floor in self._floors])

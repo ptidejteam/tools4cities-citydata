@@ -72,12 +72,14 @@ class AbstractFloorSpace(AbstractSpace):
 
     def __eq__(self, other):
         # spaces on a floor are equal if they share the same name
-        if isinstance(other, AbstractFloorSpace):
-            # Check for equality based on the 'name' attribute
-            return self.getName() == other.getName()
-        return False
+        # TODO Is it expected not to have a get for the list of transducers?
+        return isinstance(other, type(self))      and \
+            self.getName()    == other.getName()  and \
+            self.getMeter()   == other.getMeter() and \
+            self._transducers == other._transducers
 
     def toString(self) -> str:
+        # TODO Is it expected not to print the list of transducers?
         return (
             f"{super().__str__()}"
             f"Name: {self.getName()}, "

@@ -39,33 +39,44 @@ import ca.concordia.ngci.tools4cities.metamenth.interfaces.transducers.ISensor;
 @RequestMapping("/api/building")
 public class BuildingController {
 
-	private PythonEntryServer pythonEntryServer;
-	private ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping("/create")
 	public ResponseEntity<String> createBuilding(@RequestBody String jsonString) {
 		try {
-			// Initialize Py4J gateway only when needed
-			if (pythonEntryServer == null) {
-				pythonEntryServer = new PythonEntryServer();
+			// Validate input - check for null or empty JSON
+			if (jsonString == null || jsonString.trim().isEmpty() || jsonString.trim().equals("{}")) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body("{\"error\": \"Empty or invalid JSON input\"}");
 			}
+
+			PythonEntryServer pythonEntryServer = PythonEntryServer.INSTANCE;
 
 			// Create building from JSON
 			pythonEntryServer.createBuildingFromJson(jsonString);
 			IBuilding building = pythonEntryServer.getBuilding();
 
 			if (building == null) {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-						.body("{\"error\": \"Failed to create building\"}");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body("{\"error\": \"Failed to create building - invalid building specification\"}");
 			}
 
 			// Convert building to JSON response
 			String buildingJson = convertBuildingToJson(building);
 
 			return ResponseEntity.ok(buildingJson);
-		} catch (Exception e) {
+
+		} catch (IllegalArgumentException e) {
+			// Handle validation errors from MetamEnTh
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\": \"" + e.getMessage() + "\"}");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("{\"error\": \"Invalid building specification: " + e.getMessage() + "\"}");
+
+		} catch (Exception e) {
+			// Handle unexpected server errors
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("{\"error\": \"Internal server error: " + e.getMessage() + "\"}");
 		}
 	}
 

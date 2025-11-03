@@ -2,6 +2,9 @@ package ca.concordia.encs.citydata.core.configs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,19 +60,38 @@ public class SecurityConfig {
 		loadCredentialsFromTxt();
 	}
 
-	private void loadCredentialsFromTxt() {
+	private List<JsonNode> readCredentialNodes() throws IOException {
 		try (InputStream input = getClass().getClassLoader()
 				.getResourceAsStream("scripts/credentials/credentials.txt")) {
 			if (input == null) {
 				throw new RuntimeException("Unable to find credentials.txt in resources folder");
 			}
-
 			ObjectMapper mapper = new ObjectMapper();
-			JsonNode node = mapper.readTree(input);
+			JsonNode root = mapper.readTree(input);
+			// Accept either single object or array
+			if (root.isArray()) {
+				List<JsonNode> list = new ArrayList<>();
+				root.forEach(list::add);
+				return list;
+			} else if (root.isObject()) {
+				return Collections.singletonList(root);
+			} else {
+				return Collections.emptyList();
+			}
+		}
+	}
 
-			this.defaultUsername = node.has("username") ? node.get("username").asText() : "defaultUser";
-			this.defaultPassword = node.has("password") ? node.get("password").asText() : "$2a$10$dummyHash";
-
+	private void loadCredentialsFromTxt() {
+		try {
+			List<JsonNode> nodes = readCredentialNodes();
+			if (nodes.isEmpty()) {
+				this.defaultUsername = "defaultUser";
+				this.defaultPassword = "$2a$10$dummyHash";
+			} else {
+				JsonNode first = nodes.get(0);
+				this.defaultUsername = first.has("username") ? first.get("username").asText() : "defaultUser";
+				this.defaultPassword = first.has("password") ? first.get("password").asText() : "$2a$10$dummyHash";
+			}
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load credentials.txt", e);
 		}
@@ -80,7 +102,7 @@ public class SecurityConfig {
 	}
 
 	public String getDefaultPassword() {
-		return defaultPassword; // this is already a BCrypt hash
+		return defaultPassword;
 	}
 
 	@Bean
@@ -90,9 +112,30 @@ public class SecurityConfig {
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
-		UserDetails user = User.withUsername(defaultUsername).password(defaultPassword) // already BCrypt
-				.authorities("read").build();
-		return new InMemoryUserDetailsManager(user);
+		List<UserDetails> users = new ArrayList<>();
+		try {
+			List<JsonNode> nodes = readCredentialNodes();
+			for (JsonNode node : nodes) {
+				String uname = node.has("username") ? node.get("username").asText() : null;
+				String pwHash = node.has("password") ? node.get("password").asText() : null;
+				if (uname == null || pwHash == null)
+					continue;
+				// pwHash is already BCrypt; set directly (do not re-encode)
+				UserDetails u = User.withUsername(uname).password(pwHash).authorities("read").build();
+				users.add(u);
+			}
+		} catch (IOException e) {
+			// log or rethrow as needed; keep behavior minimal
+			throw new RuntimeException("Failed to load users from credentials.txt", e);
+		}
+
+		// If no users found, create a fallback user to avoid empty manager
+		if (users.isEmpty()) {
+			UserDetails fallback = User.withUsername(defaultUsername).password(defaultPassword).authorities("read")
+					.build();
+			users.add(fallback);
+		}
+		return new InMemoryUserDetailsManager(users);
 	}
 
 	@Bean

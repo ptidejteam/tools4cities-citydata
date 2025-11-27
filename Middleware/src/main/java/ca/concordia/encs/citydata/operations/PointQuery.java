@@ -1,11 +1,18 @@
 package ca.concordia.encs.citydata.operations;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
+
+/**
+ * This operation filters CSV sensor readings by sensor ID, room, and date.
+ * @author Minette Zongo M.
+ * @since 2025-10-06
+ */
 
 public class PointQuery extends AbstractOperation<String> implements IOperation<String> {
 
@@ -30,19 +37,12 @@ public class PointQuery extends AbstractOperation<String> implements IOperation<
     public ArrayList<String> apply(ArrayList<String> input) {
         ArrayList<String> filtered = new ArrayList<>();
         
-        System.out.println("[DEBUG] PointQuery Input Parameters:");
-        System.out.println("[DEBUG]   sensorId = '" + sensorId + "'");
-        System.out.println("[DEBUG]   room = '" + room + "'");
-        System.out.println("[DEBUG]   date = '" + date + "'");
-        System.out.println("[DEBUG] Total input lines: " + input.size());
-        
         int lineNum = 0;
         for (String line : input) {
             if (line == null || line.trim().isEmpty()) continue;
             
             String[] cols = line.split(",");
             if (cols.length < 6) {
-                System.out.println("[DEBUG] Line " + lineNum + " has only " + cols.length + " columns, skipping");
                 continue;
             }
             
@@ -69,7 +69,6 @@ public class PointQuery extends AbstractOperation<String> implements IOperation<
             lineNum++;
         }
 
-        System.out.println("[DEBUG] PointQuery matched " + filtered.size() + " rows.");
         return filtered;
     }
 
@@ -85,4 +84,3 @@ public class PointQuery extends AbstractOperation<String> implements IOperation<
         }
     }
 }
-

@@ -235,5 +235,5 @@ cython_debug/
 #########
 .DS_Store
 
-certs/
 MyNewGithubToken.txt
+/home/minette/Documents/citydata/Middleware/src/main/resources/scripts/certs/

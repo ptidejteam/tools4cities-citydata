@@ -8,9 +8,16 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 
+/**
+ * This operation filters environmental value (either temperature or relative humidity) readings for selected sensors over a 
+ * given date and optional time range, then computes the average temperature/humidity value for each target sensor.
+ * @author Minette Zongo M.
+ * @date 2025-10-07
+ */
+
 public class StandardAverageOperation extends AbstractOperation<String> implements IOperation<String> {
 	
-	private String sensorIds;  // comma-separated sensor IDs
+	private String sensorIds; 
     private String date;
     private String startTime;  
     private String endTime;    
@@ -24,11 +31,11 @@ public class StandardAverageOperation extends AbstractOperation<String> implemen
         this.date = date;
     }
     
-    public void setStartTime(String startTime) {  // Add this
+    public void setStartTime(String startTime) { 
         this.startTime = startTime;
     }
 
-    public void setEndTime(String endTime) {      // Add this
+    public void setEndTime(String endTime) {   
         this.endTime = endTime;
     }
 
@@ -36,8 +43,7 @@ public class StandardAverageOperation extends AbstractOperation<String> implemen
     public ArrayList<String> apply(ArrayList<String> input) {
         String[] targetSensors = sensorIds != null ? sensorIds.split(",") : new String[0];
         
-        // Store humidity values per sensor using HashMap
-        HashMap<String, ArrayList<Double>> sensorHumidityMap = new HashMap<>();
+        HashMap<String, ArrayList<Double>> sensorMap = new HashMap<>();
 
         for (String line : input) {
             if (line == null || line.trim().isEmpty()) continue;
@@ -52,7 +58,6 @@ public class StandardAverageOperation extends AbstractOperation<String> implemen
             String lineDate = timestamp.length() >= 10 ? timestamp.substring(0, 10) : "";
             String lineTime = timestamp.length() >= 19 ? timestamp.substring(11, 19) : "";
 
-            // Check if this sensor is in our target list
             boolean matchesSensor = false;
             for (String targetSensor : targetSensors) {
                 if (lineSensorId.equals(targetSensor.trim())) {
@@ -63,33 +68,30 @@ public class StandardAverageOperation extends AbstractOperation<String> implemen
 
             boolean matchesDate = (date == null || date.isEmpty() || lineDate.equals(date));
 
-         // Add time range check
             boolean withinTimeRange = true;
             if (startTime != null && !startTime.isEmpty() && endTime != null && !endTime.isEmpty()) {
                 withinTimeRange = lineTime.compareTo(startTime) >= 0 && lineTime.compareTo(endTime) <= 0;
             }
 
-            if (matchesSensor && matchesDate && withinTimeRange) {  // Update this condition
+            if (matchesSensor && matchesDate && withinTimeRange) {
                 try {
                     double humidity = Double.parseDouble(humidityValue);
 
-                    if (!sensorHumidityMap.containsKey(lineSensorId)) {
-                        sensorHumidityMap.put(lineSensorId, new ArrayList<>());
+                    if (!sensorMap.containsKey(lineSensorId)) {
+                        sensorMap.put(lineSensorId, new ArrayList<>());
                     }
-                    sensorHumidityMap.get(lineSensorId).add(humidity);
+                    sensorMap.get(lineSensorId).add(humidity);
 
                 } catch (NumberFormatException e) {
-                    System.out.println("[DEBUG] Skipping non-numeric value: " + humidityValue);
                 }
             }
         }
 
-        // Calculate average for each sensor and build results
         ArrayList<String> result = new ArrayList<>();
         
         for (String targetSensor : targetSensors) {
             String sensor = targetSensor.trim();
-            ArrayList<Double> values = sensorHumidityMap.get(sensor);
+            ArrayList<Double> values = sensorMap.get(sensor);
             
             if (values != null && !values.isEmpty()) {
                 double sum = 0.0;
@@ -97,20 +99,14 @@ public class StandardAverageOperation extends AbstractOperation<String> implemen
                     sum += value;
                 }
                 double average = sum / values.size();
-                
-                System.out.println("[DEBUG] Sensor " + sensor + ": Found " + values.size() + 
-                                 " readings, Average: " + average);
-                
-                // Add each sensor result as a separate line
-                result.add("sensor," + sensor + ",average_humidity," + average + 
+
+                result.add("sensor," + sensor + ",average," + average + 
                           ",date," + date + ",count," + values.size());
             } else {
-                System.out.println("[DEBUG] Sensor " + sensor + ": No data found");
-                result.add("sensor," + sensor + ",average_humidity,0.0,date," + date + ",count,0");
+                result.add("sensor," + sensor + ",average,0.0,date," + date + ",count,0");
             }
         }
 
-        System.out.println("[DEBUG] Returning " + result.size() + " sensor results");
         return result;
     }
 

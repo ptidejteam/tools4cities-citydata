@@ -15,6 +15,13 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
+/**
+ * This producer reads environmental sensor data from a CSV source, processes it line by line, and produces a list of sensor 
+ * readings for further operations. It stores all non-empty lines, optionally applies a configured operation on the data, and 
+ * makes the processed results available to consumers.
+ * @author Minette Zongo M.
+ * @date: 2025-10-03
+ */
 public class EnvironmentalSensorProducer extends AbstractProducer<String> implements IProducer<String> {
 	
 	public EnvironmentalSensorProducer() {
@@ -51,7 +58,6 @@ public class EnvironmentalSensorProducer extends AbstractProducer<String> implem
             this.applyOperation();
 
             if (this.getOperation() == null) {
-                System.out.println("[DEBUG] No operation applied. Printing all data:");
                 for (String line : csvLines) {
                     System.out.println(line);
                 }

@@ -14,7 +14,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
  * @since 2025-10-06
  */
 
-public class PointQuery extends AbstractOperation<String> implements IOperation<String> {
+public class StandardFilteringOperation extends AbstractOperation<String> implements IOperation<String> {
 
 	private String sensorId;
     private String room;

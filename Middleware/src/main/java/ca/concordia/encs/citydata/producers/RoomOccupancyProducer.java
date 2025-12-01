@@ -19,9 +19,9 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @date: 2025-10-04
  */
 
-public class OccupancyProducerMapped extends AbstractProducer<String> implements IProducer<String> {
+public class RoomOccupancyProducer extends AbstractProducer<String> implements IProducer<String> {
 
-    public OccupancyProducerMapped() {
+    public RoomOccupancyProducer() {
         // Constructor
     }
 

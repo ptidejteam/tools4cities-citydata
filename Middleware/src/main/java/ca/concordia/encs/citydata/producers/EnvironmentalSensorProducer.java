@@ -38,10 +38,6 @@ public class EnvironmentalSensorProducer extends AbstractProducer<String> implem
 
             String[] lines = csvString.split("\\R");
 
-            if (lines.length > 0) {
-                System.out.println("[DEBUG] Header: " + lines[0]);
-            }
-
             ArrayList<String> csvLines = new ArrayList<>();
             for (int i = 1; i < lines.length; i++) {
                 String line = lines[i].trim();

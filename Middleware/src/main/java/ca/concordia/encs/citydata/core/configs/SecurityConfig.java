@@ -46,8 +46,11 @@ import com.nimbusds.jose.proc.SecurityContext;
  * Author: Sikandar Ejaz
  * Last Update: 2025-09-28
  * 
- * Last update: 2025-11-03
+ * Update: 2025-11-03
  * Fixed issue is user credentials management
+ * 
+ * Last Update: 2025-12-02
+ * Removed unused code
  */
 
 @EnableWebSecurity
@@ -60,7 +63,6 @@ public class SecurityConfig {
 
 	public SecurityConfig(RsaKeyProperties rsaKeys) {
 		this.rsaKeys = rsaKeys;
-		loadCredentialsFromTxt();
 	}
 
 	private List<JsonNode> readCredentialNodes() throws IOException {
@@ -81,22 +83,6 @@ public class SecurityConfig {
 			} else {
 				return Collections.emptyList();
 			}
-		}
-	}
-
-	private void loadCredentialsFromTxt() {
-		try {
-			List<JsonNode> nodes = readCredentialNodes();
-			if (nodes.isEmpty()) {
-				this.defaultUsername = "defaultUser";
-				this.defaultPassword = "$2a$10$dummyHash";
-			} else {
-				JsonNode first = nodes.get(0);
-				this.defaultUsername = first.has("username") ? first.get("username").asText() : "defaultUser";
-				this.defaultPassword = first.has("password") ? first.get("password").asText() : "$2a$10$dummyHash";
-			}
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to load credentials.txt", e);
 		}
 	}
 

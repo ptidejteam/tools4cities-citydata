@@ -22,8 +22,8 @@ This document provides a comprehensive catalog of datasets available for researc
 | DS10 | Varennes Boundary Shape File | Shapefile boundary covering ~5,229 buildings around Varennes Public Library. | SHP |
 | DS11 | Geoindex shape file clipped for Varennes | Shapefile clipped based on a defined Varennes boundary using PyQGIS. | SHP |
 | DS12 | Whole building LCA | Harmonized North America-wide whole-building life-cycle assessment dataset (first release). | ZIP / XLSX |
-| DS13 | Concordia Building Blueprints | Blueprints of all concordia campus buildings (SGW + Loyola) Campus | DWG, PDF, PNG/JPG |
-| DS14 | Hydro Quebec Energy Metering Data | Comprehensive dataset cintaing energy metering data of Hydro Quebec users | Parquet |
+| DS13 | Concordia Building Blueprints | Blueprints of all Concordia campus buildings (SGW + Loyola) Campus | DWG, PDF, PNG/JPG |
+| DS14 | Hydro Quebec Energy Metering Data | Comprehensive dataset containing energy metering data of Hydro Quebec users | Parquet |
 | DS15 | Building Elecricity Data | Comes from Concordia Facilities Management - Weekly basis | CSV |
 | DS16 | General Transit Feed Specification | The General Transit Feed Specification (GTFS) is a standardized open data portal that offers information about transit systems. | TXT files |
 | DS17 | Lot boundaries of Montreal Chinatown 2014 | Buildings' lot boundaries and associated metadata for Chinatown, Montreal. This dataset pertains to the year 2014. | JSON |

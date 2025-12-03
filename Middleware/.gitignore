@@ -58,4 +58,6 @@ Middleware/src/main/resources/scripts/certs/
 ## Ignore user credentials
 Middleware/src/main/resources/scripts/credentials/
 
+src/test/resources/
+
 

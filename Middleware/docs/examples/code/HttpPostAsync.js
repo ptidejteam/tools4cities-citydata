@@ -1,5 +1,5 @@
 async function httpPostAsync() {
-    const requestUrl = "http://localhost:8082/apply/async";  // Replace with actual URL
+    const requestUrl = "https://ngci.encs.concordia.ca/citydata/apply/async";  // Replace with actual URL
     const jsonInput = JSON.stringify(	{
 	  "use": "ca.concordia.encs.citydata.producers.RandomNumberProducer",
 	  "withParams": [

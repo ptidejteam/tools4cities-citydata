@@ -1,6 +1,6 @@
 async function httpGetAsync() {
     const runnerId = "d593c930-7fed-4c7b-ac52-fff946b78c32";
-    const requestUrl = `http://localhost:8082/apply/async/${runnerId}`;
+    const requestUrl = `https://ngci.encs.concordia.ca/citydata/apply/async/${runnerId}`;
 
     try {
         const response = await fetch(requestUrl);

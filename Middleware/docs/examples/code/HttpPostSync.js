@@ -1,5 +1,5 @@
 async function httpPostSync() {
-    const requestUrl = "http://localhost:8082/apply/sync";  // Replace with actual URL
+    const requestUrl = "https://ngci.encs.concordia.ca/citydata/apply/sync";  // Replace with actual URL
     const jsonInput = JSON.stringify(	{
 	  "use": "ca.concordia.encs.citydata.producers.EnergyConsumptionProducer",
 	  "withParams": [

@@ -2,7 +2,7 @@ import json
 import requests
 
 if __name__ == "__main__":
-    base_url = "http://localhost:8082"
+    base_url = "https://ngci.encs.concordia.ca/citydata"
     route = "/apply/async"
     data = json.dumps({
         "use": "ca.concordia.encs.citydata.producers.EnergyConsumptionProducer",

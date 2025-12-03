@@ -12,7 +12,7 @@ public class HttpGetAsync {
 	
 	public static void main(String[] args) throws Exception {
 		String runnerId = "d593c930-7fed-4c7b-ac52-fff946b78c32";
-		String requestUrl = "http://localhost:8082/apply/async/" + runnerId;
+		String requestUrl = "https://ngci.encs.concordia.ca/citydata/home" + runnerId;
 
 		URL url = new URL(requestUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();

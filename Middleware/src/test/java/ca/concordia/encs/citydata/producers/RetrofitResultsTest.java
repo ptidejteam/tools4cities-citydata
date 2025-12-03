@@ -7,19 +7,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.core.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.BaseIntegrationTest;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
@@ -34,17 +32,14 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * @since 18-07-2025
  */
 
-@SpringBootTest(classes = AppConfig.class)
+@SpringBootTest(classes = { AppConfig.class })
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class RetrofitResultsTest extends TestTokenGenerator {
+public class RetrofitResultsTest extends BaseIntegrationTest {
 
 	private static String retrofitResultsProducer;
 	private static String retrofitResultsProducerReadPath;
 	private static String hubApplicationUUID;
-
-	@Autowired
-	private MockMvc mockMvc;
 
 	@BeforeAll
 	public static void setUp() throws Exception {
@@ -60,7 +55,6 @@ public class RetrofitResultsTest extends TestTokenGenerator {
 					post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(retrofitResultsProducer))
 					.andExpect(status().isOk()).andExpect(content().string(containsString("results")));
 		}
-
 	}
 
 	@Test

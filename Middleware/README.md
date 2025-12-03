@@ -36,7 +36,7 @@ To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYd
 
 Before generating the public and private keys, ensure you have `openssl` installed in your machine!
 
-- Step 1: Create a folder named `certs` inside the `src/main/resources` directory.
+- Step 1: Create a folder named `certs` inside the `src/main/resources/scripts` directory.
 - Step 2: Navigate to the `certs` folder and run the following commands to generate your public and private keys:
 
 ```bash
@@ -45,6 +45,27 @@ openssl rsa -in keypair.pem -pubout -out public.pem
 openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
 ```
 - Step 3: Once public and private keys are generated, you can delete the keypair.pem
+
+## Adding Users
+
+Before proceeding, ensure the following prerequisites are met:
+* `Python` is installed and added to your system's environment variables.
+* The `bcrypt` package is installed. If not, open your terminal (Bash) and run:
+
+	`pip install bcrypt`
+	
+Once the above requirements are fulfilled, follow these steps to add, remove, or update users:
+
+- Open `Bash` and navigate to the following directory in the `citydata` project:
+
+	`cd src/main/resources/scripts`
+	
+- Run the credentials manager script:
+
+	`./credentials-manager.sh`
+	
+- An interactive menu will appear, allowing you to add, remove, or update users in `citydata`.
+
 
 ## How do I set it up?
 
@@ -97,9 +118,54 @@ The following routes are available:
 
 For now, the number of Producers, Operations and parameters is quite limited, but we intend to expand it in the future and also document it better. Your suggestions are more than welcome!
 
+
+## Accessing Private/Protected Routes
+
+To access the private or protected routes, follow these steps
+
+- Create a User Account:
+	* Follow the instructions in the "Adding Users" section above to create a username and password
+
+- Authenticate the User:
+	* Run the application and send a `POST` request to the following endpoint
+			
+			http://localhost:8080/authenticate
+		
+Include your username and password in the request body as JSON, for example
+	
+```json
+{
+"username": "yourUsername",
+"password": "yourPassword"
+}
+```
+			
+- Receive Authentication Token: 
+	* Upon successful authentication, a token will be returned in the response
+
+- Copy the Token:
+	* Copy the token from the response. You'll use this to access protected routes
+
+- Access Protected Routes:
+	* Use one of the following endpoints:
+		
+		POST http://localhost:8080/apply/sync
+		POST http://localhost:8080/apply/async
+
+- Add Authorization Header in Postman:
+	* In Postman (or any API client)
+	* Go to the Authorization tab
+	* Set Type to Bearer Token
+	* Paste the token into the Token field
+
+- Access Granted:
+	* If the token is valid, Spring Boot will authorize your request and grant access to the protected route
+
+
 ## Who do I talk to?
 
 Project manager: gabriel.cavalheiroullmann at concordia.ca
+
 
 ## Development Guidelines
 - The develop branch is the working branch for CityData middleware developers. To integrate your changes, please create a new branch based on develop, apply your changes, then open a **pull request** and set develop as a target.

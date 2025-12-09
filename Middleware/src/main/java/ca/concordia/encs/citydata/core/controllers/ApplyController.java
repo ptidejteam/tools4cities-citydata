@@ -117,23 +117,22 @@ public class ApplyController {
 	}
 
 	@RequestMapping(value = "/async/{runnerId}", method = RequestMethod.GET)
-    public ResponseEntity<String> asyncId(@PathVariable("runnerId") String runnerIdStr) {
-        try {
-            UUID runnerId = UUID.fromString(runnerIdStr);
-            InMemoryDataStore store = InMemoryDataStore.getInstance();
-            IProducer<?> storeResult = store.get(runnerId);
+	public ResponseEntity<String> asyncId(@PathVariable("runnerId") String runnerIdStr) {
+		try {
+			UUID runnerId = UUID.fromString(runnerIdStr);
+			InMemoryDataStore store = InMemoryDataStore.getInstance();
+			IProducer<?> storeResult = store.get(runnerId);
 
-            if (storeResult != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(storeResult.toString());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Sorry, your request result is not ready yet. Please try again later.");
-            }
-        } catch (IllegalArgumentException e) {
-            // Handle case where the provided ID is not a valid UUID
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid runner ID format. Please provide a valid UUID.");
-        }
-    }
-
+			if (storeResult != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(storeResult.toString());
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("Sorry, your request result is not ready yet. Please try again later.");
+			}
+		} catch (IllegalArgumentException e) {
+			// Handle case where the provided ID is not a valid UUID
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("Invalid runner ID format. Please provide a valid UUID.");
+		}
+	}
 }

@@ -13,12 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -42,14 +40,11 @@ import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
  * Date: 2025-10-01
  */
 
-@SpringBootTest(classes = AppConfig.class)
+@SpringBootTest(classes = { AppConfig.class })
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
 
-public class ApplyTest extends TestTokenGenerator {
-
-	@Autowired
-	private MockMvc mockMvc;
+public class ApplyTest extends BaseIntegrationTest {
 
 	private void performPostRequest(String url, String contentType, String content) throws Exception {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
@@ -60,22 +55,19 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void whenValidSteps_thenReturnSuccessMessage() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
-		String username = TestTokenGenerator.TEST_USERNAME;
 
 		mockMvc.perform(post("/apply/async").header("Authorization", "Bearer " + getToken())
-				.header("Username", username).contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("Hello! The runner")));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("Hello! The runner")));
 	}
 
 	// Test to check /apply/async with invalid JSON input -- Need to fix
 	@Test
 	public void whenInvalidReturnIdWrongInput() throws Exception {
 		final String invalidSteps = "invalid-json";
-		String username = TestTokenGenerator.TEST_USERNAME;
 
 		mockMvc.perform(post("/apply/async").header("Authorization", "Bearer " + getToken())
-				.header("Username", username).contentType(MediaType.APPLICATION_JSON).content(invalidSteps))
-				.andExpect(status().is4xxClientError())
+				.contentType(MediaType.APPLICATION_JSON).content(invalidSteps)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
 	}
 
@@ -83,10 +75,9 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void whenInvalidReturnIdWrongMediaType() throws Exception {
 		final String invalidSteps = "invalid-json";
-		String username = TestTokenGenerator.TEST_USERNAME;
 
 		mockMvc.perform(post("/apply/async").header("Authorization", "Bearer " + getToken())
-				.header("Username", username).contentType(MediaType.APPLICATION_NDJSON_VALUE).content(invalidSteps))
+				.contentType(MediaType.APPLICATION_NDJSON_VALUE).content(invalidSteps))
 				.andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
 	}
@@ -95,11 +86,9 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void whenValidRunnerId_thenReturnResultOrNotReadyMessage() throws Exception {
 		String runnerId = "d593c930-7fed-4c7b-ac52-fff946b78c32";
-		String username = TestTokenGenerator.TEST_USERNAME;
 
 		mockMvc.perform(get("/apply/async/" + runnerId).header("Authorization", "Bearer " + getToken())
-				.header("Username", username).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().is4xxClientError())
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Sorry, your request result is not ready yet.")));
 	}
 
@@ -107,10 +96,9 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void whenInvalidRunnerId_thenReturnNotReadyMessage() throws Exception {
 		String invalidRunnerId = "nonexistent-runner-id";
-		String username = TestTokenGenerator.TEST_USERNAME;
 
-		mockMvc.perform(get("/apply/async/" + invalidRunnerId).header("Authorization", "Bearer " + getToken())
-				.header("Username", username)).andExpect(status().is(400))
+		mockMvc.perform(get("/apply/async/" + invalidRunnerId).header("Authorization", "Bearer " + getToken()))
+				.andExpect(status().is(400))
 				.andExpect(content().string(containsString("Invalid runner ID format. Please provide a valid UUID.")));
 	}
 
@@ -140,21 +128,19 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for sync with wrong media type
 	@Test
 	public void testSyncWrongMediaType() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 
 		String jsonPayload = PayloadFactory.getBasicQuery();
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken()).header("Username", username)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType("application/XXX").content(jsonPayload)).andExpect(status().is2xxSuccessful());
 	}
 
 	// Test for broken JSON query
 	@Test
 	public void whenBrokenJsonQuery_thenReturnError() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 		String brokenJson = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", "
 				+ "\"withParams\": [ { \"name\": \"generationProcess\", \"value\": \"random\" } ";
 
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken()).header("Username", username)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(brokenJson)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
 	}
@@ -162,10 +148,9 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for missing "use" field
 	@Test
 	public void whenMissingUseField_thenReturnError() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 		String missingUse = "{ \"withParams\": [ { \"name\": \"generationProcess\", \"value\": \"random\" } ] }";
 
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken()).header("Username", username)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingUse))
 				.andExpect(status().isInternalServerError()).andExpect(
 						content().string(containsString("[{\"result\":\"[Error: Missing required 'use' field]\"}]")));
@@ -174,10 +159,9 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for missing "withParams" field
 	@Test
 	public void whenMissingWithParamsField_thenReturnError() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 		String missingWithParams = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\" }";
 
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken()).header("Username", username)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
 				.andExpect(status().is5xxServerError()).andExpect(content()
 						.string(containsString("[{\"result\":\"[Error: Missing required 'withParams' field]\"}]")));
@@ -186,10 +170,9 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for non-existent param in Producer/Operation
 	@Test
 	public void whenNonExistentParam_thenReturnError() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 		String nonExistentParam = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [ { \"name\": \"nonExistentParam\", \"value\": \"value\" } ] }";
 
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken()).header("Username", username)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(nonExistentParam))
 				.andExpect(content().string(containsString(
 						"[{\"result\":\"[Producer or Operation parameter 'nonExistentParam' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
@@ -198,7 +181,6 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for missing params in Operation (valid case for operations that take no params)
 	@Test
 	public void whenMissingParamsForOperation_thenReturnError() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 
 		String missingParamsForOperation = """
 					{
@@ -212,7 +194,7 @@ public class ApplyTest extends TestTokenGenerator {
 					}
 				""";
 
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken()).header("Username", username)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
 				.andExpect(status().isInternalServerError()).andExpect(content().string(containsString(
 						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
@@ -264,28 +246,22 @@ public class ApplyTest extends TestTokenGenerator {
 
 	@Test
 	public void testRoutesList() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 
-		mockMvc.perform(
-				get("/routes/list").header("Authorization", "Bearer " + getToken()).header("Username", username))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("Method: [")));
+		mockMvc.perform(get("/routes/list").header("Authorization", "Bearer " + getToken())).andExpect(status().isOk())
+				.andExpect(content().string(containsString("Method: [")));
 	}
 
 	@Test
 	public void testOperationsList() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 
-		mockMvc.perform(
-				get("/operations/list").header("Authorization", "Bearer " + getToken()).header("Username", username))
+		mockMvc.perform(get("/operations/list").header("Authorization", "Bearer " + getToken()))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("ca.concordia.encs.citydata")));
 	}
 
 	@Test
 	public void testProducersList() throws Exception {
-		String username = TestTokenGenerator.TEST_USERNAME;
 
-		mockMvc.perform(
-				get("/producers/list").header("Authorization", "Bearer " + getToken()).header("Username", username))
+		mockMvc.perform(get("/producers/list").header("Authorization", "Bearer " + getToken()))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("ca.concordia.encs.citydata")));
 	}
 }

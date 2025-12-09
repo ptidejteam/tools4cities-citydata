@@ -160,6 +160,10 @@ Include your username and password in the request body as JSON, for example
 
 - Access Granted:
 	* If the token is valid, Spring Boot will authorize your request and grant access to the protected route
+	
+## Available Data Sources
+
+- [Dataset Catalog](DATA_SOURCES.md) - Complete list of all available datasets
 
 
 ## Who do I talk to?

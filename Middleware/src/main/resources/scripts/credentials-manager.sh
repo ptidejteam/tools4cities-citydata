@@ -60,6 +60,37 @@ with open(path, "w") as f:
 PY
 }
 
+# --- Check if user exists ---
+user_exists() {
+  local user=$1
+  
+  python3 - "$CREDENTIALS_FILE" "$user" <<'PY'
+import json, sys, os
+
+path, uname = sys.argv[1:3]
+
+# Read existing data
+if os.path.exists(path) and os.path.getsize(path) > 0:
+    with open(path, 'r') as f:
+        data = json.load(f)
+else:
+    data = []
+
+# Ensure data is a list
+if isinstance(data, dict):
+    data = [data]
+
+# Check for duplicate username
+# Exit 0 (success) if user EXISTS, exit 1 (failure) if user does NOT exist
+if any(u.get("username") == uname for u in data):
+    sys.exit(0)
+else:
+    sys.exit(1)
+PY
+  
+  return $?
+}
+
 # --- Add user ---
 add_user() {
   local user=$1 pass=$2
@@ -67,21 +98,38 @@ add_user() {
   bcrypt_pw=$(bcrypt_hash "$pass")
 
   python3 - "$CREDENTIALS_FILE" "$user" "$bcrypt_pw" <<'PY'
-import json, sys
+import json, sys, os
+
 path, uname, pwhash = sys.argv[1:4]
-data = json.load(open(path))
+
+# Read existing data
+if os.path.exists(path) and os.path.getsize(path) > 0:
+    with open(path, 'r') as f:
+        data = json.load(f)
+else:
+    data = []
+
+# Ensure data is a list
 if isinstance(data, dict):
     data = [data]
-if any(u.get("username") == uname for u in data):
-    print("User already exists", file=sys.stderr)
-    sys.exit(2)
+
+# Add new user (duplicate check already done before this function)
 data.append({"username": uname, "password": pwhash})
-json.dump(data, open(path, "w"), indent=2)
+
+# Write back to file
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2)
+
+sys.exit(0)
 PY
-  if [[ $? -eq 0 ]]; then
+  
+  local exit_code=$?
+  if [[ $exit_code -eq 0 ]]; then
     echo "User $user added."
+    return 0
   else
-    echo "User already exists."
+    echo "Error: Failed to add user." >&2
+    return 1
   fi
 }
 
@@ -183,6 +231,16 @@ while true; do
 
   case "$choice" in
     1) read -rp "Username: " uname
+       # Validate username is not empty
+       if [[ -z "$uname" ]]; then
+         echo "Error: Username cannot be empty."
+         continue
+       fi
+       # Check if user already exists BEFORE asking for password
+       if user_exists "$uname"; then
+         echo "Error: User '$uname' already exists."
+         continue
+       fi
        read -s -rp "Password: " pw; echo
        read -s -rp "Confirm: " pw2; echo
        [[ "$pw" == "$pw2" ]] || { echo "Mismatch"; continue; }

@@ -3,8 +3,8 @@ import json
 
 # Configuration
 BASE_URL = "http://localhost:8084" # Replace with actual server address
-USERNAME = "sikandar"  # Replace with actual username
-PASSWORD = "sikandar123@"  # Replace with actual password
+USERNAME = "Your_Username"  # Replace with actual username
+PASSWORD = "Your_Password"  # Replace with actual password
 
 def authenticate(base_url, username, password):
 

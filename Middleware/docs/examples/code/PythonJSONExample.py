@@ -7,8 +7,6 @@ USERNAME = "Your_Username"  # Replace with actual username
 PASSWORD = "Your_Password"  # Replace with actual password
 
 def authenticate(base_url, username, password):
-
-    print("Step 1: Authenticating...")
     
     auth_url = f"{base_url}/authenticate"
     
@@ -29,8 +27,6 @@ def authenticate(base_url, username, password):
         return None
 
 def apply_sync_operation(base_url, token, json_input):
-
-    print("\nStep 3: Executing sync operation...")
     
     sync_url = f"{base_url}/apply/sync"
     
@@ -54,11 +50,7 @@ def apply_sync_operation(base_url, token, json_input):
         return None
 
 def main():
-
-    print("=" * 60)
-    print("Energy Consumption Data Processing Example")
-    print("=" * 60)
-    
+        
     # Authenticate and get token
     token = authenticate(BASE_URL, USERNAME, PASSWORD)
     
@@ -66,10 +58,7 @@ def main():
         print("\nAuthentication failed. Exiting.")
         return
     
-    # Define JSON input
-    print("\nStep 2: Token copied for next request")
-    print("\nStep 4: Preparing JSON input...")
-    
+    # Define JSON input   
     json_input = {
         "use": "ca.concordia.encs.citydata.producers.EnergyConsumptionProducer",
         "withParams": [

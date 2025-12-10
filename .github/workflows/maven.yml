@@ -10,12 +10,12 @@ name: Ptidej Middleware CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
     paths-ignore:
       - 'docs/**'
       - '*.md'
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
     paths-ignore:
       - 'docs/**'
       - '*.md'

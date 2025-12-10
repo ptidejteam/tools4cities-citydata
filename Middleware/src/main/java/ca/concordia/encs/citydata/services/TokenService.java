@@ -30,7 +30,7 @@ public class TokenService {
 		String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(" "));
 		JwtClaimsSet claims = JwtClaimsSet.builder().issuer("self").issuedAt(now)
-				.expiresAt(now.plus(1, ChronoUnit.MINUTES)).subject(authentication.getName()).claim("scope", scope)
+				.expiresAt(now.plus(5, ChronoUnit.MINUTES)).subject(authentication.getName()).claim("scope", scope)
 				.build();
 		return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 	}

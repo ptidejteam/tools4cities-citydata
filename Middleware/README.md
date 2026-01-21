@@ -101,7 +101,7 @@ java -jar ./target/Middleware-0.0.1-SNAPSHOT.jar --server.port=8080
 ## How do I use it?
 
 - CITYdata is a REST API which receives queries as input and generates data as output.
-- A query is a JSON file where you specify which data you want and which transformations you wish to apply to the data. You can see query examples in the folder /docs/examples.
+- A query is a JSON file where you specify which data you want and which transformations you wish to apply to the data. You can see query examples in the folder `/docs/examples/queries`.
 - You can call CITYdata routes using your favourite programming language. For example, you can use the requests package in [Python](https://www.geeksforgeeks.org/get-post-requests-using-python/) or the fetch API in [JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch).
 - If you are familiar with Postman, you can use our Postman collection [here](https://github.com/ptidejteam/citydata/blob/master/Middleware/docs/citydata_collection.json) to send your queries, no need to write code.
 

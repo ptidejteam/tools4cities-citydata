@@ -53,7 +53,7 @@ build/
 !**/src/test/**
 !META-INF/**
 ## Ignore JWT certs/keys
-Middleware/src/main/resources/scripts/certs/
+Middleware/src/main/resources/scripts/
 
 ## Ignore user credentials
 Middleware/src/main/resources/scripts/credentials/

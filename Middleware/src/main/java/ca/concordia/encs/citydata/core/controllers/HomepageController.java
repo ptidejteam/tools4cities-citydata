@@ -1,15 +1,12 @@
 package ca.concordia.encs.citydata.core.controllers;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * This is a welcome page for CITYdata, intended for access via browser.
@@ -24,14 +21,13 @@ public class HomepageController {
 	@GetMapping("/home")
 	@ResponseBody
 	public String home() {
-		var resource = new ClassPathResource("static/home.html");
-        try {
-            return Files.readString(resource.getFile().toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		var resource = new ClassPathResource("/static/home.html");
+		try {
+			return Files.readString(resource.getFile().toPath());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-    }
-
+	}
 
 }

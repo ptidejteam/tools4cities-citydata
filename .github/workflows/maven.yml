@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir -p src/main/resources/scripts/certs/
           openssl genpkey -algorithm RSA -out src/main/resources/scripts/certs/private.pem -pkeyopt rsa_keygen_bits:2048
-          openssl rsa -pubout -in src/main/resources/scripts/certs/private.pem -out src/main/resources/certs/public.pem
+          openssl rsa -pubout -in src/main/resources/scripts/certs/private.pem -out src/main/resources/scripts/certs/public.pem
 
       - name: Clean and test with Maven
         working-directory: Middleware

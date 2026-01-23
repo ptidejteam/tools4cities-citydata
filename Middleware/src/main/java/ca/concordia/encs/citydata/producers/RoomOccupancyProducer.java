@@ -1,10 +1,6 @@
 package ca.concordia.encs.citydata.producers;
 
-import java.nio.file.Paths;
-
-import java.util.Map;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -21,38 +17,34 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
 public class RoomOccupancyProducer extends AbstractProducer<String> implements IProducer<String> {
 
-    public RoomOccupancyProducer() {
-        // Constructor
-    }
+	@Override
+	public void fetch() {
+		try {
+			ByteArrayOutputStream outputStream = (ByteArrayOutputStream) this.fetchFromPath();
+			String csvString = outputStream.toString(StandardCharsets.UTF_8);
 
-    @Override
-    public void fetch() {
-        try {
-            ByteArrayOutputStream outputStream = (ByteArrayOutputStream) this.fetchFromPath();
-            String csvString = outputStream.toString(StandardCharsets.UTF_8);
+			System.out.println(csvString.substring(0, Math.min(500, csvString.length())));
 
-            System.out.println(csvString.substring(0, Math.min(500, csvString.length())));
+			// Split by newlines
+			String[] lines = csvString.split("\\R");
 
-            // Split by newlines
-            String[] lines = csvString.split("\\R");
+			ArrayList<String> csvLines = new ArrayList<>();
 
-            ArrayList<String> csvLines = new ArrayList<>();
+			// Skip header (line 0) and process data lines
+			for (int i = 1; i < lines.length; i++) {
+				String line = lines[i].trim();
+				if (!line.isEmpty()) {
+					csvLines.add(line);
+				}
+			}
 
-            // Skip header (line 0) and process data lines
-            for (int i = 1; i < lines.length; i++) {
-                String line = lines[i].trim();
-                if (!line.isEmpty()) {
-                    csvLines.add(line);
-                }
-            }
+			this.setResult(csvLines);
 
-            this.setResult(csvLines);
-            
-            this.applyOperation();
+			this.applyOperation();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new MiddlewareException.DatasetNotFound("Error processing occupancy CSV data: " + e.getMessage());
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new MiddlewareException.DatasetNotFound("Error processing occupancy CSV data: " + e.getMessage());
+		}
+	}
 }

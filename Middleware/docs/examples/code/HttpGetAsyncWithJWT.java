@@ -14,6 +14,8 @@ public class HttpGetAsyncWithJWT {
     	
         String token = getJwtToken();
         
+        // This runnerId is just an example; the user should use an actually existing runnerId from a Runner they created.
+        
         String runnerId = "d593c930-7fed-4c7b-ac52-fff946b78c32";
         String requestUrl = "http://localhost:8082/apply/async/" + runnerId;
         

@@ -1,7 +1,7 @@
 # Dataset Catalog
 
 ## Overview
-This document provides a comprehensive catalog of datasets available for research and analysis, covering building information, transportation, energy consumption, and urban infrastructure in Montreal and surrounding areas.
+This document provides a comprehensive catalog of datasets available for research and analysis, covering building information, transportation, energy consumption, and urban infrastructure in Montreal and surrounding areas. Currently, these datasets are not in the repository, they will be added in coming days. 
 
 ---
 

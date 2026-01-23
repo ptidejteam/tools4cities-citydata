@@ -1,11 +1,10 @@
 package ca.concordia.encs.citydata.core.contracts;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
 *
-* CityData datastores interface to orchestrate all datastores.
+* CITYdata datastores: an interface to orchestrate all datastores.
 * 
 * @author Minette Zongo
 * @since 2025-08-19
@@ -13,21 +12,19 @@ import java.util.Set;
 */
 
 public interface IDatastoreManager {
-	
-    enum DatastoreType {
-        IN_MEMORY,
-        DISK,
-        MONGODB
-    }
 
-    void registerStores();
+	enum DatastoreType {
+		IN_MEMORY, DISK, MONGODB
+	}
 
-    <T> IDataStore<T> getStore(DatastoreType type);
+	void registerStores();
 
-    Map<DatastoreType, IDataStore<?>> getStores();
+	<T> IDataStore<T> getStore(DatastoreType type);
 
-    default boolean hasStore(DatastoreType type) {
-        return getStores().containsKey(type);
-    }
+	Map<DatastoreType, IDataStore<?>> getStores();
+
+	default boolean hasStore(DatastoreType type) {
+		return getStores().containsKey(type);
+	}
 
 }

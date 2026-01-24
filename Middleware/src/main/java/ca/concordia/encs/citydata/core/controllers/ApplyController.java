@@ -1,9 +1,13 @@
 package ca.concordia.encs.citydata.core.controllers;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +28,12 @@ import ca.concordia.encs.citydata.runners.SequentialRunner;
  * 
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
+ * 
+ * Last Update: Added GetMapping for sync and async endpoints for web access
+ * Author: Sikandar Ejaz
+ * Date: 2025-12-09
  */
+
 @RestController
 @RequestMapping("/apply")
 public class ApplyController {
@@ -117,23 +126,38 @@ public class ApplyController {
 	}
 
 	@RequestMapping(value = "/async/{runnerId}", method = RequestMethod.GET)
-    public ResponseEntity<String> asyncId(@PathVariable("runnerId") String runnerIdStr) {
-        try {
-            UUID runnerId = UUID.fromString(runnerIdStr);
-            InMemoryDataStore store = InMemoryDataStore.getInstance();
-            IProducer<?> storeResult = store.get(runnerId);
+	public ResponseEntity<String> asyncId(@PathVariable("runnerId") String runnerIdStr) {
+		try {
+			UUID runnerId = UUID.fromString(runnerIdStr);
+			InMemoryDataStore store = InMemoryDataStore.getInstance();
+			IProducer<?> storeResult = store.get(runnerId);
 
-            if (storeResult != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(storeResult.toString());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Sorry, your request result is not ready yet. Please try again later.");
-            }
-        } catch (IllegalArgumentException e) {
-            // Handle case where the provided ID is not a valid UUID
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid runner ID format. Please provide a valid UUID.");
-        }
-    }
+			if (storeResult != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(storeResult.toString());
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("Sorry, your request result is not ready yet. Please try again later.");
+			}
+		} catch (IllegalArgumentException e) {
+			// Handle case where the provided ID is not a valid UUID
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("Invalid runner ID format. Please provide a valid UUID.");
+		}
+	}
 
+	@GetMapping("/sync")
+	public ResponseEntity<String> syncForm() throws IOException {
+		ClassPathResource resource = new ClassPathResource("templates/sync-form.html");
+		String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+		return ResponseEntity.ok().header("Content-Type", "text/html").body(html);
+	}
+
+	@GetMapping("/async")
+	public ResponseEntity<String> asyncForm() throws IOException {
+		ClassPathResource resource = new ClassPathResource("templates/async-form.html");
+		String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+		return ResponseEntity.ok().header("Content-Type", "text/html").body(html);
+	}
 }

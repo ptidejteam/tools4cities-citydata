@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.context.WebApplicationContext;
 
-import ca.concordia.encs.citydata.BaseMvc;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
@@ -28,7 +27,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class AppHealthTest extends BaseMvc {
+public class AppHealthTest extends BaseIntegrationTest {
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;

@@ -11,19 +11,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -31,7 +24,6 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.PayloadFactory;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
-import ca.concordia.encs.citydata.services.TokenService;
 
 /**
  * Apply routes test
@@ -42,19 +34,17 @@ import ca.concordia.encs.citydata.services.TokenService;
  * Fixed failing tests after implementing Authentication
  * Author: Sikandar Ejaz 
  * Date: 2025-07-18
+ * 
+ * Updated tests with authentication
+ * Author: Sikandar Ejaz
+ * Date: 2025-10-01
  */
 
-@SpringBootTest(classes = AppConfig.class)
+@SpringBootTest(classes = { AppConfig.class })
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ApplyTest extends TestTokenGenerator {
 
-	@Autowired
-	private MockMvc mockMvc;
-
-
-	@Autowired
-	private TokenService tokenService;
+public class ApplyTest extends BaseIntegrationTest {
 
 	private void performPostRequest(String url, String contentType, String content) throws Exception {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
@@ -85,6 +75,7 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void whenInvalidReturnIdWrongMediaType() throws Exception {
 		final String invalidSteps = "invalid-json";
+
 		mockMvc.perform(post("/apply/async").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_NDJSON_VALUE).content(invalidSteps))
 				.andExpect(status().is4xxClientError())
@@ -116,8 +107,6 @@ public class ApplyTest extends TestTokenGenerator {
 	public void testSync() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
 
-		String token = getToken();
-
 		performPostRequestWithAuth("/apply/sync", MediaType.APPLICATION_JSON_VALUE, jsonPayload, getToken());
 	}
 
@@ -139,6 +128,7 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for sync with wrong media type
 	@Test
 	public void testSyncWrongMediaType() throws Exception {
+
 		String jsonPayload = PayloadFactory.getBasicQuery();
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType("application/XXX").content(jsonPayload)).andExpect(status().is2xxSuccessful());
@@ -191,6 +181,7 @@ public class ApplyTest extends TestTokenGenerator {
 	// Test for missing params in Operation (valid case for operations that take no params)
 	@Test
 	public void whenMissingParamsForOperation_thenReturnError() throws Exception {
+
 		String missingParamsForOperation = """
 					{
 						"use": "ca.concordia.encs.citydata.producers.RandomStringProducer",
@@ -203,11 +194,7 @@ public class ApplyTest extends TestTokenGenerator {
 					}
 				""";
 
-		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-		Authentication authentication = new UsernamePasswordAuthenticationToken("testuser", null, authorities);
-		String token = tokenService.generateToken(authentication);
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + token)
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
 				.andExpect(status().isInternalServerError()).andExpect(content().string(containsString(
 						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
@@ -259,35 +246,22 @@ public class ApplyTest extends TestTokenGenerator {
 
 	@Test
 	public void testRoutesList() throws Exception {
-		// Step 1: Mock Authentication object
-		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-		Authentication authentication = new UsernamePasswordAuthenticationToken("testuser", null, authorities);
 
-		// Step 2: Generate JWT token
-		String token = tokenService.generateToken(authentication);
-
-		// Step 3: Attach token to request
-		mockMvc.perform(get("/routes/list").header("Authorization", "Bearer " + token)).andExpect(status().isOk())
+		mockMvc.perform(get("/routes/list").header("Authorization", "Bearer " + getToken())).andExpect(status().isOk())
 				.andExpect(content().string(containsString("Method: [")));
 	}
 
 	@Test
 	public void testOperationsList() throws Exception {
-		// Step 1: Create mock Authentication object
-		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-		Authentication authentication = new UsernamePasswordAuthenticationToken("testuser", null, authorities);
 
-		// Step 2: Generate JWT token
-		String token = tokenService.generateToken(authentication);
-
-		// Step 3: Attach token to request
-		mockMvc.perform(get("/operations/list").header("Authorization", "Bearer " + token)).andExpect(status().isOk())
-				.andExpect(content().string(containsString("ca.concordia.encs.citydata")));
+		mockMvc.perform(get("/operations/list").header("Authorization", "Bearer " + getToken()))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("ca.concordia.encs.citydata")));
 	}
 
 	@Test
 	public void testProducersList() throws Exception {
-		mockMvc.perform(get("/producers/list")).andExpect(status().isOk())
-				.andExpect(content().string(containsString("ca.concordia.encs.citydata")));
+
+		mockMvc.perform(get("/producers/list").header("Authorization", "Bearer " + getToken()))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("ca.concordia.encs.citydata")));
 	}
 }

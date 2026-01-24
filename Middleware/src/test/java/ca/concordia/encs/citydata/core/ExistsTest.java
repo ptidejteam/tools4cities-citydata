@@ -1,22 +1,16 @@
 package ca.concordia.encs.citydata.core;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
  * ExistsController routes test
@@ -29,43 +23,24 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * Fixed failing tests after implementing Authentication
 */
 
-@SpringBootTest(classes = AppConfig.class)
-@AutoConfigureMockMvc
-@ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ExistsTest extends TestTokenGenerator {
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	// Store the runnerId as an instance variable so it can be used across test methods
-	private UUID runnerId;
+public class ExistsTest extends BaseIntegrationTest {
 
 	@Test
 	void testQueryExists() throws Exception {
-		// Use getExampleQuery to load a specific query from a JSON file
 		String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
-		// creating a producer
 		MvcResult syncResult = mockMvc
 				.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andReturn();
 
-		// Get the response but don't try to parse it as a UUID
-		String resultJson = syncResult.getResponse().getContentAsString();
-
-		// Store this result for later use if needed, but don't parse as UUID
-		// If you really need a UUID for later, you'll need to extract it from the JSON
-
-		// Check if the query exists
 		MvcResult existsResult = mockMvc
 				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
 						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andReturn();
 
 		String responseContent = existsResult.getResponse().getContentAsString();
-
-        assertNotEquals("[]", responseContent, "Response should not be an empty array");
+		assertNotEquals("[]", responseContent);
 	}
 
 	@Test
@@ -84,6 +59,7 @@ public class ExistsTest extends TestTokenGenerator {
 	@Test
 	void testBrokenJsonQuery() throws Exception {
 		String jsonPayload = PayloadFactory.getInvalidJson();
+
 		mockMvc.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError());
@@ -106,7 +82,6 @@ public class ExistsTest extends TestTokenGenerator {
 			int syncStatus = syncResult.getResponse().getStatus();
 			String syncResponse = syncResult.getResponse().getContentAsString();
 
-			// Log the response before failing
 			System.out.println("apply/sync Status: " + syncStatus);
 			System.out.println("apply/sync Response: " + syncResponse);
 
@@ -114,7 +89,7 @@ public class ExistsTest extends TestTokenGenerator {
 				fail("apply/sync failed with status: " + syncStatus + " and response: " + syncResponse);
 			}
 		} else if (status == 200) {
-            assertNotEquals("[]", responseContent, "Response should not be an empty array");
+			assertNotEquals("[]", responseContent);
 		} else {
 			fail("Unexpected status code: " + status + ". Response content: " + responseContent);
 		}

@@ -36,7 +36,7 @@ To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYd
 
 Before generating the public and private keys, ensure you have `openssl` installed in your machine!
 
-- Step 1: Create a folder named `certs` inside the `src/main/resources` directory.
+- Step 1: Create a folder named `certs` inside the `src/main/resources/scripts/certs` directory.
 - Step 2: Navigate to the `certs` folder and run the following commands to generate your public and private keys:
 
 ```bash
@@ -45,6 +45,28 @@ openssl rsa -in keypair.pem -pubout -out public.pem
 openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
 ```
 - Step 3: Once public and private keys are generated, you can delete the keypair.pem
+
+## Adding Users
+
+Before proceeding, ensure the following prerequisites are met:
+* `Python` is installed and added to your system's environment variables.
+* The `bcrypt` package is installed. If not, open your terminal (Bash) and run:
+
+	pip install bcrypt
+
+Once the above requirements are fulfilled, follow these steps to add, remove, or update users:
+
+- Open `Bash` and navigate to the following directory in the `citydata` project:
+
+	cd src/main/resources/scripts
+
+- Run the credentials manager script:
+
+	./credentials-manager.sh
+
+- An interactive menu will appear, allowing you to add, remove, or update users in `citydata`.
+
+- If you wish to use the instance of CITYdata hosted at the NGCI, please contact us for user creation.
 
 ## How do I set it up?
 
@@ -79,7 +101,7 @@ java -jar ./target/Middleware-0.0.1-SNAPSHOT.jar --server.port=8080
 ## How do I use it?
 
 - CITYdata is a REST API which receives queries as input and generates data as output.
-- A query is a JSON file where you specify which data you want and which transformations you wish to apply to the data. You can see query examples in the folder /docs/examples.
+- A query is a JSON file where you specify which data you want and which transformations you wish to apply to the data. You can see query examples in the folder `/docs/examples/queries`.
 - You can call CITYdata routes using your favourite programming language. For example, you can use the requests package in [Python](https://www.geeksforgeeks.org/get-post-requests-using-python/) or the fetch API in [JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch).
 - If you are familiar with Postman, you can use our Postman collection [here](https://github.com/ptidejteam/citydata/blob/master/Middleware/docs/citydata_collection.json) to send your queries, no need to write code.
 
@@ -97,9 +119,58 @@ The following routes are available:
 
 For now, the number of Producers, Operations and parameters is quite limited, but we intend to expand it in the future and also document it better. Your suggestions are more than welcome!
 
+
+## Accessing Private/Protected Routes
+
+To access the private or protected routes, follow these steps
+
+- Create a User Account:
+	* Follow the instructions in the "Adding Users" section above to create a username and password
+
+- Authenticate the User:
+	* Run the application and send a `POST` request to the following endpoint
+			
+			http://localhost:8080/authenticate
+		
+Include your username and password in the request body as JSON, for example
+	
+```json
+{
+"username": "yourUsername",
+"password": "yourPassword"
+}
+```
+			
+- Receive Authentication Token: 
+	* Upon successful authentication, a token will be returned in the response
+
+- Copy the Token:
+	* Copy the token from the response. You'll use this to access protected routes
+
+- Access Protected Routes:
+	* Use one of the following endpoints:
+		
+		POST http://localhost:8080/apply/sync
+		POST http://localhost:8080/apply/async
+
+- Add Authorization Header in Postman:
+	* In Postman (or any API client)
+	* Go to the Authorization tab
+	* Set Type to Bearer Token
+	* Paste the token into the Token field
+
+- Access Granted:
+	* If the token is valid, Spring Boot will authorize your request and grant access to the protected route
+	
+## Available Data Sources
+
+- [Dataset Catalog](DATA_SOURCES.md) - Complete list of all available datasets
+
+
 ## Who do I talk to?
 
 Project manager: gabriel.cavalheiroullmann at concordia.ca
+
 
 ## Development Guidelines
 - The develop branch is the working branch for CityData middleware developers. To integrate your changes, please create a new branch based on develop, apply your changes, then open a **pull request** and set develop as a target.

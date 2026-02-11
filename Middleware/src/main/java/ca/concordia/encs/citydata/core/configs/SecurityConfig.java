@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,22 +84,47 @@ public class SecurityConfig {
 			return Collections.emptyList();
 		}
 
-		InputStream input;
+		InputStream input = null;
 
+		// Option 1: Handle classpath: prefix
 		if (credentialsPath.startsWith("classpath:")) {
 			String resourcePath = credentialsPath.substring("classpath:".length());
 			input = getClass().getClassLoader().getResourceAsStream(resourcePath);
-			if (input == null) {
-				return Collections.emptyList();
+			if (input != null) {
+				return loadCredentialsFromInputStream(input);
 			}
-		} else {
-			File file = new File(credentialsPath);
-			if (!file.exists()) {
-				return Collections.emptyList();
-			}
-			input = new FileInputStream(file);
 		}
 
+		// Option 2: Try as absolute/relative file path
+		File file = new File(credentialsPath);
+		if (file.exists() && file.isFile()) {
+			input = new FileInputStream(file);
+			return loadCredentialsFromInputStream(input);
+		}
+
+		// Option 3: Try relative to jar/executable directory
+		Path jarDir = getApplicationDirectory();
+		if (jarDir != null) {
+			Path credFile = jarDir.resolve(credentialsPath);
+			if (Files.exists(credFile)) {
+				input = new FileInputStream(credFile.toFile());
+				return loadCredentialsFromInputStream(input);
+			}
+		}
+
+		// Option 4: Try relative to jar directory with just filename
+		if (jarDir != null) {
+			Path credFile = jarDir.resolve(new File(credentialsPath).getName());
+			if (Files.exists(credFile)) {
+				input = new FileInputStream(credFile.toFile());
+				return loadCredentialsFromInputStream(input);
+			}
+		}
+
+		return Collections.emptyList();
+	}
+
+	private List<JsonNode> loadCredentialsFromInputStream(InputStream input) throws IOException {
 		try (input) {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode root = mapper.readTree(input);
@@ -112,6 +139,28 @@ public class SecurityConfig {
 				return Collections.emptyList();
 			}
 		}
+	}
+
+	private Path getApplicationDirectory() {
+		try {
+			String classpath = getClass().getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+
+			classpath = java.net.URLDecoder.decode(classpath, "UTF-8");
+
+			File f = new File(classpath);
+
+			if (f.isFile() && classpath.endsWith(".jar")) {
+				return f.getParentFile().toPath();
+			}
+
+			if (f.isDirectory()) {
+				return f.toPath();
+			}
+		} catch (Exception e) {
+			System.err.println("Could not determine application directory: " + e.getMessage());
+		}
+		return null;
 	}
 
 	public String getDefaultUsername() {
@@ -150,7 +199,10 @@ public class SecurityConfig {
 		}
 
 		if (users.isEmpty()) {
-			UserDetails fallback = User.withUsername(defaultUsername).password(defaultPassword).authorities("read")
+			UserDetails fallback = User.withUsername(defaultUsername)
+					.password(defaultPassword)
+					.passwordEncoder(s -> s)
+					.authorities("read")
 					.build();
 			users.add(fallback);
 		}

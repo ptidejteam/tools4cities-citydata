@@ -15,21 +15,21 @@ services:
       - citydata-network
     volumes:
       - ./logs:/app/logs
-      - ./src/main/resources/scripts/credentials:./src/main/resources/scripts/credentials
+      - ./src/main/resources/scripts/credentials:/app/src/main/resources/scripts/credentials
     restart: unless-stopped
 
   # MongoDB Database
-  #1mongodb:
-  #1  image: mongo:7.0
-  #1  container_name: mongodb-citydata
-  #1  ports:
-  #1    - "27017:27017"
-  #1  volumes:
-  #1    - mongodb_data:/data/db
-  #1    - ./mongo-init:/docker-entrypoint-initdb.d
-  #1  networks:
-  #1    - citydata-network
-  #1  restart: unless-stopped
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-citydata
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    networks:
+      - citydata-network
+    restart: unless-stopped
 
 networks:
   citydata-network:

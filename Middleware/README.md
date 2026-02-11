@@ -32,9 +32,9 @@ To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYd
 
 The easiest way to set up a new CITYdata instance is by using Docker. This repository contains a `docker-compose.yml` and a `Dockerfile`, which means you can easily create a CITYdata container by running `docker compose up -d`. However, if you do not wish to use Docker, please follow the instructions in this section.
 
-### 1. Generate certificates
+### 1. Generate keypair
 
-When you create a CITYdata instance, we strongly recommend that you configure authentication to prevent unauthorized access. To do so, you must start by generating a keypair (public + private key) using `openssl`:
+When you create a CITYdata instance, we strongly recommend that you set up credentials to prevent unauthorized access. To do so, you must start by generating a keypair (public + private key) using `openssl`:
 
 1. Create a folder named `certs` inside the `src/main/resources/scripts` directory.
 2. Navigate to the `certs` folder and run the following commands:
@@ -47,9 +47,11 @@ openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out priv
 
 3. Once the keys are generated, you can delete the file `keypair.pem` since it is no longer necessary.
 
+On the next step, this keypair will be used to encrypt the passwords of the users you will create.
+
 ### 2. Create credentials
 
-Now the keypair is generated, you can start creating a list of users and set password for them. You will do this process aided by the script `credentials-manager.sh`. Here is how you use it.
+To define which users will have access to your CITYdata instance, please use the script `credentials-manager.sh`. Here is you set it up:
 
 1. On the Python environment of your choice, install the `bcrypt` package:
 
@@ -69,7 +71,9 @@ Now the keypair is generated, you can start creating a list of users and set pas
 	./credentials-manager.sh
 ```
 
-4. An interactive menu will appear, allowing you to add, remove, or update users in `citydata`.
+4. An interactive menu will appear, allowing you to add, remove, or update users in `citydata`. You must define a password for every user.
+
+The list of users and passwords will be saved to the file `src/main/resources/scripts/credentials/credentials.txt`. Passwords are encrypted and will be decrypted by CITYdata using the keys you generated on the previous step. If you ever regenerate your keypair, the credentials file will have to be recreated as well.
 
 ### 2.1. What if I do not want to set up credentials?
 
@@ -77,7 +81,7 @@ While we **strongly encourage you to set up credentials**, you have two options 
 
 ### 2.1.1. Use default credentials
 
-If you did not register any credentials using the script `credentials-manager.sh`, you can use default credentials instead (username and password = `citydata`). This may be a good choice if you simply want to spin up an instance of CITYdata for experimentation in a local development environment. However, this is not recommended in a production environment because it brings the following negative consequences:
+If you did not create a `credentials.txt` file, you can authenticate with default credentials (username and password = `citydata`). This may be a good choice if you simply want to spin up an instance of CITYdata quickly for experimentation in your local development environment. However, this approach is not recommended for production environments because it brings the following negative consequences:
 
 1. Your CITYdata instance WILL NOT BE PROTECTED!
 2. You will not be able to register users. While you can change the default username and password in the `application.properties`, you will still be limited to a single user.
@@ -85,7 +89,7 @@ If you did not register any credentials using the script `credentials-manager.sh
 
 Once you register your credentials using the script `credentials-manager.sh`, the default credentials will be automatically disabled to avoid unauthorized access.
 
-### 2.1.1. Use the NGCI CITYdata instance
+### 2.1.2. Use the NGCI CITYdata instance
 
 The [Next-Generation Cities Institute](https://www.concordia.ca/research/cities-institute.html) at [Concordia University](https://www.concordia.ca) hosts its own instance of CITYdata. If you wish to use this instance, please reach out to [this email address](#who-do-i-talk-to) so we can register you as a user.
 
@@ -147,16 +151,16 @@ For now, the number of Producers, Operations and parameters is quite limited, bu
 
 ## Accessing Private/Protected Routes
 
-To access the private or protected routes, follow these steps
+To access the private or protected routes, follow these steps:
 
 - Create a User Account:
-  - Follow the instructions in the "Adding Users" section above to create a username and password
+  - Follow the instructions in [this section](#2-create-credentials) to create a username and password
 
 - Authenticate the User:
-  - Run the application and send a `POST` request to the following endpoint
+  - Run the application and send a `POST` request to the following endpoint:
     http://localhost:8080/authenticate
 
-Include your username and password in the request body as JSON, for example
+Include your username and password in the request body as JSON, for example:
 
 ```json
 {
@@ -179,9 +183,9 @@ Include your username and password in the request body as JSON, for example
 
 - Add Authorization Header in Postman:
   - In Postman (or any API client)
-  - Go to the Authorization tab
-  - Set Type to Bearer Token
-  - Paste the token into the Token field
+  - Go to the `Authorization` tab
+  - Set Type to `Bearer Token`
+  - Paste the token into the `Token` field
 
 - Access Granted:
   - If the token is valid, Spring Boot will authorize your request and grant access to the protected route

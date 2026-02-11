@@ -36,11 +36,11 @@ public class AuthController {
 	private final TokenService tokenService;
 	private final AuthenticationManager authenticationManager;
 	private final SecurityConfig securityConfig;
-	private final String defaultCredentialsWarning = "WARNING: you are using the default credentials to authenticate! " +
+	private final String defaultCredentialsWarning = "WARNING: you are using default credentials to authenticate! " +
 			"Your CITYdata instance is NOT PROTECTED! \n" +
 			"Please register your own list of trusted credentials by running: " +
 			"./src/main/resources/scripts/credentials-manager.sh. \n" +
-			"Once you register your credentials, the default credentials will be disabled to avoid unauthorized access.";
+			"Once you register your credentials, the default credentials will be disabled to prevent unauthorized access.";
 
 
 	public AuthController(TokenService tokenService, AuthenticationManager authenticationManager,
@@ -86,7 +86,6 @@ public class AuthController {
 
 			String username = values[0];
 			String password = values[1];
-
 
 			Authentication authentication = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(username, password));

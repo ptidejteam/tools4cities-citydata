@@ -146,17 +146,14 @@ public class SecurityConfig {
 			String classpath = getClass().getProtectionDomain()
 					.getCodeSource().getLocation().getPath();
 
-			// Decode URL encoding (handles spaces, special chars)
 			classpath = java.net.URLDecoder.decode(classpath, "UTF-8");
 
 			File f = new File(classpath);
 
-			// If it's a jar file, get its directory
 			if (f.isFile() && classpath.endsWith(".jar")) {
 				return f.getParentFile().toPath();
 			}
 
-			// If it's a directory (IDE/dev), return as is
 			if (f.isDirectory()) {
 				return f.toPath();
 			}

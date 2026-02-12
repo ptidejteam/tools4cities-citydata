@@ -87,16 +87,11 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"citydata\",\n    \"password\": \"citydata\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"mode": "none",
+							"raw": ""
 						},
 						"url": {
 							"raw": "{{baseURL}}/authenticate",

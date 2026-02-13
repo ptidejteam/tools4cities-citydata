@@ -139,6 +139,7 @@ The following routes are available:
 
 | **Method** | **API Route URL**       | **Description**                                                                              | **Input**                        |
 | ---------- | ----------------------- | -------------------------------------------------------------------------------------------- | -------------------------------- |
+| GET        | /authenticate        | Gives you a token to access CITYdata                                     | Your username and password in the request Authorization header                            |
 | GET        | /producers/list         | Lists all Producers and their parameters                                                     |                                  |
 | GET        | /operations/list        | Lists all Operations and their parameters                                                    |                                  |
 | POST       | /apply/sync             | Executes query synchronously (will not return until completed)                               | A JSON query in the request body |

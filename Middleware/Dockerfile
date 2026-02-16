@@ -17,11 +17,11 @@ RUN mvn dependency:resolve dependency:resolve-sources -B
 COPY src ./src
 
 # Generate RSA key pairs
-RUN mkdir -p src/main/resources/certs && \
-    openssl genrsa -out src/main/resources/certs/keypair.pem 2048 && \
-    openssl rsa -in src/main/resources/certs/keypair.pem -pubout -out src/main/resources/certs/public.pem && \
-    openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in src/main/resources/certs/keypair.pem -out src/main/resources/certs/private.pem && \
-    rm src/main/resources/certs/keypair.pem
+RUN mkdir -p src/main/resources/scripts/certs && \
+    openssl genrsa -out src/main/resources/scripts/certs/keypair.pem 2048 && \
+    openssl rsa -in src/main/resources/scripts/certs/keypair.pem -pubout -out src/main/resources/scripts/certs/public.pem && \
+    openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in src/main/resources/scripts/certs/keypair.pem -out src/main/resources/scripts/certs/private.pem && \
+    rm src/main/resources/scripts/certs/keypair.pem
 
 # Build the application
 RUN mvn clean package -DskipTests

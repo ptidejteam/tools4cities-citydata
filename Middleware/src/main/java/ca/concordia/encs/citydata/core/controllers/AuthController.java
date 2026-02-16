@@ -36,6 +36,12 @@ public class AuthController {
 	private final TokenService tokenService;
 	private final AuthenticationManager authenticationManager;
 	private final SecurityConfig securityConfig;
+	private final String defaultCredentialsWarning = "WARNING: you are using default credentials to authenticate! " +
+			"Your CITYdata instance is NOT PROTECTED! \n" +
+			"Please register your own list of trusted credentials by running: " +
+			"./src/main/resources/scripts/credentials-manager.sh. \n" +
+			"Once you register your credentials, the default credentials will be disabled to prevent unauthorized access.";
+
 
 	public AuthController(TokenService tokenService, AuthenticationManager authenticationManager,
 			SecurityConfig securityConfig) {
@@ -50,6 +56,10 @@ public class AuthController {
 			Authentication authentication = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()));
 
+			if (userLogin.username().equalsIgnoreCase(this.securityConfig.getDefaultUsername())) {
+				System.out.println(defaultCredentialsWarning);
+				return ResponseEntity.ok(tokenService.generateToken(authentication) + "\n" + defaultCredentialsWarning);
+			}
 			return ResponseEntity.ok(tokenService.generateToken(authentication));
 
 		} catch (final AuthenticationException e) {
@@ -79,6 +89,11 @@ public class AuthController {
 
 			Authentication authentication = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+			if (username.equalsIgnoreCase(this.securityConfig.getDefaultUsername())) {
+				System.out.println(defaultCredentialsWarning);
+				return ResponseEntity.ok(tokenService.generateToken(authentication) + "\n<br>" + defaultCredentialsWarning);
+			}
 
 			return ResponseEntity.ok(tokenService.generateToken(authentication));
 

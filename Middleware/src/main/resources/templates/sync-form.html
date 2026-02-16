@@ -33,44 +33,45 @@
 	</form>
 
 	<div id="result"></div>
-
+	
 	<script>
 	document.getElementById('form').addEventListener('submit', async (e) => {
-	e.preventDefault();
+	    e.preventDefault();
 
-	const steps = document.getElementById('steps').value;
-	const token = document.getElementById('token').value.trim();
-	const resultDiv = document.getElementById('result');
+	    const steps = document.getElementById('steps').value;
+	    const token = document.getElementById('token').value.trim();
+	    const resultDiv = document.getElementById('result');
 
-	if (!token) {
-	resultDiv.className = 'error';
-	resultDiv.innerHTML = '<h3>Error:</h3><pre>Please enter a Bearer token</pre>';
-	return;
-	}
+	    if (!token) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>Please enter a Bearer token</pre>';
+	        return;
+	    }
 
-	try {
-	const response = await fetch('/apply/sync', {
-	method: 'POST',
-	headers: {
-	'Content-Type': 'application/json',
-	'Authorization': 'Bearer ' + token
-	},
-	body: steps
-	});
+	    try {
+	        // Use relative URL - it will automatically use the current page's base path
+	        const response = await fetch('apply/sync', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Authorization': 'Bearer ' + token
+	            },
+	            body: steps
+	        });
 
-	const data = await response.text();
+	        const data = await response.text();
 
-	if (response.ok) {
-	resultDiv.className = 'success';
-	resultDiv.innerHTML = '<h3>Success:</h3><pre>' + data + '</pre>';
-	} else {
-	resultDiv.className = 'error';
-	resultDiv.innerHTML = '<h3>Error (' + response.status + '):</h3><pre>' + data + '</pre>';
-	}
-	} catch (error) {
-	resultDiv.className = 'error';
-	resultDiv.innerHTML = '<h3>Error:</h3><pre>' + error.message + '</pre>';
-	}
+	        if (response.ok) {
+	            resultDiv.className = 'success';
+	            resultDiv.innerHTML = '<h3>Success:</h3><pre>' + data + '</pre>';
+	        } else {
+	            resultDiv.className = 'error';
+	            resultDiv.innerHTML = '<h3>Error (' + response.status + '):</h3><pre>' + data + '</pre>';
+	        }
+	    } catch (error) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>' + error.message + '</pre>';
+	    }
 	});
 	</script>
 </body>

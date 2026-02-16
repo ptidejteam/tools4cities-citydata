@@ -119,10 +119,13 @@ public class ApplyController {
 			return ResponseEntity.status(responseCode).body(errorMessage);
 		}
 
-		return ResponseEntity.status(responseCode)
-				.body("Hello! The runner " + runnerId
-						+ " is currently working on your request. Please make a GET request to /apply/async/ "
-						+ runnerId + " to retrieve request results.");
+		/*		return ResponseEntity.status(responseCode)
+						.body("Hello! The runner " + runnerId
+								+ " is currently working on your request. Please make a GET request to /apply/async/ "
+								+ runnerId + " to retrieve request results.");*/
+
+		return ResponseEntity.status(responseCode).body("Hello! The runner " + runnerId
+				+ " is currently working on your request. Please check the status using the 'Check Status' section above with this runner ID.");
 	}
 
 	@RequestMapping(value = "/async/{runnerId}", method = RequestMethod.GET)

@@ -49,10 +49,10 @@ public class GeoJSONProducer extends AbstractProducer<JsonObject> implements IPr
 		} catch (Exception ignored) {
 		}
 
-		// 2. Fall back to filesystem (works on server with external files)
+		// 2. Fall back to filesystem (absolute path for Docker)
 		if (inputStream == null) {
 			try {
-				Resource fileResource = resolver.getResource("file:" + filePath);
+				Resource fileResource = resolver.getResource("file:/app/citydata-files/" + filePath);
 				if (fileResource.exists()) {
 					inputStream = fileResource.getInputStream();
 				}

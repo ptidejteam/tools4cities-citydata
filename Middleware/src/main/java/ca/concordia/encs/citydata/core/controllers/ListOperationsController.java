@@ -19,7 +19,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
 /**
  * This class is to print all available operations and their characteristics
  *
- * @author Sikandar Ejaz
+ * @author Sikandar Ejaz and Gabriel C. Ullmann
  * @since 2025-06-02
  */
 @RestController
@@ -33,6 +33,7 @@ public class ListOperationsController {
 		final JsonArray operationDetailsList = new JsonArray();
 
 		try {
+			// This scanner implementation works both on the filesystem and inside a JAR
 			ClassPathScanningCandidateComponentProvider scanner =
 					new ClassPathScanningCandidateComponentProvider(false);
 

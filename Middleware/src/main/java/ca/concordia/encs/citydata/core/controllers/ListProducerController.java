@@ -18,7 +18,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
 /**
  * This class is to print all available producers and their characteristics
  *
- * @author Sikandar Ejaz
+ * @author Sikandar Ejaz and Gabriel C. Ullmann
  * @since 2025-06-02
  */
 @RestController
@@ -32,12 +32,10 @@ public class ListProducerController {
 		final JsonArray producerDetailsList = new JsonArray();
 
 		try {
-			// This scanner works both on the filesystem (IDE) and inside a JAR
+			// This scanner implementation works both on the filesystem and inside a JAR
 			ClassPathScanningCandidateComponentProvider scanner =
 					new ClassPathScanningCandidateComponentProvider(false);
 
-			// Accept every class — we just want them all; adjust the filter if you
-			// only want a specific supertype or annotation
 			scanner.addIncludeFilter(new RegexPatternTypeFilter(
 					java.util.regex.Pattern.compile(".*")));
 

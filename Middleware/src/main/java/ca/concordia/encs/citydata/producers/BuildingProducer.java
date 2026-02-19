@@ -1,18 +1,19 @@
 package ca.concordia.encs.citydata.producers;
 
+import java.security.InvalidParameterException;
+
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.producers.base.JSONProducer;
 
-import java.security.InvalidParameterException;
-
 /**
  * This Producer outputs metadata about a building, such as floors, zones and sensors.
  * @author Gabriel C. Ullmann
  * @since 2025-05-28
  */
+
 public class BuildingProducer extends AbstractProducer<String> implements IProducer<String> {
 	private JSONProducer jsonProducer;
 
@@ -25,7 +26,7 @@ public class BuildingProducer extends AbstractProducer<String> implements IProdu
 	}
 
 	@SuppressWarnings("rawtypes")
-    @Override
+	@Override
 	public void setOperation(IOperation operation) {
 		this.jsonProducer.setOperation(operation);
 	}

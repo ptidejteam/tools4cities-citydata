@@ -195,6 +195,14 @@ Include your username and password in the request body as JSON, for example:
 
 - [Dataset Catalog](DATA_SOURCES.md) - Complete list of all available datasets
 
+## Demo & Presentations
+
+The following presentations describe the tool architecture and demo workflow.
+
+### Version 2.0
+
+- [Demo Presentation (PDF)](docs/presentations/citydata-demo-v2.0.pdf)
+
 ## Who do I talk to?
 
 Project manager: gabriel.cavalheiroullmann at concordia.ca

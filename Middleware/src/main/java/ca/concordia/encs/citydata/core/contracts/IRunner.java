@@ -13,6 +13,7 @@ package ca.concordia.encs.citydata.core.contracts;
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
  */
+
 public interface IRunner {
 
 	// execution

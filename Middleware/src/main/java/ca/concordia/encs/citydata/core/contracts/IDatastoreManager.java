@@ -26,5 +26,4 @@ public interface IDatastoreManager {
 	default boolean hasStore(DatastoreType type) {
 		return getStores().containsKey(type);
 	}
-
 }

@@ -6,13 +6,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
 import com.google.gson.JsonObject;
 
+import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.datastores.DiskDatastore;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
@@ -23,6 +23,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * @author Gabriel C. Ullmann, Rushin D. Makwana
  * @since 2025-02-12
  */
+
 public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	private String url;
@@ -56,12 +57,13 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private JsonObject getResourceAttributes(ArrayList<JsonObject> metadataObject) {
-		final JsonObject metadataResults = !metadataObject.isEmpty() ? metadataObject.getFirst().get("result").getAsJsonObject()
+		final JsonObject metadataResults = !metadataObject.isEmpty()
+				? metadataObject.getFirst().get("result").getAsJsonObject()
 				: null;
 
 		final JsonObject attributesObject = new JsonObject();
-        assert metadataResults != null;
-        attributesObject.addProperty("sizeInMb", metadataResults.get("size").getAsInt() / 1000000);
+		assert metadataResults != null;
+		attributesObject.addProperty("sizeInMb", metadataResults.get("size").getAsInt() / 1000000);
 		attributesObject.addProperty("mimetype", metadataResults.get("mimetype").getAsString());
 		attributesObject.addProperty("url", metadataResults.get("url").getAsString());
 
@@ -86,17 +88,17 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 			metadataProducer.setResourceId(this.resourceId);
 			final SingleStepRunner deckard = new SingleStepRunner(metadataProducer);
 			final Thread runnerTask = new Thread(() -> {
-                try {
-                    deckard.runSteps();
-                    while (!deckard.isDone()) {
-                        System.out.println("Busy waiting!");
-                    }
-                } catch (Exception e) {
-                    deckard.setAsDone();
-                    System.out.println(e.getMessage());
-                }
+				try {
+					deckard.runSteps();
+					while (!deckard.isDone()) {
+						System.out.println("Busy waiting!");
+					}
+				} catch (Exception e) {
+					deckard.setAsDone();
+					System.out.println(e.getMessage());
+				}
 
-            });
+			});
 			runnerTask.start();
 			runnerTask.join();
 
@@ -118,7 +120,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 				requestOptions.setMethod("GET");
 				this.setFilePath(resourceUrl);
 				this.setFileOptions(requestOptions);
-                return this.fetchFromPath();
+				return this.fetchFromPath();
 			} else {
 				intermediateResult.add("Sorry, the " + mimetype + " type is not currently supported by this producer. "
 						+ "If you wish to download the resource, please open this link in your browser: " + resourceUrl
@@ -156,5 +158,4 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 		}
 
 	}
-
 }

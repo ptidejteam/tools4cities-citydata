@@ -92,5 +92,4 @@ public class ReflectionUtilsTest {
 		value.getAsJsonObject().addProperty("key", 3.14);
 		assertEquals(3.14, ReflectionUtils.convertValue(double.class, value.getAsJsonObject().get("key")));
 	}
-
 }

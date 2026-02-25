@@ -21,13 +21,9 @@ import ca.concordia.encs.citydata.services.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * JWT Authentication Implementation
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
- * 
- * Update: Multi-user authentication added
- * Author: Sikandar Ejaz
- * Last Update: 28-09-2025
+ * JWT Multi-user authentication implementation
+ * @author Sikandar Ejaz 
+ * @since 18-07-2025
  */
 
 @RestController
@@ -36,12 +32,11 @@ public class AuthController {
 	private final TokenService tokenService;
 	private final AuthenticationManager authenticationManager;
 	private final SecurityConfig securityConfig;
-	private final String defaultCredentialsWarning = "WARNING: you are using default credentials to authenticate! " +
-			"Your CITYdata instance is NOT PROTECTED! \n" +
-			"Please register your own list of trusted credentials by running: " +
-			"./src/main/resources/scripts/credentials-manager.sh. \n" +
-			"Once you register your credentials, the default credentials will be disabled to prevent unauthorized access.";
-
+	private final String defaultCredentialsWarning = "WARNING: you are using default credentials to authenticate! "
+			+ "Your CITYdata instance is NOT PROTECTED! \n"
+			+ "Please register your own list of trusted credentials by running: "
+			+ "./src/main/resources/scripts/credentials-manager.sh. \n"
+			+ "Once you register your credentials, the default credentials will be disabled to prevent unauthorized access.";
 
 	public AuthController(TokenService tokenService, AuthenticationManager authenticationManager,
 			SecurityConfig securityConfig) {
@@ -92,7 +87,8 @@ public class AuthController {
 
 			if (username.equalsIgnoreCase(this.securityConfig.getDefaultUsername())) {
 				System.out.println(defaultCredentialsWarning);
-				return ResponseEntity.ok(tokenService.generateToken(authentication) + "\n<br>" + defaultCredentialsWarning);
+				return ResponseEntity
+						.ok(tokenService.generateToken(authentication) + "\n<br>" + defaultCredentialsWarning);
 			}
 
 			return ResponseEntity.ok(tokenService.generateToken(authentication));

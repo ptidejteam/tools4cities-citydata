@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
+import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.producers.base.JSONProducer;
 
@@ -16,12 +16,13 @@ import ca.concordia.encs.citydata.producers.base.JSONProducer;
  * @author Gabriel C. Ullmann
  * @since 2025-02-12
  */
+
 public class CKANMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	private String url;
 	private String resourceId;
 	private String datasetName;
-    private IOperation<JsonObject> jsonProducerOperation;
+	private IOperation<JsonObject> jsonProducerOperation;
 	private IRunner runnerObserver;
 
 	public void setUrl(String url) {
@@ -43,10 +44,10 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 	}
 
 	@SuppressWarnings("rawtypes")
-    @Override
+	@Override
 	public void setOperation(IOperation operation) {
-        //noinspection unchecked
-        this.jsonProducerOperation = operation;
+		//noinspection unchecked
+		this.jsonProducerOperation = operation;
 	}
 
 	@Override
@@ -93,5 +94,4 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 	public void addObserver(final IRunner aRunner) {
 		this.runnerObserver = aRunner;
 	}
-
 }

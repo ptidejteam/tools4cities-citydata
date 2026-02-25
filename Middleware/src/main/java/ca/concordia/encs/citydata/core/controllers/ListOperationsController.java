@@ -16,11 +16,12 @@ import ca.concordia.encs.citydata.core.utils.Constants;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
 /**
- * This class is to print all available operations and their characteristics
+ * This route prints available operations and their characteristics in CITYdata 
  * 
  * @author Sikandar Ejaz
  * @since 2025-06-02
  */
+
 @RestController
 @RequestMapping("/operations")
 public class ListOperationsController {

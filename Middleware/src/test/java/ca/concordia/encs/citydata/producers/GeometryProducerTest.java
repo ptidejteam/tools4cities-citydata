@@ -20,12 +20,8 @@ import ca.concordia.encs.citydata.operations.MergeOperation;
 /**
  * Tests the API endpoint with the merge operation between EnergyConsumption and Geometry producers
  *
- * @author Minette Zongo M. 
- * @since 29-04-2025 
- *
- * Last Update: Fixed failing tests after implementing Authentication
- * @author Sikandar Ejaz 
- * @since 2025-07-18
+ * @author Minette Zongo M., Sikandar Ejaz
+ * @since 2025-04-29 
  */
 
 @SpringBootTest(classes = { AppConfig.class })
@@ -52,5 +48,4 @@ public class GeometryProducerTest extends BaseIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("result")));
 	}
-
 }

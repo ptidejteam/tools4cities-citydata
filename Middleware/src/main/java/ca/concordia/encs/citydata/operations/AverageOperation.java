@@ -2,14 +2,15 @@ package ca.concordia.encs.citydata.operations;
 
 import java.util.ArrayList;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
+import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 
 /**
  * This operation computes the average (arithmetic mean) of a list of Integer
  * @author Gabriel C. Ullmann
  * @since 2025-06-17
  */
+
 public class AverageOperation extends AbstractOperation<Integer> implements IOperation<Integer> {
 
 	String roundingMethod = "round";
@@ -43,5 +44,4 @@ public class AverageOperation extends AbstractOperation<Integer> implements IOpe
 		result.add(roundedAverage);
 		return result;
 	}
-
 }

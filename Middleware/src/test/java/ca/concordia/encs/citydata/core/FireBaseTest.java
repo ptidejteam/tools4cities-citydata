@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
  * @author Rushin Makwana
  * @since 2025-01-01
  */
+
 public class FireBaseTest {
 
 	private static FirebaseDatabase database;
@@ -55,7 +56,7 @@ public class FireBaseTest {
 	@Test
 	public void testFetchDataFromFirebase() {
 
-		if (skipTest ) {
+		if (skipTest) {
 			System.out.println("Should skip test!");
 		} else {
 			DatabaseReference ref = database.getReference("/");
@@ -82,6 +83,5 @@ public class FireBaseTest {
 				System.out.println(e.getMessage());
 			}
 		}
-
 	}
 }

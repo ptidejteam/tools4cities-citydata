@@ -4,12 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Spring Boot configuration for EPA ENERGY STAR Portfolio Manager API.
- * Credentials and base URL are loaded from application.properties at startup
- * and exposed as static methods so they can be accessed by producers
- * instantiated via reflection (e.g. by SequentialRunner).
- *
- * @since 2026
+ * Configuration for Energy Star Portfolio Manager API. Credentials and base URL are loaded from application.properties at startup
+ * Author: Minette Zongo
+ * Date: 2026-02-24
  */
 @Configuration
 public class PortfolioManagerConfig {

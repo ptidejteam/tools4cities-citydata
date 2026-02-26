@@ -38,6 +38,9 @@ WORKDIR /app
 # Copy the built JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
 
+# Copy docs folder into container
+COPY docs ./citydata-files/docs
+
 # Change ownership to citydata user
 RUN chown -R citydata:citydata /app
 

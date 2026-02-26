@@ -2,8 +2,8 @@ package ca.concordia.encs.citydata.producers;
 
 import java.util.ArrayList;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
 /**
  * This producer was created for the sole purpose of returning Exceptions when
@@ -13,6 +13,7 @@ import ca.concordia.encs.citydata.core.contracts.IProducer;
  * @author Gabriel C. Ullmann
  * @since 2025-01-01
  */
+
 public class ExceptionProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public ExceptionProducer(Exception e) {
@@ -25,5 +26,4 @@ public class ExceptionProducer extends AbstractProducer<String> implements IProd
 	public void fetch() {
 		System.out.println("The fetch method is unimplemented in the ExceptionProducer and shall not be used!");
 	}
-
 }

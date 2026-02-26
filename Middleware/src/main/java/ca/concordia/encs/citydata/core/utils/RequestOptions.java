@@ -9,6 +9,7 @@ import java.util.HashMap;
  * @author Gabriel C. Ullmann
  * @since 2025-03-28
  */
+
 public class RequestOptions {
 	private String method;
 	private String requestBody = "";
@@ -46,5 +47,4 @@ public class RequestOptions {
 	public void addToHeaders(String key, String value) {
 		headers.put(key, value);
 	}
-
 }

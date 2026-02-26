@@ -18,11 +18,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * Discovery routes test
  *
  * @author Sikandar Ejaz
- * @since 18-06-2025
- * 
- * Last Update: Removed local mockMvc instance, used from BaseMvc
- * @author Sikandar Ejaz
- * @since 2025-08-12
+ * @since 2025-06-18
  */
 
 @SpringBootTest(classes = { AppConfig.class, TestConfig.class })

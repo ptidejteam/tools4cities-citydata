@@ -23,13 +23,6 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * Tests for MergeOperation
  * @author Sikandar Ejaz
  * @since 2025-04-08
- * 
- * Tests added for MergeOperation 
- * Author: Sikandar Ejaz 
- * Date: 2025-04-08
- * 
- * Last Update: 2025-05-16
- * Fixed failing tests after implementing Authentication
  */
 
 @SpringBootTest(classes = { AppConfig.class, TestConfig.class })
@@ -108,5 +101,4 @@ public class MergeOperationTests extends BaseIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON).content(brokenJson)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("")));
 	}
-
 }

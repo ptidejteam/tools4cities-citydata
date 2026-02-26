@@ -24,6 +24,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @author Sikandar Ejaz
  * @since 2026-02-16
  */
+
 public class GeoJSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	@Override

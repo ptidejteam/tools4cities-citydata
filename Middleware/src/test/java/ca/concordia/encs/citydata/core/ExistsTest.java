@@ -15,12 +15,8 @@ import ca.concordia.encs.citydata.PayloadFactory;
 /**
  * ExistsController routes test
  *
- * @author Minette Zongo
+ * @author Minette Zongo, Sikandar Ejaz
  * @since 2025-02-26
- *  
- * Last Update: 2025-07-18 
- * Author Sikandar Ejaz 
- * Fixed failing tests after implementing Authentication
 */
 
 public class ExistsTest extends BaseIntegrationTest {

@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
- * This java class is to print all available routes
+ * This route prints CITYdata API end points
  *
  * @author Sikandar Ejaz
  * @since 2025-01-01
  */
+
 @RestController
 @RequestMapping("/routes")
 public class RouteController {
@@ -34,13 +35,11 @@ public class RouteController {
 		handlerMapping.getHandlerMethods().forEach((requestMappingInfo, handlerMethod) -> {
 			final String methodInfo = handlerMethod.getMethod().toString();
 
-            requestMappingInfo.getDirectPaths();
-            final List<String> paths = requestMappingInfo.getDirectPaths().stream().toList(); // Simplified as Condition 'requestMappingInfo. getDirectPaths() != null' is always 'true' (Earlier -paths = requestMappingInfo.getDirectPaths() != null
+			requestMappingInfo.getDirectPaths();
+			final List<String> paths = requestMappingInfo.getDirectPaths().stream().toList(); // Simplified as Condition 'requestMappingInfo. getDirectPaths() != null' is always 'true' (Earlier -paths = requestMappingInfo.getDirectPaths() != null
 
+			final String methods = requestMappingInfo.getMethodsCondition().toString(); //
 
-			final String methods =
-					requestMappingInfo.getMethodsCondition().toString(); //
-		
 			paths.forEach(path -> {
 				// Exclude Spring Boot's default error routes
 				if (!path.startsWith("/error")) {

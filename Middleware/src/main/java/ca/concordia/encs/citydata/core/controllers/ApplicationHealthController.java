@@ -27,6 +27,4 @@ public class ApplicationHealthController {
 		final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
 		return ResponseEntity.status(HttpStatus.OK).body("CITYdata running at " + timeStamp);
 	}
-
-
 }

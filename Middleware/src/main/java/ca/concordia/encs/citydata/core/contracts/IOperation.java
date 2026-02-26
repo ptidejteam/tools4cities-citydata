@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
  */
+
 public interface IOperation<E> {
 
 	// 1 - prepare producer
@@ -19,4 +20,5 @@ public interface IOperation<E> {
 
 	// 3 - notify when done
 	void notifyObservers();
+
 }

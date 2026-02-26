@@ -11,11 +11,12 @@ import com.google.gson.JsonObject;
  * @author Gabriel C. Ullmann
  * @since 2025-06-18
  */
+
 public abstract class PayloadFactory {
 
 	//TODO Have to look into this method in the future to make it shorter and more
 	// readable.
-    public static String getBasicQuery() {
+	public static String getBasicQuery() {
 		JsonObject payload = new JsonObject();
 		payload.addProperty("use", "ca.concordia.encs.citydata.producers.RandomStringProducer");
 
@@ -65,7 +66,7 @@ public abstract class PayloadFactory {
 		payload.add("apply", apply);
 
 		return payload.toString();
-		
+
 	}
 
 	public static String getExampleQuery(String queryFileName) throws Exception {
@@ -74,8 +75,7 @@ public abstract class PayloadFactory {
 	}
 
 	@SuppressWarnings("SameReturnValue")
-    public static String getInvalidJson() {
+	public static String getInvalidJson() {
 		return "{broken_json:}";
 	}
-
 }

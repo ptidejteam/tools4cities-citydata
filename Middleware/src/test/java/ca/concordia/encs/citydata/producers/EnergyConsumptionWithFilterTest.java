@@ -35,11 +35,8 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * 2021-09-01 to 2022-08-31. Current mock file has 100 mock records.
  *
  * 
- * @author Minette Zongo M., Gabriel C. Ullmann
+ * @author Minette Zongo M., Gabriel C. Ullmann, Sikandar Ejaz
  * @since 2025-04-29
- *
- * Last Update: 2025-07-18 Author Sikandar Ejaz Fixed failing tests after
- * implementing Authentication
  */
 
 @SpringBootTest(classes = { AppConfig.class })
@@ -108,5 +105,4 @@ public class EnergyConsumptionWithFilterTest extends BaseIntegrationTest {
 				.andExpect(content().string(containsString("0.35069153"))).andReturn();
 
 	}
-
 }

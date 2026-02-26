@@ -7,8 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
@@ -17,6 +17,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
  */
+
 public class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	public JSONProducer(String filePath, RequestOptions fileOptions) {
@@ -30,22 +31,21 @@ public class JSONProducer extends AbstractProducer<JsonObject> implements IProdu
 
 		// Use ByteArrayOutputStream to fetch data
 
-        OutputStream outputStream = this.fetchFromPath();
-        String inputJson = outputStream.toString();
+		OutputStream outputStream = this.fetchFromPath();
+		String inputJson = outputStream.toString();
 
-        // Convert JSON string to object
-        final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
+		// Convert JSON string to object
+		final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
 
-        JsonObject outputJsonObject = new JsonObject();
-        if (inputJsonElement.isJsonArray()) {
-            outputJsonObject.add("result", inputJsonElement);
-        } else {
-            outputJsonObject = inputJsonElement.getAsJsonObject();
-        }
+		JsonObject outputJsonObject = new JsonObject();
+		if (inputJsonElement.isJsonArray()) {
+			outputJsonObject.add("result", inputJsonElement);
+		} else {
+			outputJsonObject = inputJsonElement.getAsJsonObject();
+		}
 
-        jsonOutput.add(outputJsonObject);
-        this.setResult(jsonOutput);
-        this.applyOperation();
-    }
-
+		jsonOutput.add(outputJsonObject);
+		this.setResult(jsonOutput);
+		this.applyOperation();
+	}
 }

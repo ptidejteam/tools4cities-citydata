@@ -23,12 +23,8 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
 /**
  * CKANProducer tests
  *
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Sikandar Ejaz
  * @since 2025-02-12
- *
- * Last Update: 2025-07-18 
- * Author Sikandar Ejaz 
- * Fixed failing tests after implementing Authentication
  */
 
 @SpringBootTest(classes = { AppConfig.class })
@@ -109,5 +105,4 @@ public class CKANProducerTest extends BaseIntegrationTest {
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().string(containsString("Cannot invoke")));
 	}
-
 }

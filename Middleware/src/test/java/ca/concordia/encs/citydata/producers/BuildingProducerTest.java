@@ -44,5 +44,4 @@ public class BuildingProducerTest extends BaseIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("open_spaces")));
 	}
-
 }

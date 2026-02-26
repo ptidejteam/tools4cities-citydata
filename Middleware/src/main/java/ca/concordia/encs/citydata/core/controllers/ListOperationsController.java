@@ -22,6 +22,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * @author Sikandar Ejaz and Gabriel C. Ullmann
  * @since 2025-06-02
  */
+
 @RestController
 @RequestMapping("/operations")
 public class ListOperationsController {

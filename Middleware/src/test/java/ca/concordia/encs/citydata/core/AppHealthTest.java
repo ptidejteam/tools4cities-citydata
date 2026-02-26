@@ -16,12 +16,8 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
 /**
  * App health routes test
  *
- * @author Minette Zongo
+ * @author Minette Zongo, Sikandar Ejaz
  * @since 2025-06-18
- * 
- * Last Update: Removed local mockMvc instance, used from BaseMvc
- * @author Sikandar Ejaz
- * @since 2025-08-12
  */
 
 @SpringBootTest(classes = AppConfig.class)
@@ -38,5 +34,4 @@ public class AppHealthTest extends BaseIntegrationTest {
 		mockMvc.perform(get("/health/ping")).andExpect(status().isOk())
 				.andExpect(content().string(org.hamcrest.Matchers.startsWith("CITYdata running")));
 	}
-
 }

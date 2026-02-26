@@ -18,8 +18,14 @@ import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
+/**
+ * Producer for fetching Portfolio Manager metadata (account, property, or meter) and forwarding the XML response to the
+ * PortfolioManagerProducer for further processing.
+ * @author Minette Zongo
+ * @since 2026-02-24
+ */
+
 public class PortfolioManagerMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
-	// client-supplied — not secrets
     private String dataType;
     private String accountId;
     private String propertyId;

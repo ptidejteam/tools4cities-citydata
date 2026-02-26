@@ -19,13 +19,20 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
+/**
+ * Producer that fetches meter consumption data from the ENERGY STAR Portfolio Manager API, transforms the XML response,
+ * and forwards structured results to the CITYdata for potential operations.
+ *
+ * @author Minette Zongo
+ * @since 2026-02-24
+ */
+
 public class PortfolioManagerProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 	private String meterId;
     private final ArrayList<JsonObject> intermediateResult = new ArrayList<>();
 
     public void setMeterId(String meterId) { this.meterId = meterId; }
 
-    // mirrors CKANProducer.getMetadataObject()
     @SuppressWarnings("unchecked")
     private ArrayList<JsonObject> getMeterMetadata(SingleStepRunner runner) {
         final InMemoryDataStore store = InMemoryDataStore.getInstance();
@@ -37,7 +44,6 @@ public class PortfolioManagerProducer extends AbstractProducer<JsonObject> imple
         return new ArrayList<>();
     }
 
-    // mirrors CKANProducer.getResourceAttributes()
     private void validateMeterMetadata(ArrayList<JsonObject> metadataObject) {
         if (metadataObject.isEmpty()) {
             throw new RuntimeException("Meter metadata is empty. "
@@ -51,12 +57,9 @@ public class PortfolioManagerProducer extends AbstractProducer<JsonObject> imple
         }
     }
 
-    // mirrors CKANProducer.fetchFromCkan()
     private String fetchConsumptionData() {
         try {
-            // Step 1: validate meter via internal SingleStepRunner
-            // new PortfolioManagerMetadataProducer() works here because
-            // it reads credentials from PortfolioManagerConfig statically
+			
             final PortfolioManagerMetadataProducer metadataProducer =
                     new PortfolioManagerMetadataProducer();
             metadataProducer.setMeterId(this.meterId);
@@ -77,11 +80,9 @@ public class PortfolioManagerProducer extends AbstractProducer<JsonObject> imple
             runnerTask.start();
             runnerTask.join();
 
-         // Step 2: validate meter metadata
             final ArrayList<JsonObject> meterMetadata = getMeterMetadata(internalRunner);
             validateMeterMetadata(meterMetadata);
 
-            // Step 3: fetch consumption data via AbstractProducer.fetchFromPath()
             final String consumptionEndpoint = PortfolioManagerConfig.getBaseUrl()
                     + "/meter/" + this.meterId + "/consumptionData";
             final RequestOptions requestOptions = new RequestOptions();

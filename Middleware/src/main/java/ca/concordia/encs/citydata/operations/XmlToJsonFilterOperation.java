@@ -20,8 +20,8 @@ import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
  * This operation converts XML meter consumption data from Portfolio Manager
  * into an array of JsonObjects, with optional filtering by a given key and value.
  *
- * @author Your Name
- * @since 2025-XX-XX
+ * @author: Minette Zongo
+ * @since 2026-02-26
  */
 public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 

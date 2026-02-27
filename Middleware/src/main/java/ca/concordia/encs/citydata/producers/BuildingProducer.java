@@ -40,4 +40,5 @@ public class BuildingProducer extends AbstractProducer<String> implements IProdu
 	public void addObserver(final IRunner aRunner) {
 		this.jsonProducer.addObserver(aRunner);
 	}
+
 }

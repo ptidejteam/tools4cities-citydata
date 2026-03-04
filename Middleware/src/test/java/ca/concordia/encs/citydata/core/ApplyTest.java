@@ -30,14 +30,6 @@ import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
  *
  * @author Gabriel C. Ullmann, Sikandar Ejaz
  * @since 2025-06-18
- * 
- * Fixed failing tests after implementing Authentication
- * Author: Sikandar Ejaz 
- * Date: 2025-07-18
- * 
- * Updated tests with authentication
- * Author: Sikandar Ejaz
- * Date: 2025-10-01
  */
 
 @SpringBootTest(classes = { AppConfig.class })

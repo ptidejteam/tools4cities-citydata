@@ -23,6 +23,7 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
  * @author Rushin Makwana
  * @since 2024-02-26
  */
+
 @RestController
 @RequestMapping("/report")
 public class ReportController {

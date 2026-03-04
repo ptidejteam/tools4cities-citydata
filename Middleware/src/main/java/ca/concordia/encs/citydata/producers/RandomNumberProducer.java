@@ -3,8 +3,8 @@ package ca.concordia.encs.citydata.producers;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
 /**
@@ -14,6 +14,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @author Gabriel C. Ullmann
  * @since 2025-05-28
  */
+
 public class RandomNumberProducer extends AbstractProducer<Integer> implements IProducer<Integer> {
 	private int listSize;
 	private int generationDelay;
@@ -27,7 +28,7 @@ public class RandomNumberProducer extends AbstractProducer<Integer> implements I
 	}
 
 	@SuppressWarnings("BusyWait")
-    @Override
+	@Override
 	public void fetch() {
 		try {
 			// if this is running for the first time, fetch

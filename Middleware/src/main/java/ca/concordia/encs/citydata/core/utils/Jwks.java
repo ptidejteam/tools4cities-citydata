@@ -9,8 +9,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 
 /**
  * JWT Authentication Implementation
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
+ * @author Sikandar Ejaz 
+ * @since 18-07-2025
  */
 
 public class Jwks {

@@ -23,11 +23,6 @@ RUN mkdir -p src/main/resources/scripts/certs && \
     openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in src/main/resources/scripts/certs/keypair.pem -out src/main/resources/scripts/certs/private.pem && \
     rm src/main/resources/scripts/certs/keypair.pem
 
-# User will execute credential-manager.sh manually
-# TODO: in the future, make the Dockerfile create a default docker user by running the script here
-RUN mkdir -p src/main/resources/scripts/credentials
-COPY src/main/resources/scripts/credentials/*.txt ./src/main/resources/scripts/credentials
-
 # Build the application
 RUN mvn clean package -DskipTests
 
@@ -42,6 +37,9 @@ WORKDIR /app
 
 # Copy the built JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Copy docs folder into container
+COPY docs ./citydata-files/docs
 
 # Change ownership to citydata user
 RUN chown -R citydata:citydata /app

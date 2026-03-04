@@ -24,12 +24,8 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
 /**
  * Test: Hub building retrofit results Producer
  *
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Sikandar Ejaz
  * @since 2025-06-18
- * 
- * Last Update: Fixed failing tests after implementing Authentication
- * @author Sikandar Ejaz 
- * @since 18-07-2025
  */
 
 @SpringBootTest(classes = { AppConfig.class })

@@ -44,8 +44,8 @@ import ca.concordia.encs.citydata.core.configs.SecurityConfig;
  * These tests verify that the SecurityConfig correctly reads and processes
  * the credentials.txt file in various scenarios matching the bash script operations.
  * 
- * Date: 2025-12-01
- * Author: Sikandar Ejaz
+ * @author Sikandar Ejaz
+ * @since 2025-12-01
  */
 
 @DisplayName("SecurityConfig Credentials Management Tests")

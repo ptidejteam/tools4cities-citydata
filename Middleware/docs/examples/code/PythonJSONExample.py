@@ -1,6 +1,7 @@
 import requests
 import json
 
+#Python code example to access JSON producer via API call in code 
 # Configuration
 BASE_URL = "http://localhost:8084" # Replace with actual server address
 USERNAME = "Your_Username"  # Replace with actual username

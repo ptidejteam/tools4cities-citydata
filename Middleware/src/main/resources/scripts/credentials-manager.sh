@@ -236,6 +236,11 @@ while true; do
          echo "Error: Username cannot be empty."
          continue
        fi
+       # Prevent the use of 'citydata' username
+       if [[ "$uname" == "citydata" ]]; then
+         echo "Error: Sorry, the username 'citydata' is reserved for the default user. Please choose another username."
+         continue
+       fi
        # Check if user already exists BEFORE asking for password
        if user_exists "$uname"; then
          echo "Error: User '$uname' already exists."

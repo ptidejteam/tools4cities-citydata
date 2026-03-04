@@ -17,6 +17,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractEntity;
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
  */
+
 public class InMemoryDataStore extends AbstractEntity implements IDataStore<IProducer<?>> {
 
 	private HashMap<UUID, IProducer<?>> map = new HashMap<>();
@@ -35,26 +36,25 @@ public class InMemoryDataStore extends AbstractEntity implements IDataStore<IPro
 
 	@Override
 	public void set(UUID key, IProducer<?> value) {
-        this.map.put(key, value);
-    }
+		this.map.put(key, value);
+	}
 
 	@Override
-    public IProducer<?> get(UUID key) {
-        return this.map.get(key);
-    }
-    
-    @Override
-    public Iterator<IProducer<?>> getValues() {
-        return this.map.values().iterator();
-    }
-    
-    @Override
-    public void delete(UUID key) {
-        this.map.remove(key);
-    }
-    
-    public void truncate() {
-        this.map = new HashMap<>();
-    }
+	public IProducer<?> get(UUID key) {
+		return this.map.get(key);
+	}
 
+	@Override
+	public Iterator<IProducer<?>> getValues() {
+		return this.map.values().iterator();
+	}
+
+	@Override
+	public void delete(UUID key) {
+		this.map.remove(key);
+	}
+
+	public void truncate() {
+		this.map = new HashMap<>();
+	}
 }

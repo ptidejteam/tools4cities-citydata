@@ -113,6 +113,18 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+	
+	    <resources>
+	        <resource>
+	            <directory>src/main/resources</directory>
+	        </resource>
+	        <resource>
+	            <directory>${project.basedir}</directory>
+	            <includes>
+	                <include>docs/**/*</include>
+	            </includes>
+	        </resource>
+	    </resources>
 	</build>
 
 </project>

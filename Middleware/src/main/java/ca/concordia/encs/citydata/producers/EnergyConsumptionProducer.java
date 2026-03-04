@@ -29,6 +29,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * @author Gabriel C. Ullmann, Minette Zongo
  * @since 2025-05-28
  */
+
 public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> implements IProducer<JsonArray> {
 	private String city;
 	private String startDatetime;
@@ -153,5 +154,4 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 			this.applyOperation();
 		}
 	}
-
 }

@@ -26,6 +26,7 @@ import ca.concordia.encs.citydata.core.utils.ProducerUsageData;
  * @author Rushin Makwana
  * @since 2024-02-26
  */
+
 @Component
 public class MongoDataStore extends AbstractEntity implements IDataStore<ProducerUsageData> {
 
@@ -105,30 +106,28 @@ public class MongoDataStore extends AbstractEntity implements IDataStore<Produce
 			mongoTemplate.remove(new Query(), ProducerUsageData.class);
 		}
 	}
-	
+
 	@Override
 	public ProducerUsageData get(UUID key) {
-	    if (mongoTemplate != null) {
-	        return mongoTemplate.findById(key.toString(), ProducerUsageData.class);
-	    }
-	    return null;
+		if (mongoTemplate != null) {
+			return mongoTemplate.findById(key.toString(), ProducerUsageData.class);
+		}
+		return null;
 	}
-	
+
 	@Override
 	public void set(UUID key, ProducerUsageData value) {
-	    if (mongoTemplate != null) {
-	        mongoTemplate.save(value, key.toString());
-	    }
+		if (mongoTemplate != null) {
+			mongoTemplate.save(value, key.toString());
+		}
 	}
 
 	@Override
 	public void delete(UUID key) {
-	    if (mongoTemplate != null) {
-	        mongoTemplate.remove(query(where("_id").is(key.toString())), ProducerUsageData.class);
-	    }
+		if (mongoTemplate != null) {
+			mongoTemplate.remove(query(where("_id").is(key.toString())), ProducerUsageData.class);
+		}
 	}
-	
-	
 
 	@Override
 	public Iterator<ProducerUsageData> getValues() {

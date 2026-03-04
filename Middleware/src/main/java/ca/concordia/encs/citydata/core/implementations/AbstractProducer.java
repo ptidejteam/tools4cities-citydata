@@ -1,6 +1,11 @@
 package ca.concordia.encs.citydata.core.implementations;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -9,7 +14,9 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -30,6 +37,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @author Gabriel C. Ullmann, Rushin D. Makwana
  * @since 2025-05-27
  */
+
 public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
 
 	private String filePath;
@@ -76,9 +84,9 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	}
 
 	@SuppressWarnings("rawtypes")
-    @Override
+	@Override
 	public void setOperation(IOperation operation) {
-        this.operation = operation;
+		this.operation = operation;
 	}
 
 	@Override
@@ -126,19 +134,19 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		 *  for now, I kept support to PUT and POST because they are needed for Hub API auth
 		 */
 		switch (this.fileOptions.getMethod()) {
-			case "HEAD":
-				break;
-			case "GET":
-				requestBuilder.GET();
-				break;
-			case "POST":
-				requestBuilder.POST(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
-				break;
-			case "PUT":
-				requestBuilder.PUT(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
-				break;
-			default:
-				throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
+		case "HEAD":
+			break;
+		case "GET":
+			requestBuilder.GET();
+			break;
+		case "POST":
+			requestBuilder.POST(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
+			break;
+		case "PUT":
+			requestBuilder.PUT(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
+			break;
+		default:
+			throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
 		}
 
 		if (!this.fileOptions.getHeaders().isEmpty()) {
@@ -146,10 +154,8 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		}
 
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<InputStream> response = client.send(
-					requestBuilder.build(),
-					HttpResponse.BodyHandlers.ofInputStream()
-			);
+			HttpResponse<InputStream> response = client.send(requestBuilder.build(),
+					HttpResponse.BodyHandlers.ofInputStream());
 
 			if (this.fileOptions.isReturnHeaders()) {
 				try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
@@ -182,8 +188,8 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("File not found: " + this.filePath, e);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot read file: " + this.filePath + ". " +
-					"The file may be corrupted or inaccessible to CITYdata right now.");
+			throw new RuntimeException("Cannot read file: " + this.filePath + ". "
+					+ "The file may be corrupted or inaccessible to CITYdata right now.");
 		} catch (Exception e) {
 			throw new RuntimeException("An error occurred while fetching the data: " + e.getMessage());
 		}
@@ -204,5 +210,4 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		}
 		return jsonArray.toString();
 	}
-
 }

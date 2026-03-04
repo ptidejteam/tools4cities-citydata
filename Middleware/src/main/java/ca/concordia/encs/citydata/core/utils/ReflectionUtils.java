@@ -3,15 +3,16 @@ package ca.concordia.encs.citydata.core.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidProducerException;
+
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidOperationException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidParameterException;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.UnsupportedParameterTypeException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidProducerException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.MalformedParameterException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.UnsupportedParameterTypeException;
 
 /**
  * This class contains Reflection functions used throughout the code to
@@ -20,6 +21,7 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.MalformedP
  * @author Rushin Makwana
  * @since 2025-02-01
  */
+
 public abstract class ReflectionUtils {
 
 	public static JsonElement getRequiredField(JsonObject jsonObject, String fieldName) {
@@ -39,10 +41,12 @@ public abstract class ReflectionUtils {
 			} else if (className.contains("Producer") || className.contains("producer")) {
 				throw new InvalidProducerException(className);
 			} else {
-				throw new MiddlewareException("Producer or Operation " + e.getClass().getSimpleName() + " was not found. Please check for typos and try again.");
+				throw new MiddlewareException("Producer or Operation " + e.getClass().getSimpleName()
+						+ " was not found. Please check for typos and try again.");
 			}
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			throw new MiddlewareException("CITYdata entity could not be created: " + e.getClass().getSimpleName() + ". Please contact the system administrator.");
+			throw new MiddlewareException("CITYdata entity could not be created: " + e.getClass().getSimpleName()
+					+ ". Please contact the system administrator.");
 		}
 	}
 
@@ -62,17 +66,17 @@ public abstract class ReflectionUtils {
 			}
 		} catch (NullPointerException | IllegalStateException e) {
 			throw new MalformedParameterException(params.get(i).toString());
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			if (setter != null) {
-				throw new UnsupportedParameterTypeException(paramName, paramValue.toString(), setter.getParameterTypes()[0].toString());
+				throw new UnsupportedParameterTypeException(paramName, paramValue.toString(),
+						setter.getParameterTypes()[0].toString());
 			} else {
 				throw new InvalidParameterException(paramName);
 			}
 		}
 	}
 
-	public static Method findSetterMethod(Class<?> clazz, String paramName)
-			throws InvalidParameterException {
+	public static Method findSetterMethod(Class<?> clazz, String paramName) throws InvalidParameterException {
 		final String methodName = "set" + StringUtils.capitalize(paramName);
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().equals(methodName) && method.getParameterCount() == 1) {
@@ -82,7 +86,8 @@ public abstract class ReflectionUtils {
 		throw new InvalidParameterException(paramName);
 	}
 
-	public static Object convertValue(Class<?> targetType, JsonElement value) throws UnsupportedOperationException, NumberFormatException {
+	public static Object convertValue(Class<?> targetType, JsonElement value)
+			throws UnsupportedOperationException, NumberFormatException {
 		if (targetType == int.class || targetType == Integer.class) {
 			return value.getAsInt();
 		} else if (targetType == boolean.class || targetType == Boolean.class) {
@@ -96,5 +101,4 @@ public abstract class ReflectionUtils {
 		}
 		return value.getAsString();
 	}
-
 }

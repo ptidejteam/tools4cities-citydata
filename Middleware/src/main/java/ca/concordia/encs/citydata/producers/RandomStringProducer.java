@@ -13,6 +13,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @author Gabriel C. Ullmann, Minette Zongo
  * @since 2025-05-28
  */
+
 public class RandomStringProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	private int stringLength = 10;

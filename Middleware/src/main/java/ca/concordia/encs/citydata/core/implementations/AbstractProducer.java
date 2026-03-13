@@ -234,7 +234,10 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
             if (configured.startsWith("~")) {
                 configured = configured.replaceFirst("^~", System.getProperty("user.home"));
             }
-             java.nio.file.Paths.get(configured).toAbsolutePath().normalize();
+            Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
+            if (Files.exists(configuredPath)) {
+                return configuredPath;
+            }
         }
 
         // Trying to build a list of candidate locations where a Data folder might live (relative to the working dir and /or  its parents)

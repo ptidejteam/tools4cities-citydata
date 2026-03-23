@@ -85,7 +85,7 @@ public class GeoJsonFilterOperation extends AbstractOperation<String> implements
 			}
 			final JsonObject feature = featureElement.getAsJsonObject();
 			final Coordinate centroid = getFeatureCentroid(feature);
-			if (centroid == null) {
+			if (centroid == Coordinate.NONE) {
 				continue;
 			}
 
@@ -108,20 +108,20 @@ public class GeoJsonFilterOperation extends AbstractOperation<String> implements
 
 	private Coordinate getFeatureCentroid(JsonObject feature) {
 		if (feature == null || !feature.has("geometry") || !feature.get("geometry").isJsonObject()) {
-			return null;
+			return Coordinate.NONE;
 		}
 		return getGeometryCentroid(feature.getAsJsonObject("geometry"));
 	}
 
 	private Coordinate getGeometryCentroid(JsonObject geometry) {
 		if (geometry == null || !geometry.has("type") || !geometry.get("type").isJsonPrimitive()) {
-			return null;
+			return Coordinate.NONE;
 		}
 		final List<Coordinate> coordinates = new ArrayList<>();
 		collectCoordinatesFromGeometry(geometry, coordinates);
 
 		if (coordinates.isEmpty()) {
-			return null;
+			return Coordinate.NONE;
 		}
 		return averageCoordinates(coordinates);
 	}
@@ -203,6 +203,8 @@ public class GeoJsonFilterOperation extends AbstractOperation<String> implements
 	}
 
 	private static final class Coordinate {
+		static final Coordinate NONE = new Coordinate(Double.NaN, Double.NaN);
+
 		private final double latitude;
 		private final double longitude;
 

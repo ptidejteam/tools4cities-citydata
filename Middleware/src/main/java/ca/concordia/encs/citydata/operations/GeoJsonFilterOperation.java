@@ -2,6 +2,7 @@ package ca.concordia.encs.citydata.operations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -95,7 +96,12 @@ public class GeoJsonFilterOperation extends AbstractOperation<String> implements
 			}
 		}
 
-		final JsonObject output = inputObject.deepCopy();
+		final JsonObject output = new JsonObject();
+		for (Map.Entry<String, JsonElement> entry : inputObject.entrySet()) {
+			if (!"features".equals(entry.getKey())) {
+				output.add(entry.getKey(), entry.getValue());
+			}
+		}
 		output.add("features", filteredFeatures);
 		return output;
 	}

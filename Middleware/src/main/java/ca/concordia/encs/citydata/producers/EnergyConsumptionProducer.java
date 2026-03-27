@@ -40,7 +40,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 	public void setCity(String city) {
 		this.city = city;
 		if (this.city != null) {
-			this.cityConsumptionDataset = "docs/examples/data/" + this.city + "_energy_consumption.parquet";
+			this.cityConsumptionDataset = "./src/test/resources/" + this.city + "_energy_consumption.parquet";
 		} else {
 			throw new InvalidParameterException("Please provide a city name to the producer.");
 		}
@@ -58,7 +58,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 		this.clientId = clientId;
 	}
 
-	private String buildQuery() {
+	public String buildQuery() {
 		final Object[] arr = new Object[4];
 		final String baseQuery = "SELECT Identifiant as clientId, dateinterval as timestamp, energieactivelivree_kwh as consumptionKwh FROM '%s'";
 		String preparedStmt = baseQuery + " WHERE Identifiant is not null";
@@ -82,7 +82,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 		return String.format(preparedStmt, arr);
 	}
 
-	private void validateParams() {
+	public void validateParams() {
 		final int MAX_QUERY_DAYS = 30;
 		final LocalDateTime localStartDate = StringUtils.parseDate(this.startDatetime);
 		final LocalDateTime localEndDate = StringUtils.parseDate(this.endDatetime);

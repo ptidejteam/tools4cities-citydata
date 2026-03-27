@@ -27,7 +27,7 @@ public class BuildingProducer extends AbstractProducer<JsonObject> implements IP
 
 	public void setBuildingName(String buildingName) {
 		if (buildingName != null) {
-			this.filePath = "docs/examples/data/" + buildingName + "_building.json";
+			this.filePath = "./src/test/resources/" + buildingName + "_building.json";
 		} else {
 			throw new InvalidParameterException("Please provide a building name to the producer.");
 		}

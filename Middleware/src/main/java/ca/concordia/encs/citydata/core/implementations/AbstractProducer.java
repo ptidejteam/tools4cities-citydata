@@ -28,6 +28,7 @@ import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DatasetNotFound;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -45,6 +46,9 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	private IOperation<E> operation;
 	private final Set<IRunner> runners = new HashSet<>();
 	private ArrayList<E> result = new ArrayList<>();
+
+    @Value("${data.path.route:../Data}")
+    private String dataPathRoute;
 
 	public String getFilePath() {
 		return filePath;
@@ -77,6 +81,10 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	public AbstractProducer() {
 		this.setMetadata("role", "producer");
 	}
+
+    public String getDataPathRoute() {
+        return dataPathRoute;
+    }
 
 	@Override
 	public void addObserver(final IRunner aRunner) {
@@ -210,59 +218,4 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		}
 		return jsonArray.toString();
 	}
-
-    /**
-     * The method tries to find a "Data" folder in the current working directory.
-     * It checks for a configured path in application.properties under the key "data.path.route".
-     * If that key is set, it will try to use that path first (supporting "~" for user home).
-     * If no valid "Data" folder is found, it returns null.
-     */
-
-    public Path fetchData() {
-        java.util.Properties props = new java.util.Properties();
-        try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("application.properties")) {
-            if (in != null) {
-                props.load(in);
-            }
-        } catch (java.io.IOException e) {
-            // ignore and use defaults
-        }
-
-        String configured = props.getProperty("data.path.route");
-        if (configured != null && !configured.isBlank()) {
-            configured = configured.trim();
-            if (configured.startsWith("~")) {
-                configured = configured.replaceFirst("^~", System.getProperty("user.home"));
-            }
-            Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
-            if (Files.exists(configuredPath)) {
-                return configuredPath;
-            }
-        }
-
-        // Trying to build a list of candidate locations where a Data folder might live (relative to the working dir and /or  its parents)
-        Path cwd = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize();
-        java.util.List<Path> candidates = new java.util.ArrayList<>();
-        candidates.add(cwd.resolve("Data"));
-        candidates.add(cwd.resolve("..").resolve("Data").normalize());
-        candidates.add(cwd.resolve("..").resolve("..").resolve("Data").normalize());
-        candidates.add(cwd.resolve("tools4cities-middleware").resolve("Data").normalize());
-        if (cwd.getParent() != null) {
-            candidates.add(cwd.getParent().resolve("Data").normalize());
-            if (cwd.getParent().getParent() != null) {
-                candidates.add(cwd.getParent().getParent().resolve("Data").normalize());
-            }
-        }
-
-        for (Path p : candidates) {
-            if (p != null && Files.exists(p)) {
-                return p.toAbsolutePath().normalize();
-            }
-        }
-
-        return null;
-
-    }
-
-
 }

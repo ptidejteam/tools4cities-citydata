@@ -2,6 +2,8 @@ package ca.concordia.encs.citydata.test.producers;
 
 import java.util.ArrayList;
 
+import ca.concordia.encs.citydata.operations.MergeOperation;
+import ca.concordia.encs.citydata.producers.base.JSONProducer;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonArray;
@@ -103,12 +105,26 @@ public class ProducersSanityTest {
 		System.out.println(result);
 	}
 	
-	//@Test
+	@Test
 	// GeometryProducer wraps JSONProducer and applies MergeOperation
-//	public void testGeometryProducer() {
-//		final GeometryProducer producer = new GeometryProducer();
-//		producer.setCity("montreal");
-//		
-//		final operation
-//	}
+	public void testGeometryProducer() {
+		final GeometryProducer producer = new GeometryProducer();
+		producer.setCity("montreal");
+        final MergeOperation mergeOperation = new MergeOperation();
+//        producer.setOperation(mergeOperation);
+//        producer.fetch();
+//        System.out.println(producer.getResult());
+//        System.out.println(result);
+	}
+
+
+    @Test
+    public void testGeoJsonProducer() {
+        final JSONProducer producer = new JSONProducer("./src/test/resources/test_one_building.geojson", null);
+        producer.fetch();
+        ArrayList<JsonObject> result = producer.getResult();
+        System.out.println(result);
+    }
+
+
 }

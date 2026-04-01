@@ -12,8 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /***
@@ -22,11 +21,12 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2024-02-07
  */
 
-public class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public final class FirebaseProducer extends JSONProducer {
 
 	private final String nodePath; // Path to the Firebase node to fetch data from
 
-	public FirebaseProducer(String databaseURL, String nodePath, RequestOptions requestOptions) {
+	public FirebaseProducer(String filePath, String databaseURL, String nodePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
 		this.nodePath = nodePath;
 		// Any request options if needed
 

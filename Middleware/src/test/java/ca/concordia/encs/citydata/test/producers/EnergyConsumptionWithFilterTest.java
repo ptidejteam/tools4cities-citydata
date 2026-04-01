@@ -49,7 +49,8 @@ public class EnergyConsumptionWithFilterTest extends AbstractTest {
 
 	@BeforeEach
 	void setUp() {
-		energyConsumptionProducer = new EnergyConsumptionProducer();
+		energyConsumptionProducer = new EnergyConsumptionProducer(
+				"./src/test/resources/montreal_energy_consumption.csv", null);
 	}
 
 	@Test
@@ -66,7 +67,8 @@ public class EnergyConsumptionWithFilterTest extends AbstractTest {
 		assertThat(responseContent).isNotEmpty();
 
 		// test by direct instantiation of producer
-		energyConsumptionProducer = new EnergyConsumptionProducer();
+		energyConsumptionProducer = new EnergyConsumptionProducer(
+				"./src/test/resources/montreal_energy_consumption.csv", null);
 		energyConsumptionProducer.setCity("montreal");
 		energyConsumptionProducer.setStartDatetime("2021-09-01 00:00:00");
 		energyConsumptionProducer.setEndDatetime("2021-09-01 23:59:00");

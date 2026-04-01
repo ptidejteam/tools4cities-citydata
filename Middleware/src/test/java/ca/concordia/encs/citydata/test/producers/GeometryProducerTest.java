@@ -37,7 +37,8 @@ public class GeometryProducerTest extends AbstractTest {
 	@BeforeEach
 	void setUp() {
 		GeometryProducer geometryProducer = new GeometryProducer();
-		EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
+		EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer(
+				"./src/test/resources/test_one_building.geojson", null);
 		MergeOperation mergeOperation = new MergeOperation();
 	}
 

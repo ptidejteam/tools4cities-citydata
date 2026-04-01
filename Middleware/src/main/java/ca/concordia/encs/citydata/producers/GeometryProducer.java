@@ -3,10 +3,9 @@ package ca.concordia.encs.citydata.producers;
 import java.security.InvalidParameterException;
 
 import ca.concordia.encs.citydata.core.contracts.IOperation;
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
-import ca.concordia.encs.citydata.producers.base.JSONProducer;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This Producer outputs GeoJSON geometries for a given city.
@@ -15,7 +14,17 @@ import ca.concordia.encs.citydata.producers.base.JSONProducer;
  * @since 2025-05-28
  */
 
-public class GeometryProducer extends AbstractProducer<String> implements IProducer<String> {
+public final class GeometryProducer extends JSONProducer {
+
+	public GeometryProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+		// TODO Auto-generated constructor stub
+	}
+
+	public GeometryProducer() {
+		// TODO Auto-generated constructor stub
+	}
+
 	private JSONProducer jsonProducer;
 
 	public void setCity(String city) {

@@ -12,8 +12,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.contracts.IOperation;
+import ca.concordia.encs.citydata.core.contracts.IRunner;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This Producer outputs metadata about a building, such as floors, zones and sensors.
@@ -21,7 +23,16 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @since 2025-05-28
  */
 
-public class BuildingProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public final class BuildingProducer extends JSONProducer {
+
+	public BuildingProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+		// TODO Auto-generated constructor stub
+	}
+
+	public BuildingProducer() {
+		// TODO Auto-generated constructor stub
+	}
 
 	private String filePath;
 
@@ -68,5 +79,35 @@ public class BuildingProducer extends AbstractProducer<JsonObject> implements IP
 
 		this.setResult(jsonOutput);
 		this.applyOperation();
+	}
+
+	@Override
+	public void addObserver(IRunner aRunner) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setOperation(IOperation operation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void applyOperation() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void notifyObservers() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public ArrayList<JsonObject> getResult() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -12,8 +12,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This Producer loads a GeoJSON file and outputs its content as a JsonObject.
@@ -25,7 +25,12 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @since 2026-02-16
  */
 
-public class GeoJSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public final class GeoJSONProducer extends JSONProducer {
+
+	public GeoJSONProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void fetch() {

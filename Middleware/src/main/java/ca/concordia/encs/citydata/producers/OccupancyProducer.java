@@ -3,8 +3,8 @@ package ca.concordia.encs.citydata.producers;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.CSVProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  *
@@ -14,7 +14,12 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @since 2025-05-28
  */
 
-public class OccupancyProducer extends AbstractProducer<String> implements IProducer<String> {
+public final class OccupancyProducer extends CSVProducer {
+	public OccupancyProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+		// TODO Auto-generated constructor stub
+	}
+
 	private int listSize;
 
 	public void setListSize(int listSize) {

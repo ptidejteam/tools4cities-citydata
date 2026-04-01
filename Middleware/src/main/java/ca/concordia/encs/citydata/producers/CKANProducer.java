@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.datastores.DiskDatastore;
@@ -19,12 +18,19 @@ import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /**
- * This producer can connect to a CKAN instance and fetch a resource.
- * @author Gabriel C. Ullmann, Rushin D. Makwana
- * @since 2025-02-12
- */
+	* This producer can connect to a CKAN instance and fetch a resource.
+	* @author Gabriel C. Ullmann, Rushin D. Makwana
+	* @since 2025-02-12
+	*/
 
-public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
+//This producer should be updated so that it extends CKANMetadataProducer
+
+public final class CKANProducer extends CKANMetadataProducer {
+
+	public CKANProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+		// TODO Auto-generated constructor stub
+	}
 
 	private String url;
 	private String resourceId;

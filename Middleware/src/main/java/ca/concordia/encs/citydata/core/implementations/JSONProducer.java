@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.producers.base;
+package ca.concordia.encs.citydata.core.implementations;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
@@ -18,11 +17,15 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2024-12-01
  */
 
-public class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public non-sealed class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	public JSONProducer(String filePath, RequestOptions fileOptions) {
 		this.setFilePath(filePath);
 		this.setFileOptions(fileOptions);
+	}
+
+	public JSONProducer() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override

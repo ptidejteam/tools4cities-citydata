@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DatasetNotFound;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
 /**
@@ -30,7 +30,13 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * @since 2025-05-28
  */
 
-public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> implements IProducer<JsonArray> {
+public final class EnergyConsumptionProducer extends JSONProducer {
+
+	public EnergyConsumptionProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+		// TODO Auto-generated constructor stub
+	}
+
 	private String city;
 	private String startDatetime;
 	private String endDatetime;
@@ -148,8 +154,8 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 			resultRow.addProperty("error", e.getMessage());
 			resultsArray.add(resultRow);
 		} finally {
-			final ArrayList<JsonArray> updatedResult = this.getResult();
-			updatedResult.add(resultsArray);
+			final ArrayList<JsonObject> updatedResult = this.getResult();
+			//updatedResult.add(resultsArray);
 			this.setResult(updatedResult);
 			this.applyOperation();
 		}

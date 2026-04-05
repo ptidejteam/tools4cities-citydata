@@ -18,12 +18,12 @@ public abstract class PayloadFactory {
 	// readable.
 	public static String getBasicQuery() {
 		JsonObject payload = new JsonObject();
-		payload.addProperty("use", "ca.concordia.encs.citydata.producers.RandomStringProducer");
+		payload.addProperty("use", "ca.concordia.encs.citydata.producers.JSONProducer");
 
 		JsonArray withParams = new JsonArray();
 		JsonObject param1 = new JsonObject();
-		param1.addProperty("name", "stringLength");
-		param1.addProperty("value", "10");
+		param1.addProperty("name", "filePath");
+		param1.addProperty("value", "src/test/resources/valid_test.json");
 		withParams.add(param1);
 
 		payload.add("withParams", withParams);
@@ -66,7 +66,6 @@ public abstract class PayloadFactory {
 		payload.add("apply", apply);
 
 		return payload.toString();
-
 	}
 
 	public static String getExampleQuery(String queryFileName) throws Exception {

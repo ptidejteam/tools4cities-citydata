@@ -133,8 +133,12 @@ public final class CKANProducer extends CKANMetadataProducer {
 						+ " .");
 			}
 		} catch (InterruptedException e) {
-			final ArrayList<String> errorMessageList = new ArrayList<>();
-			errorMessageList.add(e.getMessage());
+
+			// Wrap error message in JsonObject to match setResult(ArrayList<JsonObject>) signature of AbstractProducer
+			final ArrayList<JsonObject> errorMessageList = new ArrayList<>();
+			JsonObject errorJson = new JsonObject();
+			errorJson.addProperty("error", e.getMessage());
+			errorMessageList.add(errorJson);
 			this.setResult(errorMessageList);
 		}
 
@@ -158,8 +162,13 @@ public final class CKANProducer extends CKANMetadataProducer {
 			} catch (IOException e) {
 				throw new MiddlewareException.DatasetNotFound("Data Not Found");
 			}
-			this.intermediateResult.add(fileStream.toString());
-			this.setResult(this.intermediateResult);
+
+			// Wrap file stream content in JsonObject to match setResult(ArrayList<JsonObject>) signature of AbstractProducer
+			final ArrayList<JsonObject> resultList = new ArrayList<>();
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("data", fileStream.toString());
+			resultList.add(resultJson);
+			this.setResult(resultList);
 			this.applyOperation();
 		}
 

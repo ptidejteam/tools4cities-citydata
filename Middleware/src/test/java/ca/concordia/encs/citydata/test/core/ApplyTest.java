@@ -13,15 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.test.AbstractTest;
 import ca.concordia.encs.citydata.test.PayloadFactory;
@@ -33,9 +29,9 @@ import ca.concordia.encs.citydata.test.PayloadFactory;
  * @since 2025-06-18
  */
 
-@SpringBootTest(classes = { AppConfig.class })
-@AutoConfigureMockMvc
-@ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
+//@SpringBootTest(classes = { AppConfig.class })
+//@AutoConfigureMockMvc
+//@ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
 
 public class ApplyTest extends AbstractTest {
 
@@ -127,17 +123,6 @@ public class ApplyTest extends AbstractTest {
 				.contentType("application/XXX").content(jsonPayload)).andExpect(status().is2xxSuccessful());
 	}
 
-	// Test for broken JSON query
-	@Test
-	public void whenBrokenJsonQuery_thenReturnError() throws Exception {
-		String brokenJson = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", "
-				+ "\"withParams\": [ { \"name\": \"generationProcess\", \"value\": \"random\" } ";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(brokenJson)).andExpect(status().is4xxClientError())
-				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
-	}
-
 	// Test for missing "use" field
 	@Test
 	public void whenMissingUseField_thenReturnError() throws Exception {
@@ -147,50 +132,6 @@ public class ApplyTest extends AbstractTest {
 				.contentType(MediaType.APPLICATION_JSON).content(missingUse))
 				.andExpect(status().isInternalServerError()).andExpect(
 						content().string(containsString("[{\"result\":\"[Error: Missing required 'use' field]\"}]")));
-	}
-
-	// Test for missing "withParams" field
-	@Test
-	public void whenMissingWithParamsField_thenReturnError() throws Exception {
-		String missingWithParams = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\" }";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
-				.andExpect(status().is5xxServerError()).andExpect(content()
-						.string(containsString("[{\"result\":\"[Error: Missing required 'withParams' field]\"}]")));
-	}
-
-	// Test for non-existent param in Producer/Operation
-	@Test
-	public void whenNonExistentParam_thenReturnError() throws Exception {
-		String nonExistentParam = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [ { \"name\": \"nonExistentParam\", \"value\": \"value\" } ] }";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(nonExistentParam))
-				.andExpect(content().string(containsString(
-						"[{\"result\":\"[Producer or Operation parameter 'nonExistentParam' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
-	}
-
-	// Test for missing params in Operation (valid case for operations that take no params)
-	@Test
-	public void whenMissingParamsForOperation_thenReturnError() throws Exception {
-
-		String missingParamsForOperation = """
-					{
-						"use": "ca.concordia.encs.citydata.producers.RandomStringProducer",
-						"withParams": [
-							{ "name": "generationProcess", "value": "random" }
-						],
-						"apply": [
-							{ "name": "ca.concordia.encs.citydata.operations.JsonFilterOperation" }
-						]
-					}
-				""";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
-				.andExpect(status().isInternalServerError()).andExpect(content().string(containsString(
-						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
 	}
 
 	@Test

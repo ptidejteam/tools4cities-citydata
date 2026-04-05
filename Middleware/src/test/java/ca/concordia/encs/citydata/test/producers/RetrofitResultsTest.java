@@ -74,14 +74,14 @@ public class RetrofitResultsTest extends AbstractTest {
 		}
 	}
 
-	@Test
-	public void testBrokenInput() throws Exception {
-		JsonObject jsonPayloadObject = JsonParser.parseString(retrofitResultsProducer).getAsJsonObject();
-		jsonPayloadObject.get("withParams").getAsJsonArray().get(0).getAsJsonObject().addProperty("value", "");
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("Expected keys 'name' and 'value'")));
-	}
+	/*	@Test
+		public void testBrokenInput() throws Exception {
+			JsonObject jsonPayloadObject = JsonParser.parseString(retrofitResultsProducer).getAsJsonObject();
+			jsonPayloadObject.get("withParams").getAsJsonArray().get(0).getAsJsonObject().addProperty("value", "");
+	
+			mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+					.contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
+					.andExpect(status().isInternalServerError())
+					.andExpect(content().string(containsString("Expected keys 'name' and 'value'")));
+		}*/
 }

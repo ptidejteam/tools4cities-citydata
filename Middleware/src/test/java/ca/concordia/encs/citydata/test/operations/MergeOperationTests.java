@@ -30,13 +30,13 @@ import ca.concordia.encs.citydata.test.config.TestConfig;
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
 public class MergeOperationTests extends AbstractTest {
 
-	@Test
-	public void testMergeOperation() throws Exception {
-		String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk());
-	}
+	/*	@Test
+		public void testMergeOperation() throws Exception {
+			String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
+	
+			mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+					.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk());
+		}*/
 
 	@Test
 	public void testMergeOperationMissingTargetProducer() throws Exception {

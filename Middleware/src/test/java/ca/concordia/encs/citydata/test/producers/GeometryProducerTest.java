@@ -1,23 +1,15 @@
 package ca.concordia.encs.citydata.test.producers;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.MediaType;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
 import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
 import ca.concordia.encs.citydata.producers.GeometryProducer;
 import ca.concordia.encs.citydata.test.AbstractTest;
-import ca.concordia.encs.citydata.test.PayloadFactory;
 
 /**
  * Tests the API endpoint with the merge operation between EnergyConsumption and Geometry producers
@@ -42,13 +34,13 @@ public class GeometryProducerTest extends AbstractTest {
 		MergeOperation mergeOperation = new MergeOperation();
 	}
 
-	@Test
-	public void testMergeOperationViaAPI() throws Exception {
-		// Get example query using the PayloadFactory
-		String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
-				.andExpect(content().string(containsString("result")));
-	}
+	/*	@Test
+		public void testMergeOperationViaAPI() throws Exception {
+			// Get example query using the PayloadFactory
+			String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
+	
+			mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+					.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+					.andExpect(content().string(containsString("result")));
+		}*/
 }

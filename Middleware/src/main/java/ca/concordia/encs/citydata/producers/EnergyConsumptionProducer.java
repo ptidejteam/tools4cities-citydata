@@ -64,7 +64,7 @@ public final class EnergyConsumptionProducer extends JSONProducer {
 		this.clientId = clientId;
 	}
 
-	public String buildQuery() {
+	private String buildQuery() {
 		final Object[] arr = new Object[4];
 		final String baseQuery = "SELECT Identifiant as clientId, dateinterval as timestamp, energieactivelivree_kwh as consumptionKwh FROM '%s'";
 		String preparedStmt = baseQuery + " WHERE Identifiant is not null";
@@ -88,7 +88,7 @@ public final class EnergyConsumptionProducer extends JSONProducer {
 		return String.format(preparedStmt, arr);
 	}
 
-	public void validateParams() {
+	private void validateParams() {
 		final int MAX_QUERY_DAYS = 30;
 		final LocalDateTime localStartDate = StringUtils.parseDate(this.startDatetime);
 		final LocalDateTime localEndDate = StringUtils.parseDate(this.endDatetime);

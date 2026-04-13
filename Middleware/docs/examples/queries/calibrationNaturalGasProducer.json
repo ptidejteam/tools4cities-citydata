@@ -1,0 +1,15 @@
+{
+  "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
+  "withParams": [
+    { "name": "filePath", "value": "src/main/resources/Data/OMHM_natural_gas.csv" }
+  ],
+  "apply": [
+    {
+      "name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
+      "withParams": [
+        { "name": "addressFilter", "value": "H1W3J9" },
+        { "name": "dateFilter",    "value": "2022-04-30" }
+      ]
+    }
+  ]
+}

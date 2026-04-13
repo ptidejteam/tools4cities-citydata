@@ -3,9 +3,10 @@ package ca.concordia.encs.citydata.producers;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,12 +17,14 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
 /**
  * This Producer loads a GeoJSON file and outputs its content as a JsonObject.
- * It first attempts to load from the classpath (works inside JAR/Docker),
- * then falls back to the filesystem (works on server with external files).
+ * Uses Spring's PathMatchingResourcePatternResolver with the thread context
+ * classloader, which correctly resolves BOOT-INF/classes/ inside a Spring Boot
+ * JAR, as well as falling back to the filesystem for external files on the server.
  *
  * @author Sikandar Ejaz
  * @since 2026-02-16
  */
+
 public class GeoJSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	@Override
@@ -32,18 +35,34 @@ public class GeoJSONProducer extends AbstractProducer<JsonObject> implements IPr
 			throw new RuntimeException("Please provide a file path to the producer.");
 		}
 
+		// Use thread context classloader — correctly resolves BOOT-INF/classes/ in Spring Boot JAR
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(
+				Thread.currentThread().getContextClassLoader());
+
 		InputStream inputStream = null;
 
 		// 1. Try classpath first (works inside JAR / Docker)
-		inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+		try {
+			Resource classpathResource = resolver.getResource("classpath:" + filePath);
+			if (classpathResource.exists()) {
+				inputStream = classpathResource.getInputStream();
+			}
+		} catch (Exception ignored) {
+		}
 
-		// 2. Fall back to filesystem (works on server with external files)
+		// 2. Fall back to filesystem (absolute path for Docker)
 		if (inputStream == null) {
 			try {
-				inputStream = Files.newInputStream(Paths.get(filePath));
-			} catch (Exception e) {
-				throw new RuntimeException("GeoJSON file not found on classpath or filesystem: " + filePath, e);
+				Resource fileResource = resolver.getResource("file:/app/citydata-files/" + filePath);
+				if (fileResource.exists()) {
+					inputStream = fileResource.getInputStream();
+				}
+			} catch (Exception ignored) {
 			}
+		}
+
+		if (inputStream == null) {
+			throw new RuntimeException("GeoJSON file not found on classpath or filesystem: " + filePath);
 		}
 
 		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();

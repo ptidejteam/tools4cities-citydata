@@ -6,9 +6,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
@@ -17,6 +17,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
  */
+
 public class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public CSVProducer(String filePath, RequestOptions fileOptions) {
@@ -28,9 +29,9 @@ public class CSVProducer extends AbstractProducer<String> implements IProducer<S
 
 	@Override
 	public void fetch() {
-    
+
 		try (OutputStream outputStream = this.fetchFromPath();
-			 OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
+				OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
 			writer.flush(); // Ensure all data is written to the stream
 			String csvString = outputStream.toString();
 
@@ -43,5 +44,4 @@ public class CSVProducer extends AbstractProducer<String> implements IProducer<S
 			throw new MiddlewareException.DatasetNotFound("Error processing CSV data");
 		}
 	}
-
 }

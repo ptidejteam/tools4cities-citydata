@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
+import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 
 /**
  * This operation reads from a JSON a given path (e.g., aKey1.child, something.info.name).
@@ -19,6 +19,7 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
  * @author Gabriel C. Ullmann
  * @since 2025-06-18
  */
+
 public class JsonReadOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	private String path = "";
 	private JsonElement currentObject;

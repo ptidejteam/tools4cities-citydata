@@ -11,6 +11,7 @@ import java.util.Set;
  * @since 2025-04-23
  * 
  */
+
 public interface IEntity {
 
 	void setMetadata(String key, Object value);
@@ -20,4 +21,5 @@ public interface IEntity {
 	Set<String> getMetadataKeySet();
 
 	String getMetadataString(String key);
+
 }

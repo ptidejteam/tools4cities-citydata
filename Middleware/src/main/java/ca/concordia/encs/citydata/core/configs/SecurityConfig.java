@@ -44,19 +44,9 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 /**
- * JWT Authentication Implementation
- * Author: Sikandar Ejaz, Rushin D. Makwana
- * Date: 2025-07-18
- * 
- * Update: Multi-user authentication added
- * Author: Sikandar Ejaz
- * Last Update: 2025-09-28
- * 
- * Update: 2025-11-03
- * Fixed issue is user credentials management
- * 
- * Last Update: 2025-12-02
- * Removed unused code
+ * JWT Multi-user authentication implementation
+ * @author Sikandar Ejaz, Rushin D. Makwana
+ * @since 2025-07-18
  */
 
 @EnableWebSecurity
@@ -143,8 +133,7 @@ public class SecurityConfig {
 
 	private Path getApplicationDirectory() {
 		try {
-			String classpath = getClass().getProtectionDomain()
-					.getCodeSource().getLocation().getPath();
+			String classpath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
 			classpath = java.net.URLDecoder.decode(classpath, "UTF-8");
 
@@ -199,11 +188,8 @@ public class SecurityConfig {
 		}
 
 		if (users.isEmpty()) {
-			UserDetails fallback = User.withUsername(defaultUsername)
-					.password(defaultPassword)
-					.passwordEncoder(s -> s)
-					.authorities("read")
-					.build();
+			UserDetails fallback = User.withUsername(defaultUsername).password(defaultPassword).passwordEncoder(s -> s)
+					.authorities("read").build();
 			users.add(fallback);
 		}
 		return new InMemoryUserDetailsManager(users);

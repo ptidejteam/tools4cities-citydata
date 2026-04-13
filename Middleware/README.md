@@ -14,9 +14,7 @@ CITYdata is a part of the [TOOLS4CITIES](https://www.concordia.ca/research/citie
 - Operation: describes transformations to be performed on producer outputs (data)
 - Runner: calls a series of producers, executes a series of operations on the producer's outputs, and then outputs the resulting data
 
-![image](./docs/simplified-architecture.png)
-
-You can see a more detailed breakdown of responsibilities for the middleware [here](./docs/architecture.png).
+![image](./docs/architecture.png)
 
 ## What do I need?
 
@@ -194,6 +192,14 @@ Include your username and password in the request body as JSON, for example:
 ## Available Data Sources
 
 - [Dataset Catalog](DATA_SOURCES.md) - Complete list of all available datasets
+
+## Demo & Presentations
+
+The following presentations describe the tool architecture and demo workflow.
+
+### Version 1.0
+
+- [Demo Presentation (PDF)](docs/presentations/citydata-demo-v1.0.pdf)
 
 ## Who do I talk to?
 

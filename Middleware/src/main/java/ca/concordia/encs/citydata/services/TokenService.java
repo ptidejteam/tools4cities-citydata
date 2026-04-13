@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * JWT Authentication Implementation
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
+ * @author Sikandar Ejaz 
+ * @since 2025-07-18
  */
 
 @Service
@@ -34,5 +34,4 @@ public class TokenService {
 				.build();
 		return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 	}
-
 }

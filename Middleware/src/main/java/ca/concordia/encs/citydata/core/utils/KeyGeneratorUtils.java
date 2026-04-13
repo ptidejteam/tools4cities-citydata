@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * JWT Authentication Implementation
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
+ * @author Sikandar Ejaz 
+ * @since 18-07-2025
  */
 
 @Component
@@ -28,5 +28,4 @@ final class KeyGeneratorUtils {
 		}
 		return keyPair;
 	}
-
 }

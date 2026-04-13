@@ -7,7 +7,6 @@ import java.util.Set;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 
-
 /**
  *
  * This implements features common to all Operations, such as notifying Runners
@@ -15,6 +14,7 @@ import ca.concordia.encs.citydata.core.contracts.IRunner;
  * @author Gabriel C. Ullmann
  * @since 2025-05-27
  */
+
 public abstract class AbstractOperation<E> extends AbstractEntity implements IOperation<E> {
 
 	private final Set<IRunner> runners = new HashSet<>();
@@ -35,5 +35,4 @@ public abstract class AbstractOperation<E> extends AbstractEntity implements IOp
 			runner.newOperationApplied(this);
 		}
 	}
-
 }

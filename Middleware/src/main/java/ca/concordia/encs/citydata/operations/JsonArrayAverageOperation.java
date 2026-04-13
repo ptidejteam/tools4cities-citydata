@@ -16,6 +16,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
  * @author Gabriel C. Ullmann
  * @since 2025-06-18
  */
+
 public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> implements IOperation<JsonArray> {
 
 	private String keyName;
@@ -59,5 +60,4 @@ public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> impl
 
 		return results;
 	}
-
 }

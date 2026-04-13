@@ -60,4 +60,5 @@ Middleware/src/main/resources/scripts/certs/
 Middleware/src/main/resources/scripts/credentials/
 Middleware/src/main/resources/credentials/
 
-
+#Run/Debug configurations file
+.run/

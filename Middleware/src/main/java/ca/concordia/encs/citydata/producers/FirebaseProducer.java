@@ -3,31 +3,38 @@ package ca.concordia.encs.citydata.producers;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.concordia.encs.citydata.core.utils.RequestOptions;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import com.google.gson.JsonParser;
+
+import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
+
 /***
  * This is the Producer class for Firebase, which fetches data from Firebase
  * @author Rushin Makwana
- * @since 7th Feb 2024
+ * @since 2024-02-07
  */
+
 public class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
-    private final String nodePath; // Path to the Firebase node to fetch data from
+	private final String nodePath; // Path to the Firebase node to fetch data from
 
-    public FirebaseProducer(String databaseURL, String nodePath, RequestOptions requestOptions) {
-        this.nodePath = nodePath;
-        // Any request options if needed
+	public FirebaseProducer(String databaseURL, String nodePath, RequestOptions requestOptions) {
+		this.nodePath = nodePath;
+		// Any request options if needed
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+		FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 	}
+
 	@Override
-	public void fetch(){
+	public void fetch() {
 		final List<JsonObject> jsonObjects = new ArrayList<>();
 
 		final DatabaseReference ref = FirebaseDatabase.getInstance().getReference(nodePath);

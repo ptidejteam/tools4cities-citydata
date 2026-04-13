@@ -1,0 +1,15 @@
+{
+  "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
+  "withParams": [
+    { "name": "filePath", "value": "src/main/resources/Data/OMHM_electricity.csv" }
+  ],
+  "apply": [
+    {
+      "name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
+      "withParams": [
+        { "name": "addressFilter", "value": "H1Z 0B3" },
+        { "name": "dateFilter",    "value": "2022-02-28" }
+      ]
+    }
+  ]
+}

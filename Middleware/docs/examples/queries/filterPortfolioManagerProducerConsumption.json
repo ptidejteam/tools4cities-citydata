@@ -1,0 +1,28 @@
+{
+    "use": "ca.concordia.encs.citydata.producers.PortfolioManagerProducer",
+    "withParams": [
+        {
+            "name": "meterId",
+            "value": "299278275"
+        }
+    ],
+    "apply": [
+        {
+            "name": "ca.concordia.encs.citydata.operations.XmlToJsonFilterOperation",
+            "withParams": [
+                {
+                    "name": "filterKey",
+                    "value": "startDate"
+                },
+                {
+                    "name": "filterValue",
+                    "value": "2024"
+                },
+                {
+                    "name": "isExactlyEqual",
+                    "value": "false"
+                }
+            ]
+        }
+    ]
+}

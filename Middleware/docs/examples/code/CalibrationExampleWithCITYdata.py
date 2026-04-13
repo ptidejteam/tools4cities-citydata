@@ -9,11 +9,11 @@ import json
 # ==========================
 # Configuration
 BASE_URL = "https://ngci.encs.concordia.ca/citydata"
-USERNAME = "workshop"  # Production username
-PASSWORD = "workshop2026"  # Production password
+USERNAME = username  # Production username created by CITYdata team
+PASSWORD = password  # Production password created by CITYdata team
 # BASE_URL = "http://localhost:8080/citydata"
-# USERNAME = "temp"  # Local username
-# PASSWORD = "temp"  # Local password
+# USERNAME = username  # Local username created with the script (cf. READMe)
+# PASSWORD = password  # Local password created with the script (cf. READMe)
            
 
 

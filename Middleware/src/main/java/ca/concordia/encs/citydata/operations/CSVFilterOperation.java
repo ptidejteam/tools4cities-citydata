@@ -37,7 +37,7 @@ public class CSVFilterOperation extends AbstractOperation<String> implements IOp
 
 			for (int j = 1; j < headers.length; j++) {
 				String date = headers[j].trim();
-				if (dateFilter != null && !date.equals(dateFilter)) continue;
+				if (dateFilter != null && !date.contains(dateFilter)) continue;
 				result.add(address + "," + date + "," + cols[j].trim());
 			}
 		}

@@ -1,6 +1,8 @@
 package ca.concordia.encs.citydata.operations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
@@ -9,38 +11,55 @@ import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 public class CSVFilterOperation extends AbstractOperation<String> implements IOperation<String> {
 
 	private String addressFilter;
-	private String dateFilter;
+	private String startDateFilter;
+	private String endDateFilter;
 	private IRunner observer;
 
 	public void setAddressFilter(String addressFilter) {
 		this.addressFilter = addressFilter;
 	}
 
-	public void setDateFilter(String dateFilter) {
-		this.dateFilter = dateFilter;
+	public void setStartDateFilter(String startDateFilter) {
+		this.startDateFilter = startDateFilter;
+	}
+	
+	public void setEndDateFilter(String endDateFilter) {
+		this.endDateFilter = endDateFilter;
 	}
 
 	public ArrayList<String> apply(ArrayList<String> input) {
 		ArrayList<String> result = new ArrayList<>();
-		if (input == null || input.isEmpty()) return result;
+		if (input == null || input.isEmpty()) 
+			return result;
 
 		String[] headers = input.get(0).split(",");
+        String[] addresses = addressFilter != null ? addressFilter.split(";") : null;
 
-		for (int i = 1; i < input.size(); i++) {
-			String line = input.get(i);
-			if (line == null || line.trim().isEmpty()) continue;
+        for (int i = 1; i < input.size(); i++) {
+            String line = input.get(i);
+            if (line == null || line.trim().isEmpty()) continue;
 
-			String[] cols = line.split(",");
-			String address = cols[0].trim();
+            String[] cols = line.split(",");
+            String address = cols[0].trim();
 
-			if (addressFilter != null && !address.contains(addressFilter)) continue;
+            if (addresses != null) {
+                boolean matchFound = false;
+                for (String filter : addresses) {
+                    if (address.contains(filter.trim())) {
+                        matchFound = true;
+                        break;
+                    }
+                }
+                if (!matchFound) continue;
+            }
 
-			for (int j = 1; j < headers.length; j++) {
-				String date = headers[j].trim();
-				if (dateFilter != null && !date.equals(dateFilter)) continue;
-				result.add(address + "," + date + "," + cols[j].trim());
-			}
-		}
+            for (int j = 1; j < headers.length; j++) {
+                String date = headers[j].trim();
+                if (startDateFilter != null && date.compareTo(startDateFilter) < 0) continue;
+                if (endDateFilter != null && date.compareTo(endDateFilter) > 0) continue;
+                result.add(address + "," + date + "," + cols[j].trim());
+            }
+        }
 
 		return result;
 	}

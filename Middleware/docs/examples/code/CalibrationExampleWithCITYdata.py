@@ -9,11 +9,11 @@ import json
 # ==========================
 # Configuration
 BASE_URL = "https://ngci.encs.concordia.ca/citydata"
-USERNAME = "workshop"  # Production username
-PASSWORD = "workshop2026"  # Production password
+USERNAME = username  # Production username created by CITYdata team
+PASSWORD = password  # Production password created by CITYdata team
 # BASE_URL = "http://localhost:8080/citydata"
-# USERNAME = "temp"  # Local username
-# PASSWORD = "temp"  # Local password
+# USERNAME = username  # Local username created with the script (cf. READMe)
+# PASSWORD = password  # Local password created with the script (cf. READMe)
            
 
 
@@ -58,7 +58,7 @@ def fetch_consumption(base_url, token):
     # json_input = {
     #     "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
     #     "withParams": [
-    #         { "name": "filePath", "value": "src/main/resources/Data/OMHM_natural_gas.csv" }
+    #         { "name": "filePath", "value": "src/test/resources/OMHM_natural_gas.csv" }
     #     ],
     #     "apply": [
     #         {

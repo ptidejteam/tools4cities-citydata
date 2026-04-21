@@ -41,6 +41,9 @@ COPY --from=build /app/target/*.jar app.jar
 # Copy docs folder into container
 COPY docs ./citydata-files/docs
 
+#Copy data files
+COPY src/test/resources ./src/test/resources
+
 # Change ownership to citydata user
 RUN chown -R citydata:citydata /app
 

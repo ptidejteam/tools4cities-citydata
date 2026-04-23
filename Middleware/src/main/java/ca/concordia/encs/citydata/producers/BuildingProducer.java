@@ -25,9 +25,19 @@ public class BuildingProducer extends AbstractProducer<JsonObject> implements IP
 
 	private String filePath;
 
+	// Setter — for JSON files
 	public void setBuildingName(String buildingName) {
 		if (buildingName != null) {
 			this.filePath = "./src/test/resources/" + buildingName + "_building.json";
+		} else {
+			throw new InvalidParameterException("Please provide a building name to the producer.");
+		}
+	}
+
+	// Setter — for GeoJSON files
+	public void setBuildingNameGeoJSON(String buildingName) {
+		if (buildingName != null) {
+			this.filePath = "./src/test/resources/" + buildingName + "_building.geojson";
 		} else {
 			throw new InvalidParameterException("Please provide a building name to the producer.");
 		}

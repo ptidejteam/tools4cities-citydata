@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,9 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
-import ca.concordia.encs.citydata.operations.MergeOperation;
-import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
-import ca.concordia.encs.citydata.producers.GeometryProducer;
 import ca.concordia.encs.citydata.test.AbstractTest;
 import ca.concordia.encs.citydata.test.PayloadFactory;
 
@@ -32,14 +28,14 @@ import ca.concordia.encs.citydata.test.PayloadFactory;
 
 public class GeometryProducerTest extends AbstractTest {
 
-	private final String CITY = "montreal";
+	// private final String CITY = "montreal";
 
-	@BeforeEach
-	void setUp() {
-		GeometryProducer geometryProducer = new GeometryProducer();
-		EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
-		MergeOperation mergeOperation = new MergeOperation();
-	}
+	/*	@BeforeEach
+		void setUp() {
+			GeometryProducer geometryProducer = new GeometryProducer();
+			EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
+			MergeOperation mergeOperation = new MergeOperation();
+		}*/
 
 	@Test
 	public void testMergeOperationViaAPI() throws Exception {

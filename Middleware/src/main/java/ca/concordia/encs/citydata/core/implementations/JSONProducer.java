@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.producers.base;
+package ca.concordia.encs.citydata.core.implementations;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**

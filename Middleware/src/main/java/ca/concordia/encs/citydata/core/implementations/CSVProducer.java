@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.producers.base;
+package ca.concordia.encs.citydata.core.implementations;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**

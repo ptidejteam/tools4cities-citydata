@@ -10,10 +10,10 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
-import ca.concordia.encs.citydata.producers.base.JSONProducer;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /**

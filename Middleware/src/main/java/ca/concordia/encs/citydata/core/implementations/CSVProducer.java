@@ -19,16 +19,16 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 public class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
 
-	public CSVProducer(String filePath, RequestOptions fileOptions) {
-		this.setFilePath(filePath);
-		this.setFileOptions(fileOptions);
+	public CSVProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
 	}
 
-	// I added the error handling to ensure I actually read my local file
+	public CSVProducer(final String filePath) {
+		super(filePath);
+	}
 
 	@Override
 	public void fetch() {
-
 		try (OutputStream outputStream = this.fetchFromPath();
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
 			writer.flush(); // Ensure all data is written to the stream

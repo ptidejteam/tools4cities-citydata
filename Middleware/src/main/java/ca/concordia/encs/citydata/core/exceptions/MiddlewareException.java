@@ -7,15 +7,18 @@ package ca.concordia.encs.citydata.core.exceptions;
  */
 
 public class MiddlewareException extends RuntimeException {
-
 	public MiddlewareException(String message) {
 		super(message);
 	}
 
+	public MiddlewareException(final String message, final Exception cause) {
+		super(message, cause);
+	}
+
 	public static class InvalidProducerException extends MiddlewareException {
-		public InvalidProducerException(String producerName) {
+		public InvalidProducerException(String producerName, final Exception e) {
 			super("Producer " + producerName
-					+ " was not found. Please check whether the fully-qualified name is correct and try again.");
+					+ " was not found. Please check whether the fully-qualified name is correct and try again.", e);
 		}
 	}
 

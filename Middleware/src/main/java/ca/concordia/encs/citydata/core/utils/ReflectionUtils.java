@@ -31,7 +31,7 @@ public abstract class ReflectionUtils {
 		return jsonObject.get(fieldName);
 	}
 
-	public static Object instantiateClass(String className) throws MiddlewareException {
+	public static Object instantiateOperation(final String className) throws MiddlewareException {
 		try {
 			final Class<?> clazz = Class.forName(className);
 			return clazz.getDeclaredConstructor().newInstance();
@@ -39,13 +39,37 @@ public abstract class ReflectionUtils {
 			if (className.contains("Operation") || className.contains("operation")) {
 				throw new InvalidOperationException(className);
 			} else if (className.contains("Producer") || className.contains("producer")) {
-				throw new InvalidProducerException(className);
+				throw new InvalidProducerException(className, e);
 			} else {
 				throw new MiddlewareException("Producer or Operation " + e.getClass().getSimpleName()
 						+ " was not found. Please check for typos and try again.");
 			}
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			throw new MiddlewareException("CITYdata entity could not be created: " + e.getClass().getSimpleName()
+					+ ". Please contact the system administrator.");
+		}
+	}
+
+	public static Object instantiateProducer(final String producerClassName, final String filePath)
+			throws MiddlewareException {
+
+		return ReflectionUtils.instantiateProducer(producerClassName, filePath, null);
+	}
+
+	public static Object instantiateProducer(final String producerClassName, final String filePath,
+			final RequestOptions options) throws MiddlewareException {
+		try {
+			final Class<?> clazz = Class.forName(producerClassName);
+			return clazz.getDeclaredConstructor(String.class, RequestOptions.class).newInstance(filePath, options);
+		} catch (ClassNotFoundException | NoSuchMethodException e) {
+			if (producerClassName.contains("Producer") || producerClassName.contains("producer")) {
+				throw new InvalidProducerException(producerClassName, e);
+			} else {
+				throw new MiddlewareException(
+						"Producer " + producerClassName + " was not found. Please check for typos and try again.");
+			}
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			throw new MiddlewareException("CITYdata entity could not be created: " + producerClassName
 					+ ". Please contact the system administrator.");
 		}
 	}

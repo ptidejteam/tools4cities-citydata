@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.contracts.IOperation;
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.implementations.JSONProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
@@ -17,13 +15,22 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2025-02-12
  */
 
-public class CKANMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+//public class CKANMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public class CKANMetadataProducer extends JSONProducer {
 
 	private String url;
 	private String resourceId;
 	private String datasetName;
 	private IOperation<JsonObject> jsonProducerOperation;
 	private IRunner runnerObserver;
+
+	public CKANMetadataProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+	}
+
+	public CKANMetadataProducer(final String filePath) {
+		super(filePath);
+	}
 
 	public void setUrl(String url) {
 		if (url != null) {

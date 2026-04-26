@@ -31,6 +31,14 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	private final DiskDatastore diskStore = DiskDatastore.getInstance();
 	private final ArrayList<String> intermediateResult = new ArrayList<>();
 
+	public CKANProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+	}
+
+	public CKANProducer(final String filePath) {
+		super(filePath);
+	}
+
 	public void setUrl(String url) {
 		if (url != null) {
 			if (url.contains("http")) {
@@ -83,7 +91,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	private OutputStream fetchFromCkan() {
 		try {
 			// fetch resource metadata first
-			final CKANMetadataProducer metadataProducer = new CKANMetadataProducer();
+			final CKANMetadataProducer metadataProducer = new CKANMetadataProducer(resourceId);
 			metadataProducer.setUrl(this.url);
 			metadataProducer.setResourceId(this.resourceId);
 			final SingleStepRunner deckard = new SingleStepRunner(metadataProducer);

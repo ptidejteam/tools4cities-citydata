@@ -39,12 +39,21 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  */
 
 public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
-
 	private String filePath;
 	private RequestOptions fileOptions;
 	private IOperation<E> operation;
 	private final Set<IRunner> runners = new HashSet<>();
 	private ArrayList<E> result = new ArrayList<>();
+
+	public AbstractProducer(final String filePath, final RequestOptions fileOptions) {
+		this.filePath = filePath;
+		this.fileOptions = fileOptions;
+		this.setMetadata("role", "producer");
+	}
+
+	public AbstractProducer(final String filePath) {
+		this(filePath, null);
+	}
 
 	public String getFilePath() {
 		return filePath;
@@ -72,6 +81,11 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 
 	public void setResult(ArrayList<E> result) {
 		this.result = result;
+	}
+
+	@Override
+	public ArrayList<E> getResult() {
+		return this.result;
 	}
 
 	public AbstractProducer() {
@@ -111,11 +125,6 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			this.result = this.operation.apply(this.result);
 		}
 		this.notifyObservers();
-	}
-
-	@Override
-	public ArrayList<E> getResult() {
-		return this.result;
 	}
 
 	public boolean isEmpty() {

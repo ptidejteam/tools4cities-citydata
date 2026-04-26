@@ -42,7 +42,7 @@ public class ReflectionUtilsTest {
 	@Test
 	public void testInstantiateClassInvalidClassName() {
 		Exception exception = assertThrows(MiddlewareException.class,
-				() -> ReflectionUtils.instantiateClass("non.existent.ClassName"));
+				() -> ReflectionUtils.instantiateOperation("non.existent.ClassName"));
 		assert (exception.getMessage().contains("Producer or Operation ClassNotFoundException was not found"));
 	}
 

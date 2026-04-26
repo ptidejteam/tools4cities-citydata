@@ -4,9 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.CSVProducer;
 
 /**
  * This producer reads an sensor data from a CSV file, extracts all data lines, and provides them as input to the potential further 
@@ -15,7 +14,12 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @date: 2025-10-04
  */
 
-public class RoomOccupancyProducer extends AbstractProducer<String> implements IProducer<String> {
+//public class RoomOccupancyProducer extends AbstractProducer<String> implements IProducer<String> {
+public class RoomOccupancyProducer extends CSVProducer {
+
+	public RoomOccupancyProducer(String filePath) {
+		super(filePath);
+	}
 
 	@Override
 	public void fetch() {

@@ -4,9 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.CSVProducer;
 
 /**
  * This producer reads environmental sensor data from a CSV source, processes it line by line, and produces a list of sensor 
@@ -16,10 +15,11 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @date: 2025-10-03
  */
 
-public class EnvironmentalSensorProducer extends AbstractProducer<String> implements IProducer<String> {
+//public class EnvironmentalSensorProducer extends AbstractProducer<String> implements IProducer<String> {
+public class EnvironmentalSensorProducer extends CSVProducer {
 
-	public EnvironmentalSensorProducer() {
-
+	public EnvironmentalSensorProducer(String filePath) {
+		super(filePath);
 	}
 
 	@Override

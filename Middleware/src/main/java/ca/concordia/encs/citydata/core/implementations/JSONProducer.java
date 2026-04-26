@@ -19,11 +19,14 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 public class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
-	public JSONProducer(String filePath, RequestOptions fileOptions) {
-		this.setFilePath(filePath);
-		this.setFileOptions(fileOptions);
+	public JSONProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
 	}
-
+	
+	public JSONProducer(final String filePath) {
+		super(filePath);
+	}
+	
 	@Override
 	public void fetch() {
 		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();

@@ -1,9 +1,8 @@
-package ca.concordia.encs.citydata.producers;
+package ca.concordia.encs.citydata.core.implementations;
 
 import java.util.ArrayList;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
 /**
  * This producer was created for the sole purpose of returning Exceptions when
@@ -14,7 +13,9 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
  * @since 2025-01-01
  */
 
-public class ExceptionProducer extends AbstractProducer<String> implements IProducer<String> {
+//Need to discuss with Yann, and then probably move this back to producers package
+
+public non-sealed class ExceptionProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public ExceptionProducer(Exception e) {
 		final ArrayList<String> result = new ArrayList<>();

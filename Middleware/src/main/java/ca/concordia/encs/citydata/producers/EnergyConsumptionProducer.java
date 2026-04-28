@@ -26,11 +26,10 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * must be provided by the CityData instance. If no file is found, this producer
  * will return a message telling the user no data is available.
  *
- * @author Gabriel C. Ullmann, Minette Zongo
+ * @author Gabriel C. Ullmann, Minette Zongo, Sikandar Ejaz
  * @since 2025-05-28
  */
 
-//public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> implements IProducer<JsonArray> {
 public class EnergyConsumptionProducer extends CSVProducer {
 
 	public EnergyConsumptionProducer(String filePath) {

@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.implementations.JSONProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
@@ -20,15 +19,17 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * This producer fetches data from the HUB API. Credentials are needed to access
  * this API in your environment variables.
  *
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Minette Zongo, Sikandar Ejaz
  * @since 2025-04-04
  */
 
-//TODO: Intellj keeps showing few trivial warnings here which perhaps have no impact
-// on code or in functionality, but it is worth checking later if needed, rather than
-// supressing them.
+//TODO: Intellj keeps showing few trivial warnings here which perhaps have no impact on code or in functionality, but it is worth checking later if needed, rather than supressing them.
 
-public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+public class RetrofitResultsProducer extends JSONProducer {
+
+	public RetrofitResultsProducer(String filePath) {
+		super(filePath);
+	}
 
 	private JsonArray buildingIds;
 	private IOperation<JsonObject> jsonProducerOperation;

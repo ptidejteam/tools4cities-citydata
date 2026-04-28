@@ -17,7 +17,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2024-12-01
  */
 
-public class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
+public non-sealed class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public CSVProducer(final String filePath, final RequestOptions fileOptions) {
 		super(filePath, fileOptions);

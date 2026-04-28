@@ -17,11 +17,10 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This Producer outputs metadata about a building, such as floors, zones and sensors.
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Sikandar Ejaz, Minette Zongo
  * @since 2025-05-28
  */
 
-// public class BuildingProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 public class BuildingProducer extends JSONProducer {
 
 	private String filePath;

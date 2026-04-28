@@ -7,12 +7,13 @@ import java.util.Arrays;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.CSVProducer;
 
-//public class CalibrationProducer extends AbstractProducer<String> implements IProducer<String> {
-public class CalibrationProducer extends CSVProducer {
+/**
+ * This Producer outputs metadata about a building, such as floors, zones and sensors.
+ * @author Minette Zongo, Sikandar Ejaz
+ * @since 2026-03-01
+ */
 
-	/*	public void setFilePath(String fileName) {
-			super.setFilePath("docs/examples/data/" + fileName);
-		}*/
+public class CalibrationProducer extends CSVProducer {
 
 	public CalibrationProducer(String filePath) {
 		super(filePath);

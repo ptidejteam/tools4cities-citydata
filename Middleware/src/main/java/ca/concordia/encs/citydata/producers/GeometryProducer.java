@@ -10,7 +10,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 /**
  * This Producer outputs GeoJSON geometries for a given city.
  *
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Minette Zongo, Sikandar Ejaz
  * @since 2025-05-28
  */
 

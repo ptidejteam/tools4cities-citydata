@@ -10,11 +10,10 @@ import ca.concordia.encs.citydata.core.implementations.CSVProducer;
 /**
  * This producer reads an sensor data from a CSV file, extracts all data lines, and provides them as input to the potential further 
  * operations
- * @author Minette Zongo M.
+ * @author Minette Zongo M., Sikandar Ejaz
  * @date: 2025-10-04
  */
 
-//public class RoomOccupancyProducer extends AbstractProducer<String> implements IProducer<String> {
 public class RoomOccupancyProducer extends CSVProducer {
 
 	public RoomOccupancyProducer(String filePath) {

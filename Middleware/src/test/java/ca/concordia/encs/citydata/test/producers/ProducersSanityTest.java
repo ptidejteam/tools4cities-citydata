@@ -9,8 +9,8 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.operations.StandardFilteringOperation;
 import ca.concordia.encs.citydata.operations.TemporalAggregationOperation;
 import ca.concordia.encs.citydata.producers.BuildingProducer;
+import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
 import ca.concordia.encs.citydata.producers.EnvironmentalSensorProducer;
-import ca.concordia.encs.citydata.producers.OccupancyProducer;
 import ca.concordia.encs.citydata.producers.RoomOccupancyProducer;
 
 public class ProducersSanityTest {
@@ -24,26 +24,17 @@ public class ProducersSanityTest {
 		System.out.println(result);
 	}
 
-	/*	@Test
-		public void testEnergyConsumptionProducer() {
-			final EnergyConsumptionProducer producer1 = new EnergyConsumptionProducer(null);
-			producer1.setCity("montreal");
-			producer1.setStartDatetime("2021-09-01 00:00:00");
-			producer1.setEndDatetime("2021-09-01 23:59:00");
-			producer1.setClientId(1);
-			producer1.validateParams();
-			producer1.buildQuery();
-			producer1.fetch();
-			ArrayList<JsonArray> result = producer1.getResult();
-			System.out.println(result);
-		}
-	*/
 	@Test
-	public void testOccupancyProducer() {
-		final OccupancyProducer producer = new OccupancyProducer();
-		producer.setListSize(2);
-		producer.fetch();
-		ArrayList<String> result = producer.getResult();
+	public void testEnergyConsumptionProducer() {
+		final EnergyConsumptionProducer producer1 = new EnergyConsumptionProducer(null);
+		producer1.setCity("montreal");
+		producer1.setStartDatetime("2021-09-01 00:00:00");
+		producer1.setEndDatetime("2021-09-01 23:59:00");
+		producer1.setClientId(1);
+		producer1.validateParams();
+		producer1.buildQuery();
+		producer1.fetch();
+		ArrayList<String> result = producer1.getResult();
 		System.out.println(result);
 	}
 
@@ -80,12 +71,12 @@ public class ProducersSanityTest {
 		System.out.println(result);
 	}
 
-	//@Test
-	// GeometryProducer wraps JSONProducer and applies MergeOperation
-	//	public void testGeometryProducer() {
-	//		final GeometryProducer producer = new GeometryProducer();
-	//		producer.setCity("montreal");
-	//		
-	//		final operation
-	//	}
+	/*	@Test
+		 GeometryProducer wraps JSONProducer and applies MergeOperation
+			public void testGeometryProducer() {
+				final GeometryProducer producer = new GeometryProducer();
+				producer.setCity("montreal");
+				
+				final operation
+			}*/
 }

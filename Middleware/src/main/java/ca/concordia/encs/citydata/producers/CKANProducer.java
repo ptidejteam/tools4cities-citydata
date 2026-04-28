@@ -11,8 +11,8 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
+import ca.concordia.encs.citydata.core.implementations.JSONProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.datastores.DiskDatastore;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
@@ -20,11 +20,13 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /**
  * This producer can connect to a CKAN instance and fetch a resource.
- * @author Gabriel C. Ullmann, Rushin D. Makwana
+ * @author Gabriel C. Ullmann, Rushin D. Makwana, Sikandar Ejaz, Minette Zongo
  * @since 2025-02-12
  */
 
-public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
+//In case of filetype other than JSON, we need to create a new Producer that extends CSV producer.
+//public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
+public class CKANProducer extends JSONProducer {
 
 	private String url;
 	private String resourceId;
@@ -135,8 +137,8 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 						+ " .");
 			}
 		} catch (InterruptedException e) {
-			final ArrayList<String> errorMessageList = new ArrayList<>();
-			errorMessageList.add(e.getMessage());
+			final ArrayList<JsonObject> errorMessageList = new ArrayList<>();
+			//errorMessageList.add(e.getMessage());
 			this.setResult(errorMessageList);
 		}
 

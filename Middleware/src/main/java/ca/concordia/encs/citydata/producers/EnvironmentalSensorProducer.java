@@ -11,11 +11,10 @@ import ca.concordia.encs.citydata.core.implementations.CSVProducer;
  * This producer reads environmental sensor data from a CSV source, processes it line by line, and produces a list of sensor 
  * readings for further operations. It stores all non-empty lines, optionally applies a configured operation on the data, and 
  * makes the processed results available to consumers.
- * @author Minette Zongo M.
+ * @author Minette Zongo M., Sikandar Ejaz
  * @date: 2025-10-03
  */
 
-//public class EnvironmentalSensorProducer extends AbstractProducer<String> implements IProducer<String> {
 public class EnvironmentalSensorProducer extends CSVProducer {
 
 	public EnvironmentalSensorProducer(String filePath) {

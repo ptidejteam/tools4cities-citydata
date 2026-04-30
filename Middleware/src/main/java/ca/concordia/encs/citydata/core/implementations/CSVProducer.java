@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.producers.base;
+package ca.concordia.encs.citydata.core.implementations;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
@@ -18,18 +17,18 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2024-12-01
  */
 
-public class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
+public non-sealed class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
 
-	public CSVProducer(String filePath, RequestOptions fileOptions) {
-		this.setFilePath(filePath);
-		this.setFileOptions(fileOptions);
+	public CSVProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
 	}
 
-	// I added the error handling to ensure I actually read my local file
+	public CSVProducer(final String filePath) {
+		super(filePath);
+	}
 
 	@Override
 	public void fetch() {
-
 		try (OutputStream outputStream = this.fetchFromPath();
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
 			writer.flush(); // Ensure all data is written to the stream

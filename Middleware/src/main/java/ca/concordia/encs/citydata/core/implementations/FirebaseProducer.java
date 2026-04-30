@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.producers;
+package ca.concordia.encs.citydata.core.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /***
@@ -22,7 +21,9 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2024-02-07
  */
 
-public class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
+//Need to discuss with Yann, and then probably move this back to producers package
+
+public non-sealed class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	private final String nodePath; // Path to the Firebase node to fetch data from
 

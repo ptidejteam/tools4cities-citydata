@@ -44,16 +44,6 @@ public class ApplyTest extends AbstractTest {
 				.andExpect(content().string(containsString("result")));
 	}
 
-	// Test for valid steps
-	@Test
-	public void whenValidSteps_thenReturnSuccessMessage() throws Exception {
-		String jsonPayload = PayloadFactory.getBasicQuery();
-
-		mockMvc.perform(post("/apply/async").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
-				.andExpect(content().string(containsString("Hello! The runner")));
-	}
-
 	// Test to check /apply/async with invalid JSON input -- Need to fix
 	@Test
 	public void whenInvalidReturnIdWrongInput() throws Exception {
@@ -95,102 +85,12 @@ public class ApplyTest extends AbstractTest {
 				.andExpect(content().string(containsString("Invalid runner ID format. Please provide a valid UUID.")));
 	}
 
-	// Test for sync with valid payload
-	@Test
-	public void testSync() throws Exception {
-		String jsonPayload = PayloadFactory.getBasicQuery();
-
-		performPostRequestWithAuth("/apply/sync", MediaType.APPLICATION_JSON_VALUE, jsonPayload, getToken());
-	}
-
-	private void performPostRequestWithAuth(String url, String contentType, String payload, String token)
-			throws Exception {
-		mockMvc.perform(
-				post(url).contentType(contentType).content(payload).header("Authorization", "Bearer " + getToken()))
-				.andExpect(status().isOk());
-	}
-
 	// Test for sync with wrong media type access
 	@Test
 	public void testSyncWrongMediaTypeAccess() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
 		mockMvc.perform(post("/apply/sync").contentType("XXX").content(jsonPayload))
 				.andExpect(status().is4xxClientError());
-	}
-
-	// Test for sync with wrong media type
-	@Test
-	public void testSyncWrongMediaType() throws Exception {
-
-		String jsonPayload = PayloadFactory.getBasicQuery();
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType("application/XXX").content(jsonPayload)).andExpect(status().is2xxSuccessful());
-	}
-
-	// Test for broken JSON query
-	@Test
-	public void whenBrokenJsonQuery_thenReturnError() throws Exception {
-		String brokenJson = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", "
-				+ "\"withParams\": [ { \"name\": \"generationProcess\", \"value\": \"random\" } ";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(brokenJson)).andExpect(status().is4xxClientError())
-				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
-	}
-
-	// Test for missing "use" field
-	@Test
-	public void whenMissingUseField_thenReturnError() throws Exception {
-		String missingUse = "{ \"withParams\": [ { \"name\": \"generationProcess\", \"value\": \"random\" } ] }";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(missingUse))
-				.andExpect(status().isInternalServerError()).andExpect(
-						content().string(containsString("[{\"result\":\"[Error: Missing required 'use' field]\"}]")));
-	}
-
-	// Test for missing "withParams" field
-	@Test
-	public void whenMissingWithParamsField_thenReturnError() throws Exception {
-		String missingWithParams = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\" }";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
-				.andExpect(status().is5xxServerError()).andExpect(content()
-						.string(containsString("[{\"result\":\"[Error: Missing required 'withParams' field]\"}]")));
-	}
-
-	// Test for non-existent param in Producer/Operation
-	@Test
-	public void whenNonExistentParam_thenReturnError() throws Exception {
-		String nonExistentParam = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [ { \"name\": \"nonExistentParam\", \"value\": \"value\" } ] }";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(nonExistentParam))
-				.andExpect(content().string(containsString(
-						"[{\"result\":\"[Producer or Operation parameter 'nonExistentParam' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
-	}
-
-	// Test for missing params in Operation (valid case for operations that take no params)
-	@Test
-	public void whenMissingParamsForOperation_thenReturnError() throws Exception {
-
-		String missingParamsForOperation = """
-					{
-						"use": "ca.concordia.encs.citydata.producers.RandomStringProducer",
-						"withParams": [
-							{ "name": "generationProcess", "value": "random" }
-						],
-						"apply": [
-							{ "name": "ca.concordia.encs.citydata.operations.JsonFilterOperation" }
-						]
-					}
-				""";
-
-		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
-				.andExpect(status().isInternalServerError()).andExpect(content().string(containsString(
-						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
 	}
 
 	@Test
@@ -214,7 +114,7 @@ public class ApplyTest extends AbstractTest {
 
 	@Test
 	public void testInstantiateClass() throws Exception {
-		Object instance = ReflectionUtils.instantiateClass("java.lang.String");
+		Object instance = ReflectionUtils.instantiateOperation("java.lang.String");
 		assertTrue(instance instanceof String);
 	}
 

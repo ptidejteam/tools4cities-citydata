@@ -38,13 +38,23 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2025-05-27
  */
 
-public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
-
+public sealed abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> permits JSONProducer,
+		CSVProducer, ExceptionProducer, FirebaseProducer, PortfolioManagerProducer, PortfolioManagerMetadataProducer {
 	private String filePath;
 	private RequestOptions fileOptions;
 	private IOperation<E> operation;
 	private final Set<IRunner> runners = new HashSet<>();
 	private ArrayList<E> result = new ArrayList<>();
+
+	public AbstractProducer(final String filePath, final RequestOptions fileOptions) {
+		this.filePath = filePath;
+		this.fileOptions = fileOptions;
+		this.setMetadata("role", "producer");
+	}
+
+	public AbstractProducer(final String filePath) {
+		this(filePath, null);
+	}
 
 	public String getFilePath() {
 		return filePath;
@@ -70,8 +80,13 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		return runners;
 	}
 
-	public void setResult(ArrayList<E> result) {
-		this.result = result;
+	public void setResult(ArrayList<?> result) {
+		this.result = (ArrayList<E>) result;
+	}
+
+	@Override
+	public ArrayList<E> getResult() {
+		return this.result;
 	}
 
 	public AbstractProducer() {
@@ -111,11 +126,6 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			this.result = this.operation.apply(this.result);
 		}
 		this.notifyObservers();
-	}
-
-	@Override
-	public ArrayList<E> getResult() {
-		return this.result;
 	}
 
 	public boolean isEmpty() {

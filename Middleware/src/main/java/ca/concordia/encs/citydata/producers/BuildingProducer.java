@@ -33,19 +33,15 @@ public class BuildingProducer extends JSONProducer {
 		super(filePath);
 	}
 
-	// Setter — for JSON files
 	public void setBuildingName(String buildingName) {
 		if (buildingName != null) {
-			this.filePath = "./src/test/resources/" + buildingName + "_building.json";
-		} else {
-			throw new InvalidParameterException("Please provide a building name to the producer.");
-		}
-	}
-
-	// Setter — for GeoJSON files
-	public void setBuildingNameGeoJSON(String buildingName) {
-		if (buildingName != null) {
-			this.filePath = "./src/test/resources/" + buildingName + "_building.geojson";
+			if (buildingName.endsWith(".geojson")) {
+				this.filePath = "./src/test/resources/" + buildingName;
+			} else if (buildingName.endsWith(".json")) {
+				this.filePath = "./src/test/resources/" + buildingName;
+			} else {
+				this.filePath = "./src/test/resources/" + buildingName + "_building.json";
+			}
 		} else {
 			throw new InvalidParameterException("Please provide a building name to the producer.");
 		}

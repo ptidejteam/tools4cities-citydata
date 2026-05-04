@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://localhost:8082/authenticate"
+url = "https://ngci.encs.concordia.ca/citydata/authenticate"
 
 payload = json.dumps({
   "username": "citydata",

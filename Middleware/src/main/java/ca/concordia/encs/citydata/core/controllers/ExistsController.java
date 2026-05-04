@@ -3,8 +3,6 @@ package ca.concordia.encs.citydata.core.controllers;
 import java.util.Iterator;
 import java.util.UUID;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +13,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 
 /**
@@ -31,7 +31,7 @@ import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 public class ExistsController {
 
 	@SuppressWarnings("rawtypes")
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity<String> sync(@RequestBody String query) {
 
 		try {
@@ -73,5 +73,4 @@ public class ExistsController {
 		}
 
 	}
-
 }

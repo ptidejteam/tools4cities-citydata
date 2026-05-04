@@ -6,14 +6,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
+import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
+import ca.concordia.encs.citydata.core.implementations.ExceptionProducer;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
-import ca.concordia.encs.citydata.producers.ExceptionProducer;
 
 /**
  * This Runner executes a single Producer with no Operations.
@@ -25,6 +25,7 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
  * @author Gabriel C. Ullmann
  * @since 2025-05-27
  */
+
 public class SingleStepRunner extends AbstractRunner implements IRunner {
 
 	private IProducer<?> targetProducerInstance;
@@ -106,5 +107,4 @@ public class SingleStepRunner extends AbstractRunner implements IRunner {
 		final String runnerId = this.getMetadata("id").toString();
 		store.set(runnerId, producer);
 	}
-
 }

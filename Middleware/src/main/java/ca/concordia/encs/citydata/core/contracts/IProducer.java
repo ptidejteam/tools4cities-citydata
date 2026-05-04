@@ -1,8 +1,8 @@
 package ca.concordia.encs.citydata.core.contracts;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-
 import java.util.ArrayList;
+
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 
 /**
  *
@@ -19,7 +19,7 @@ public interface IProducer<E> {
 	void addObserver(final IRunner aRunner);
 
 	@SuppressWarnings("rawtypes")
-    void setOperation(IOperation operation);
+	void setOperation(IOperation operation);
 
 	// 2 - fetch data
 	void fetch() throws MiddlewareException;

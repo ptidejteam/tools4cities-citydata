@@ -26,6 +26,7 @@ import ca.concordia.encs.citydata.core.utils.ProducerUsageData;
  * @author Rushin Makwana
  * @since 2024-02-26
  */
+
 @Component
 public class MongoDataStore extends AbstractEntity implements IDataStore<ProducerUsageData> {
 

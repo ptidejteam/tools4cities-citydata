@@ -9,6 +9,7 @@ import java.nio.file.Paths;
  * @author Rushin Makwana
  * @since 2025-02-07
  */
+
 public interface Constants {
 	// IntelliJ points out as an issue, but these should all be static
 	// and final, so we prevent accidental changes
@@ -16,10 +17,8 @@ public interface Constants {
 
 	static String SOURCE_CODE_ROOT_PATH = "./src/main/java/";
 
-	static String PRODUCER_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH + "ca/concordia/encs" +
-			"/citydata/producers/";
+	static String PRODUCER_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH + "ca/concordia/encs" + "/citydata/producers/";
 
-	static String OPERATION_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH
-			+ "ca/concordia/encs/citydata/operations/";
+	static String OPERATION_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH + "ca/concordia/encs/citydata/operations/";
 
 }

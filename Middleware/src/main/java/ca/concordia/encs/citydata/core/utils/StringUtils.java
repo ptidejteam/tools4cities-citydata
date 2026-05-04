@@ -1,5 +1,7 @@
 package ca.concordia.encs.citydata.core.utils;
 
+import static ca.concordia.encs.citydata.core.utils.Constants.ENV_PATH;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -14,14 +16,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import static ca.concordia.encs.citydata.core.utils.Constants.ENV_PATH;
-
 /**
  * This class contains functions to perform transformations on strings.
  * 
  * @author Rushin Makwana and Gabriel C. Ullmann
  * @since 2025-03-28
  */
+
 public abstract class StringUtils {
 
 	public static String capitalize(String str) {
@@ -70,13 +71,13 @@ public abstract class StringUtils {
 		}
 	}
 
-	private static boolean isUserAccessibleSetter(String methodName, Parameter[] params){
-		return methodName != null && methodName.startsWith("set") && !methodName.equals("setMetadata") && params.length > 0;
+	private static boolean isUserAccessibleSetter(String methodName, Parameter[] params) {
+		return methodName != null && methodName.startsWith("set") && !methodName.equals("setMetadata")
+				&& params.length > 0;
 	}
 
 	private static String extractParamNameFromSetterMethod(String setterMethodName) {
 		final String setterName = setterMethodName.replace("set", "");
 		return setterName.substring(0, 1).toLowerCase() + setterName.substring(1);
 	}
-
 }

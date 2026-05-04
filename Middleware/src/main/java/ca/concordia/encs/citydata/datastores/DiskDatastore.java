@@ -9,8 +9,10 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import ca.concordia.encs.citydata.core.contracts.IDataStore;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreDeleteFailureException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreWritingFailureException;
 import ca.concordia.encs.citydata.core.implementations.AbstractEntity;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.*;
 
 /**
  * A DataStore that persists information in the disk.
@@ -18,6 +20,7 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.*;
  * @author Gabriel C. Ullmann
  * @since 2025-02-19
  */
+
 public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> {
 
 	private static final String filePrefix = ".citydata";
@@ -44,9 +47,9 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 	}
 
 	@Override
-    public void set(UUID key, byte[] value) {
-        set(key.toString(), value);
-    }
+	public void set(UUID key, byte[] value) {
+		set(key.toString(), value);
+	}
 
 	@Override
 	public void set(String key, byte[] value) {
@@ -60,9 +63,9 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 	}
 
 	@Override
-    public byte[] get(UUID key) {
-        return get(key.toString());
-    }
+	public byte[] get(UUID key) {
+		return get(key.toString());
+	}
 
 	@Override
 	public byte[] get(String key) {
@@ -81,9 +84,9 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 	}
 
 	@Override
-    public void delete(UUID key) {
-        delete(key.toString());
-    }
+	public void delete(UUID key) {
+		delete(key.toString());
+	}
 
 	@Override
 	public void delete(String key) {
@@ -93,6 +96,5 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 		} catch (IOException e) {
 			throw new DataStoreDeleteFailureException("Failed to delete data from disk: " + e.getMessage());
 		}
-    }
-
+	}
 }

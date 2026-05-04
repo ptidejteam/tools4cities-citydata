@@ -7,39 +7,47 @@ package ca.concordia.encs.citydata.core.exceptions;
  */
 
 public class MiddlewareException extends RuntimeException {
-
 	public MiddlewareException(String message) {
 		super(message);
 	}
 
+	public MiddlewareException(final String message, final Exception cause) {
+		super(message, cause);
+	}
 
 	public static class InvalidProducerException extends MiddlewareException {
-		public InvalidProducerException(String producerName) {
-			super("Producer " + producerName + " was not found. Please check whether the fully-qualified name is correct and try again.");
+		public InvalidProducerException(String producerName, final Exception e) {
+			super("Producer " + producerName
+					+ " was not found. Please check whether the fully-qualified name is correct and try again.", e);
 		}
 	}
 
 	public static class InvalidOperationException extends MiddlewareException {
 		public InvalidOperationException(String operationName) {
-			super("Operation '" + operationName + "' was not found. Please check whether the fully-qualified name is correct and try again.");
+			super("Operation '" + operationName
+					+ "' was not found. Please check whether the fully-qualified name is correct and try again.");
 		}
 	}
 
 	public static class MalformedParameterException extends MiddlewareException {
 		public MalformedParameterException(String parameterJsonString) {
-			super("Malformed Producer or Operation parameter. Expected keys 'name' and 'value', found: " + parameterJsonString);
+			super("Malformed Producer or Operation parameter. Expected keys 'name' and 'value', found: "
+					+ parameterJsonString);
 		}
 	}
 
 	public static class InvalidParameterException extends MiddlewareException {
 		public InvalidParameterException(String parameterName) {
-			super("Producer or Operation parameter '" + parameterName + "' was not found. Please make sure you input names and values correctly for every parameter.");
+			super("Producer or Operation parameter '" + parameterName
+					+ "' was not found. Please make sure you input names and values correctly for every parameter.");
 		}
 	}
 
 	public static class UnsupportedParameterTypeException extends MiddlewareException {
-		public UnsupportedParameterTypeException(String parameterName, String parameterValue, String parameterTypeSupported) {
-			super("Parameter '" + parameterName + "' does not accept value '" + parameterValue + "' as an input. Please input a value of type " + parameterTypeSupported + " instead.");
+		public UnsupportedParameterTypeException(String parameterName, String parameterValue,
+				String parameterTypeSupported) {
+			super("Parameter '" + parameterName + "' does not accept value '" + parameterValue
+					+ "' as an input. Please input a value of type " + parameterTypeSupported + " instead.");
 		}
 	}
 
@@ -78,5 +86,4 @@ public class MiddlewareException extends RuntimeException {
 			super(message);
 		}
 	}
-
 }

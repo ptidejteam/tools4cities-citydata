@@ -1,6 +1,11 @@
 package ca.concordia.encs.citydata.core.implementations;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -9,7 +14,9 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -30,13 +37,24 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @author Gabriel C. Ullmann, Rushin D. Makwana
  * @since 2025-05-27
  */
-public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
 
+public sealed abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> permits JSONProducer,
+		CSVProducer, ExceptionProducer, FirebaseProducer, PortfolioManagerProducer, PortfolioManagerMetadataProducer {
 	private String filePath;
 	private RequestOptions fileOptions;
 	private IOperation<E> operation;
 	private final Set<IRunner> runners = new HashSet<>();
 	private ArrayList<E> result = new ArrayList<>();
+
+	public AbstractProducer(final String filePath, final RequestOptions fileOptions) {
+		this.filePath = filePath;
+		this.fileOptions = fileOptions;
+		this.setMetadata("role", "producer");
+	}
+
+	public AbstractProducer(final String filePath) {
+		this(filePath, null);
+	}
 
 	public String getFilePath() {
 		return filePath;
@@ -62,8 +80,13 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		return runners;
 	}
 
-	public void setResult(ArrayList<E> result) {
-		this.result = result;
+	public void setResult(ArrayList<?> result) {
+		this.result = (ArrayList<E>) result;
+	}
+
+	@Override
+	public ArrayList<E> getResult() {
+		return this.result;
 	}
 
 	public AbstractProducer() {
@@ -76,9 +99,9 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	}
 
 	@SuppressWarnings("rawtypes")
-    @Override
+	@Override
 	public void setOperation(IOperation operation) {
-        this.operation = operation;
+		this.operation = operation;
 	}
 
 	@Override
@@ -105,11 +128,6 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		this.notifyObservers();
 	}
 
-	@Override
-	public ArrayList<E> getResult() {
-		return this.result;
-	}
-
 	public boolean isEmpty() {
 		return this.result == null || this.result.isEmpty();
 	}
@@ -126,19 +144,19 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		 *  for now, I kept support to PUT and POST because they are needed for Hub API auth
 		 */
 		switch (this.fileOptions.getMethod()) {
-			case "HEAD":
-				break;
-			case "GET":
-				requestBuilder.GET();
-				break;
-			case "POST":
-				requestBuilder.POST(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
-				break;
-			case "PUT":
-				requestBuilder.PUT(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
-				break;
-			default:
-				throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
+		case "HEAD":
+			break;
+		case "GET":
+			requestBuilder.GET();
+			break;
+		case "POST":
+			requestBuilder.POST(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
+			break;
+		case "PUT":
+			requestBuilder.PUT(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
+			break;
+		default:
+			throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
 		}
 
 		if (!this.fileOptions.getHeaders().isEmpty()) {
@@ -146,10 +164,8 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		}
 
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<InputStream> response = client.send(
-					requestBuilder.build(),
-					HttpResponse.BodyHandlers.ofInputStream()
-			);
+			HttpResponse<InputStream> response = client.send(requestBuilder.build(),
+					HttpResponse.BodyHandlers.ofInputStream());
 
 			if (this.fileOptions.isReturnHeaders()) {
 				try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
@@ -182,8 +198,8 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("File not found: " + this.filePath, e);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot read file: " + this.filePath + ". " +
-					"The file may be corrupted or inaccessible to CITYdata right now.");
+			throw new RuntimeException("Cannot read file: " + this.filePath + ". "
+					+ "The file may be corrupted or inaccessible to CITYdata right now.");
 		} catch (Exception e) {
 			throw new RuntimeException("An error occurred while fetching the data: " + e.getMessage());
 		}
@@ -205,4 +221,54 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		return jsonArray.toString();
 	}
 
+	/**
+	 * The method tries to find a "Data" folder in the current working directory.
+	 * It checks for a configured path in application.properties under the key "data.path.route".
+	 * If that key is set, it will try to use that path first (supporting "~" for user home).
+	 * If no valid "Data" folder is found, it returns null.
+	 */
+
+	public Path fetchData() {
+		java.util.Properties props = new java.util.Properties();
+		try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+			if (in != null) {
+				props.load(in);
+			}
+		} catch (java.io.IOException e) {
+			// ignore and use defaults
+		}
+
+		String configured = props.getProperty("data.path.route");
+		if (configured != null && !configured.isBlank()) {
+			configured = configured.trim();
+			if (configured.startsWith("~")) {
+				configured = configured.replaceFirst("^~", System.getProperty("user.home"));
+			}
+			Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
+			if (Files.exists(configuredPath)) {
+				return configuredPath;
+			}
+		}
+
+		// Trying to build a list of candidate locations where a Data folder might live (relative to the working dir and /or  its parents)
+		Path cwd = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize();
+		java.util.List<Path> candidates = new java.util.ArrayList<>();
+		candidates.add(cwd.resolve("Data"));
+		candidates.add(cwd.resolve("..").resolve("Data").normalize());
+		candidates.add(cwd.resolve("..").resolve("..").resolve("Data").normalize());
+		candidates.add(cwd.resolve("tools4cities-middleware").resolve("Data").normalize());
+		if (cwd.getParent() != null) {
+			candidates.add(cwd.getParent().resolve("Data").normalize());
+			if (cwd.getParent().getParent() != null) {
+				candidates.add(cwd.getParent().getParent().resolve("Data").normalize());
+			}
+		}
+
+		for (Path p : candidates) {
+			if (p != null && Files.exists(p)) {
+				return p.toAbsolutePath().normalize();
+			}
+		}
+		return null;
+	}
 }

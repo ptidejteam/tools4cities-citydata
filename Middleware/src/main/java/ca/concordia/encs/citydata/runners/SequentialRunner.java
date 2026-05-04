@@ -4,10 +4,9 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
@@ -16,12 +15,13 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
+import ca.concordia.encs.citydata.core.implementations.ExceptionProducer;
 import ca.concordia.encs.citydata.core.utils.ProducerUsageData;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.datastores.MongoDataStore;
-import ca.concordia.encs.citydata.producers.ExceptionProducer;
 
 /***
  * This Runner starts with data provided by a producer P1, then applies
@@ -32,9 +32,12 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
  * @author Gabriel C. Ullmann
  * @since 2025-05-27
  */
+
 @Component
 public class SequentialRunner extends AbstractRunner implements IRunner {
 
+	private String filePath;
+	private String fileOptions;
 	private final MongoDataStore mongoDataStore = MongoDataStore.getInstance();
 	private final JsonObject steps;
 	private int operationCounter = 0;
@@ -48,20 +51,22 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 		// if there are no steps to run, warn the user and stop
 		if (this.steps == null) {
 			this.setAsDone();
-			throw new MiddlewareException.NoStepsToRunException("No steps to run! Please provide steps so the runner can execute them.");
+			throw new MiddlewareException.NoStepsToRunException(
+					"No steps to run! Please provide steps so the runner can execute them.");
 		}
 
 		// start by extracting Producers, Operations and their params from the query
 		System.out.println("Run started!");
-		final String producerName = ReflectionUtils.getRequiredField(this.steps, "use").getAsString();
+		final String producerClassName = ReflectionUtils.getRequiredField(this.steps, "use").getAsString();
 		final JsonArray producerParams = ReflectionUtils.getRequiredField(this.steps, "withParams").getAsJsonArray();
 
 		// instantiate a new Producer instance and set its params
-		final Object producerInstance = ReflectionUtils.instantiateClass(producerName);
+		final Object producerInstance = ReflectionUtils.instantiateProducer(producerClassName, filePath);
 		ReflectionUtils.setParameters(producerInstance, producerParams);
 
 		// set query to producer so we can check it later against other queries
-		final Method setMetadataMethod = producerInstance.getClass().getMethod("setMetadata", String.class, Object.class);
+		final Method setMetadataMethod = producerInstance.getClass().getMethod("setMetadata", String.class,
+				Object.class);
 		setMetadataMethod.invoke(producerInstance, "query", this.steps);
 
 		// add this Runner as an observer of the Producer instance
@@ -75,21 +80,21 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 	}
 
 	@SuppressWarnings("JavaReflectionInvocation")
-    @Override
-	public void applyNextOperation(IProducer<?> producer) throws Exception {
+	@Override
+	public void applyNextOperation(final IProducer<?> producer) throws Exception {
 		/*
 		 * get list of operations and choose which one to execute next based on the
 		 * sequential operation counter
 		 */
 		final JsonArray operationsToApply = ReflectionUtils.getRequiredField(this.steps, "apply").getAsJsonArray();
 		final int totalOperations = operationsToApply.size();
-		if (producer != null && totalOperations > 0) {
 
+		if (producer != null && totalOperations > 0) {
 			final JsonObject currentOperation = operationsToApply.get(this.operationCounter).getAsJsonObject();
 
 			// instantiate current operation
-			final String operationName = ReflectionUtils.getRequiredField(currentOperation, "name").getAsString();
-			final Object operationInstance = ReflectionUtils.instantiateClass(operationName);
+			final String operationClassName = ReflectionUtils.getRequiredField(currentOperation, "name").getAsString();
+			final Object operationInstance = ReflectionUtils.instantiateOperation(operationClassName);
 
 			// extract operation parameters and set them
 			final JsonArray operationParams = ReflectionUtils.getRequiredField(currentOperation, "withParams")
@@ -106,8 +111,8 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 			System.out.println("No operations to apply");
 		}
 
-        assert producer != null;
-        producer.fetch();
+		assert producer != null;
+		producer.fetch();
 
 	}
 
@@ -157,7 +162,7 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 		// store producer in the datastore
 		final InMemoryDataStore store = InMemoryDataStore.getInstance();
 		final UUID runnerId = this.getId();
-        store.set(runnerId, producer);
+		store.set(runnerId, producer);
 
 		final String producerName = this.steps.get("use").getAsString();
 		this.storeProducerCallInfo(runnerId, this.steps.toString(), producerName);
@@ -180,7 +185,5 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 				mongoDataStore.save(existingCallInfo);
 			}
 		}
-
 	}
-
 }

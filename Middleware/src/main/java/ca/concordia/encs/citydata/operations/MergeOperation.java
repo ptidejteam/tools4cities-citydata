@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.ThreadInterruptedException;
 import com.google.gson.JsonArray;
 
-import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.ThreadInterruptedException;
+import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
@@ -19,6 +19,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * @author Gabriel C. Ullmann
  * @since 2025-01-01
  */
+
 public class MergeOperation extends AbstractOperation<String> implements IOperation<String> {
 
 	private String targetProducer;
@@ -46,30 +47,30 @@ public class MergeOperation extends AbstractOperation<String> implements IOperat
 		try {
 			final SingleStepRunner deckard = new SingleStepRunner(targetProducer, targetProducerParams);
 			final Thread runnerTask = new Thread(() -> {
-                try {
-                    deckard.runSteps();
-                    while (!deckard.isDone()) {
-                        System.out.println("Busy waiting!");
-                    }
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
+				try {
+					deckard.runSteps();
+					while (!deckard.isDone()) {
+						System.out.println("Busy waiting!");
+					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
 
-            });
+			});
 			runnerTask.start();
 			runnerTask.join();
 
 			final String runnerId = deckard.getMetadata("id").toString();
 			final InMemoryDataStore store = InMemoryDataStore.getInstance();
 
-			final ArrayList<?> targetList =  store.get(runnerId).getResult();
+			final ArrayList<?> targetList = store.get(runnerId).getResult();
 			if (targetList != null && !targetList.isEmpty()) {
 				String timeStampTarget = new SimpleDateFormat(timeStampFormat).format(timeObject);
 				sourceList.add("{\"" + timeStampTarget + "\": \"" + targetList + "\" }");
 			}
 
 		} catch (InterruptedException e) {
-			throw new ThreadInterruptedException("Thread was interrupted during execution." +e.getMessage());
+			throw new ThreadInterruptedException("Thread was interrupted during execution." + e.getMessage());
 		}
 
 		return sourceList;

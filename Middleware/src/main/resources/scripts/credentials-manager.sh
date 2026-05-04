@@ -1,98 +1,221 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 CREDENTIALS_DIR="credentials"
 CREDENTIALS_FILE="$CREDENTIALS_DIR/credentials.txt"
 
 mkdir -p "$CREDENTIALS_DIR"
 
-# --- BCrypt hashing helper (cross-platform) ---
+# --- Ensure file exists and is a JSON array ---
+if [[ ! -f "$CREDENTIALS_FILE" ]]; then
+  echo "[]" > "$CREDENTIALS_FILE"
+else
+  python3 - <<'PY' || true
+import json, sys, os
+path = "credentials/credentials.txt"
+try:
+    data = json.load(open(path))
+    if isinstance(data, dict):
+        # convert single object -> array
+        json.dump([data], open(path, "w"), indent=2)
+except Exception:
+    pass
+PY
+fi
+
+# --- BCrypt hashing helper ---
 bcrypt_hash() {
   if command -v htpasswd >/dev/null 2>&1; then
-    # Apache utils: works if available (e.g. Linux/macOS with apache2-utils)
     htpasswd -nbB user "$1" | cut -d: -f2
   elif command -v python3 >/dev/null 2>&1; then
-    python3 - "$1" <<'EOF'
+    python3 - "$1" <<'PY'
 import bcrypt, sys
 pw = sys.argv[1].encode()
 print(bcrypt.hashpw(pw, bcrypt.gensalt()).decode())
-EOF
-  elif command -v python >/dev/null 2>&1; then
-    python - "$1" <<'EOF'
-import bcrypt, sys
-pw = sys.argv[1].encode()
-print(bcrypt.hashpw(pw, bcrypt.gensalt()).decode())
-EOF
+PY
   else
-    echo "Error: No bcrypt tool found (need htpasswd or Python with bcrypt)." >&2
+    echo "Error: No bcrypt tool found (need htpasswd or python3 with bcrypt)." >&2
     exit 1
   fi
 }
 
-# --- User management ---
+# --- JSON update helper using Python ---
+py_update() {
+  python3 - "$CREDENTIALS_FILE" <<'PY'
+import json, sys
+path = sys.argv[1]
+code = sys.stdin.read()
+with open(path) as f:
+    try:
+        data = json.load(f)
+    except Exception:
+        data = []
+if isinstance(data, dict):
+    data = [data]
+# execute injected code block
+locals_dict = {"data": data}
+exec(code, {}, locals_dict)
+with open(path, "w") as f:
+    json.dump(locals_dict["data"], f, indent=2)
+PY
+}
+
+# --- Check if user exists ---
+user_exists() {
+  local user=$1
+  
+  python3 - "$CREDENTIALS_FILE" "$user" <<'PY'
+import json, sys, os
+
+path, uname = sys.argv[1:3]
+
+# Read existing data
+if os.path.exists(path) and os.path.getsize(path) > 0:
+    with open(path, 'r') as f:
+        data = json.load(f)
+else:
+    data = []
+
+# Ensure data is a list
+if isinstance(data, dict):
+    data = [data]
+
+# Check for duplicate username
+# Exit 0 (success) if user EXISTS, exit 1 (failure) if user does NOT exist
+if any(u.get("username") == uname for u in data):
+    sys.exit(0)
+else:
+    sys.exit(1)
+PY
+  
+  return $?
+}
+
+# --- Add user ---
 add_user() {
-  local user=$1
-  local pass=$2
+  local user=$1 pass=$2
   local bcrypt_pw
   bcrypt_pw=$(bcrypt_hash "$pass")
 
-  # Overwrite JSON with single user for now
-  echo "{\"username\":\"$user\",\"password\":\"$bcrypt_pw\"}" > "$CREDENTIALS_FILE"
-  echo "User $user added."
-}
+  python3 - "$CREDENTIALS_FILE" "$user" "$bcrypt_pw" <<'PY'
+import json, sys, os
 
-update_user() {
-  local user=$1
-  local pass=$2
-  local bcrypt_pw
-  bcrypt_pw=$(bcrypt_hash "$pass")
+path, uname, pwhash = sys.argv[1:4]
 
-  echo "{\"username\":\"$user\",\"password\":\"$bcrypt_pw\"}" > "$CREDENTIALS_FILE"
-  echo "Password updated for user $user."
-}
+# Read existing data
+if os.path.exists(path) and os.path.getsize(path) > 0:
+    with open(path, 'r') as f:
+        data = json.load(f)
+else:
+    data = []
 
-delete_user() {
-  local uname="$1"
+# Ensure data is a list
+if isinstance(data, dict):
+    data = [data]
 
-  if [[ ! -f "$CREDENTIALS_FILE" ]]; then
-    echo "No credentials file yet."
-    return
+# Add new user (duplicate check already done before this function)
+data.append({"username": uname, "password": pwhash})
+
+# Write back to file
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2)
+
+sys.exit(0)
+PY
+  
+  local exit_code=$?
+  if [[ $exit_code -eq 0 ]]; then
+    echo "User $user added."
+    return 0
+  else
+    echo "Error: Failed to add user." >&2
+    return 1
   fi
+}
 
-  grep -v "\"username\":\"$uname\"" "$CREDENTIALS_FILE" > "$CREDENTIALS_FILE.tmp" && mv "$CREDENTIALS_FILE.tmp" "$CREDENTIALS_FILE"
+# --- Update user ---
+update_user() {
+  local user=$1 pass=$2
+  local bcrypt_pw
+  bcrypt_pw=$(bcrypt_hash "$pass")
+
+  python3 - "$CREDENTIALS_FILE" "$user" "$bcrypt_pw" <<'PY'
+import json, sys
+path, uname, pwhash = sys.argv[1:4]
+data = json.load(open(path))
+if isinstance(data, dict):
+    data = [data]
+found = False
+for u in data:
+    if u.get("username") == uname:
+        u["password"] = pwhash
+        found = True
+        break
+json.dump(data, open(path, "w"), indent=2)
+if not found:
+    print("User not found", file=sys.stderr)
+    sys.exit(3)
+PY
+  if [[ $? -eq 0 ]]; then
+    echo "Password updated for user $user."
+  else
+    echo "User not found."
+  fi
+}
+
+# --- Delete user ---
+delete_user() {
+  local uname=$1
+  python3 - "$CREDENTIALS_FILE" "$uname" <<'PY'
+import json, sys
+path, uname = sys.argv[1:3]
+data = json.load(open(path))
+if isinstance(data, dict):
+    data = [data]
+data = [u for u in data if u.get("username") != uname]
+json.dump(data, open(path, "w"), indent=2)
+PY
   echo "User $uname deleted (if existed)."
 }
 
+# --- List users ---
 list_users() {
-  if [[ ! -f "$CREDENTIALS_FILE" ]]; then
-    echo "No users yet."
-    return
-  fi
-
-  echo "Users:"
-  grep -o '"username":"[^"]*"' "$CREDENTIALS_FILE" | cut -d':' -f2 | tr -d '"'
+  python3 - "$CREDENTIALS_FILE" <<'PY'
+import json, sys
+path = sys.argv[1]
+try:
+    data = json.load(open(path))
+except Exception:
+    print("No users yet."); sys.exit(0)
+if isinstance(data, dict):
+    data = [data]
+if not data:
+    print("No users yet."); sys.exit(0)
+print("Users:")
+for u in data:
+    if isinstance(u, dict) and "username" in u:
+        print(u["username"])
+PY
 }
 
+# --- Show password hash ---
 show_password() {
-  local uname="$1"
-
-  if [[ ! -f "$CREDENTIALS_FILE" ]]; then
-    echo "No credentials file yet."
-    return
-  fi
-
-  local stored_pw
-  stored_pw=$(grep "\"username\":\"$uname\"" "$CREDENTIALS_FILE" | sed -E 's/.*"password":"([^"]*)".*/\1/')
-  if [[ -z "$stored_pw" ]]; then
-    echo "User $uname not found."
-    return
-  fi
-
-  echo "Stored BCrypt hash for $uname:"
-  echo "$stored_pw"
+  local uname=$1
+  python3 - "$CREDENTIALS_FILE" "$uname" <<'PY'
+import json, sys
+path, uname = sys.argv[1], sys.argv[2]
+try:
+    data = json.load(open(path))
+except Exception:
+    print("User not found", file=sys.stderr); sys.exit(1)
+if isinstance(data, dict):
+    data = [data]
+for u in data:
+    if isinstance(u, dict) and u.get("username") == uname:
+        print(u.get("password")); sys.exit(0)
+print("User not found", file=sys.stderr); sys.exit(1)
+PY
 }
-
-# --- Startup ---
-[[ ! -f "$CREDENTIALS_FILE" ]] && touch "$CREDENTIALS_FILE"
 
 # --- Interactive Menu ---
 while true; do
@@ -102,12 +225,27 @@ while true; do
   echo "  2) Update user"
   echo "  3) Delete user"
   echo "  4) List users"
-  echo "  5) Show password"
+  echo "  5) Show password hash"
   echo "  6) Exit"
   read -rp "Enter choice [1-6]: " choice
 
   case "$choice" in
     1) read -rp "Username: " uname
+       # Validate username is not empty
+       if [[ -z "$uname" ]]; then
+         echo "Error: Username cannot be empty."
+         continue
+       fi
+       # Prevent the use of 'citydata' username
+       if [[ "$uname" == "citydata" ]]; then
+         echo "Error: Sorry, the username 'citydata' is reserved for the default user. Please choose another username."
+         continue
+       fi
+       # Check if user already exists BEFORE asking for password
+       if user_exists "$uname"; then
+         echo "Error: User '$uname' already exists."
+         continue
+       fi
        read -s -rp "Password: " pw; echo
        read -s -rp "Confirm: " pw2; echo
        [[ "$pw" == "$pw2" ]] || { echo "Mismatch"; continue; }
@@ -124,15 +262,16 @@ while true; do
        ;;
     4) list_users ;;
     5) read -rp "Username: " uname
-       show_password "$uname"
+       echo "Stored BCrypt hash for $uname:"
+       show_password "$uname" || true
        ;;
     6) echo "Exiting."; break ;;
     *) echo "Invalid choice." ;;
   esac
 done
 
-# Prevent auto-close on Windows
-if [[ -n "$ComSpec" ]] || [[ -n "$PROMPT" ]]; then
+# --- Prevent auto-close on Windows ---
+if [[ -n "${ComSpec:-}" ]] || [[ -n "${PROMPT:-}" ]]; then
   echo ""
   read -rp "Press Enter to exit..."
 fi

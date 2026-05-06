@@ -61,9 +61,7 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
         	System.out.println("Wrapper keys: " + wrapper.keySet());
             System.out.println("Wrapper content: " + wrapper.toString());
             if (!wrapper.has("xml")) continue;
-
             final String xmlString = wrapper.get("xml").getAsString();
-
             try {
                 final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
                 final Document doc = builder.parse(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
@@ -76,8 +74,6 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
                     obj.addProperty("startDate", getTag(entry, "startDate"));
                     obj.addProperty("endDate",   getTag(entry, "endDate"));
                     obj.addProperty("usage",     getTag(entry, "usage"));
-
-                    // filtering is optional — if filterKey not set, keep all records
                     if (filterKey == null || filterKey.isEmpty()) {
                         resultList.add(obj);
                     } else if (obj.has(filterKey)) {
@@ -94,7 +90,8 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
                         	resultList.add(obj);
                         } else if (filterValue != null && !isExactlyEqual && objectValue.contains(filterValue)) {
                             resultList.add(obj);
-                    }          
+                        }          
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("XmlToJsonFilterOperation parse error: " + e.getMessage());

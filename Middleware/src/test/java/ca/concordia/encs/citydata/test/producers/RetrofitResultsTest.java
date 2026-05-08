@@ -16,7 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import ca.concordia.encs.citydata.core.configs.AppConfig;
+import ca.concordia.encs.citydata.core.config.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 import ca.concordia.encs.citydata.test.AbstractTest;
 import ca.concordia.encs.citydata.test.PayloadFactory;

@@ -13,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import ca.concordia.encs.citydata.core.configs.RsaKeyProperties;
+import ca.concordia.encs.citydata.core.config.RsaKeyProperties;
 import ca.concordia.encs.citydata.services.TokenService;
 
 @TestConfiguration

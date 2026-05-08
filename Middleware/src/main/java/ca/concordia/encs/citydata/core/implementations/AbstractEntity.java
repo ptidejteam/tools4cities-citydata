@@ -8,8 +8,8 @@ import ca.concordia.encs.citydata.core.contracts.IEntity;
 
 /**
  *
- * This is the most generic blueprint of what a "thing" in the CityData should
- * be. Producers, Operations, Runners and DataStores are CityData entities.
+ * This is the most generic blueprint of what a "thing" in the CITYdata should
+ * be. Producers, Operations, Runners and DataStores are CITYdata entities.
  * 
  * 
  * @author Gabriel C. Ullmann

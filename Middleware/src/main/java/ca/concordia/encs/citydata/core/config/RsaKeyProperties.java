@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.core.configs;
+package ca.concordia.encs.citydata.core.config;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;

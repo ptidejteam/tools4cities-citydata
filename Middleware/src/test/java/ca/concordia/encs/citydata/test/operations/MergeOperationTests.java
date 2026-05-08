@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.configs.AppConfig;
+import ca.concordia.encs.citydata.core.config.AppConfig;
 import ca.concordia.encs.citydata.test.AbstractTest;
 import ca.concordia.encs.citydata.test.PayloadFactory;
 import ca.concordia.encs.citydata.test.config.TestConfig;

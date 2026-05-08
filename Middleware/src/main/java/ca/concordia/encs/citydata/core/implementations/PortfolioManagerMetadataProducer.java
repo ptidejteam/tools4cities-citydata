@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.configs.PortfolioManagerConfig;
+import ca.concordia.encs.citydata.core.config.PortfolioManagerConfig;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;

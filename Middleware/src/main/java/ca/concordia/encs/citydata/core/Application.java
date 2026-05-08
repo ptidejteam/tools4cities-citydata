@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import ca.concordia.encs.citydata.core.configs.RsaKeyProperties;
+import ca.concordia.encs.citydata.core.config.RsaKeyProperties;
 import ca.concordia.encs.citydata.datastores.DiskDatastore;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.datastores.MongoDataStore;

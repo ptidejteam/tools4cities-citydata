@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.concordia.encs.citydata.core.configs.SecurityConfig;
+import ca.concordia.encs.citydata.core.config.SecurityConfig;
 import ca.concordia.encs.citydata.core.utils.LoginRequest;
 import ca.concordia.encs.citydata.services.TokenService;
 import jakarta.servlet.http.HttpServletRequest;

@@ -18,7 +18,6 @@ public class ProducersSanityTest {
 	@Test
 	public void testBuildingProducer() {
 		final BuildingProducer producer = new BuildingProducer(null, null);
-		producer.setBuildingName("mock");
 		producer.fetch();
 		ArrayList<JsonObject> result = producer.getResult();
 		System.out.println(result);

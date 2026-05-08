@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.core.configs;
+package ca.concordia.encs.citydata.core.config;
 
 import java.io.File;
 import java.io.FileInputStream;

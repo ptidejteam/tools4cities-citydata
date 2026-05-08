@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata.core.configs;
+package ca.concordia.encs.citydata.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

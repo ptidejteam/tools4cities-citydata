@@ -1,5 +1,5 @@
 {
-  "use": "ca.concordia.encs.citydata.producers.EnergyConsumptionProducer",
+  "use": "ca.concordia.encs.citydata.producer.EnergyConsumptionProducer",
   "withParams": [
   {
       "name": "city",
@@ -20,7 +20,7 @@
   ],
   "apply": [
         {
-      "name": "ca.concordia.encs.citydata.operations.JsonArrayAverageOperation",
+      "name": "ca.concordia.encs.citydata.operation.JsonArrayAverageOperation",
       "withParams": [
         {
           "name": "keyName",

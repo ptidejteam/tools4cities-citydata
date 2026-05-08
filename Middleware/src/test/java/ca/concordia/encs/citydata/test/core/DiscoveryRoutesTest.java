@@ -49,7 +49,7 @@ public class DiscoveryRoutesTest extends AbstractTest {
 	@Test
 	void testListOperationsController() throws Exception {
 		mockMvc.perform(get("/operations/list")).andExpect(status().is2xxSuccessful())
-				.andExpect(content().string(containsString("ca.concordia.encs.citydata.operations.MergeOperation")))
+				.andExpect(content().string(containsString("ca.concordia.encs.citydata.operation.MergeOperation")))
 				.andExpect(content().string(containsString("targetProducerParams")))
 				.andExpect(content().string(containsString("targetProducer")));
 	}
@@ -58,7 +58,7 @@ public class DiscoveryRoutesTest extends AbstractTest {
 	void testListProducerController() throws Exception {
 		mockMvc.perform(get("/producers/list")).andExpect(status().is2xxSuccessful())
 				.andExpect(content()
-						.string(containsString("ca.concordia.encs.citydata.producers.EnergyConsumptionProducer")))
+						.string(containsString("ca.concordia.encs.citydata.producer.EnergyConsumptionProducer")))
 				.andExpect(content().string(containsString("operation")))
 				.andExpect(content().string(containsString("city")));
 	}

@@ -1,5 +1,5 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.CKANMetadataProducer",
+    "use": "ca.concordia.encs.citydata.producer.CKANMetadataProducer",
     "withParams": [
         {
             "name": "url",

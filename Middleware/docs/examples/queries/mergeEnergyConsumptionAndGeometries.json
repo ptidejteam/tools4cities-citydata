@@ -1,5 +1,5 @@
 {
-  "use": "ca.concordia.encs.citydata.producers.EnergyConsumptionProducer",
+  "use": "ca.concordia.encs.citydata.producer.EnergyConsumptionProducer",
   "withParams": [
   {
       "name": "city",
@@ -20,11 +20,11 @@
   ],
   "apply": [
     {
-      "name": "ca.concordia.encs.citydata.operations.MergeOperation",
+      "name": "ca.concordia.encs.citydata.operation.MergeOperation",
       "withParams": [
         {
           "name": "targetProducer",
-          "value": "ca.concordia.encs.citydata.producers.GeometryProducer"
+          "value": "ca.concordia.encs.citydata.producer.GeometryProducer"
         },
         {
           "name": "targetProducerParams",

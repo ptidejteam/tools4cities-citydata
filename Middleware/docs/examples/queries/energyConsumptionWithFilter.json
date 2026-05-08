@@ -1,5 +1,5 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.EnergyConsumptionProducer",
+    "use": "ca.concordia.encs.citydata.producer.EnergyConsumptionProducer",
     "withParams": [
 	    {
 	      "name": "city",

@@ -1,5 +1,5 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.PortfolioManagerProducer",
+    "use": "ca.concordia.encs.citydata.producer.PortfolioManagerProducer",
     "withParams": [
         {
             "name": "meterId",
@@ -8,7 +8,7 @@
     ],
     "apply": [
         {
-            "name": "ca.concordia.encs.citydata.operations.XmlToJsonFilterOperation",
+            "name": "ca.concordia.encs.citydata.operation.XmlToJsonFilterOperation",
             "withParams": [
                 {
                     "name": "filterKey",

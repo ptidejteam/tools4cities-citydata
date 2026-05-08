@@ -19,10 +19,10 @@ import ca.concordia.encs.citydata.datastore.MongoDataStore;
  */
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "ca.concordia.encs.citydata.core.controllers",
-		"ca.concordia.encs.citydata.core.configs", "ca.concordia.encs.citydata.datastores",
-		"ca.concordia.encs.citydata.services", "ca.concordia.encs.citydata.core.utils",
-		"ca.concordia.encs.citydata.core", "ca.concordia.encs.citydata.producers" })
+@ComponentScan(basePackages = { "ca.concordia.encs.citydata.core.controller", "ca.concordia.encs.citydata.core.config",
+		"ca.concordia.encs.citydata.datastore", "ca.concordia.encs.citydata.service",
+		"ca.concordia.encs.citydata.core.util", "ca.concordia.encs.citydata.core",
+		"ca.concordia.encs.citydata.producer" })
 @EnableConfigurationProperties(RsaKeyProperties.class)
 public class Application {
 

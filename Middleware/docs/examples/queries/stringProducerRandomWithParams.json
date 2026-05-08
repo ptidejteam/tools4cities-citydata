@@ -1,5 +1,5 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.RandomStringProducer",
+    "use": "ca.concordia.encs.citydata.producer.RandomStringProducer",
     "withParams": [
         {
             "name": "stringLength",
@@ -8,7 +8,7 @@
     ],
     "apply": [
         {
-            "name": "ca.concordia.encs.citydata.operations.StringReplaceOperation",
+            "name": "ca.concordia.encs.citydata.operation.StringReplaceOperation",
             "withParams": [
                 {
                     "name": "searchFor",

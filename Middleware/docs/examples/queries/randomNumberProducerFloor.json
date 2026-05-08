@@ -1,5 +1,5 @@
 {
-  "use": "ca.concordia.encs.citydata.producers.RandomNumberProducer",
+  "use": "ca.concordia.encs.citydata.producer.RandomNumberProducer",
   "withParams": [
     {
       "name": "listSize",
@@ -8,7 +8,7 @@
   ],
   "apply": [
     {
-      "name": "ca.concordia.encs.citydata.operations.AverageOperation",
+      "name": "ca.concordia.encs.citydata.operation.AverageOperation",
       "withParams": [
         {
           "name": "roundingMethod",

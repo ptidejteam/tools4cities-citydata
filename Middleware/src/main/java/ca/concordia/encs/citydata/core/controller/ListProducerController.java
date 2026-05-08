@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,7 @@ import ca.concordia.encs.citydata.core.util.StringUtils;
 @RequestMapping("/producers")
 public class ListProducerController {
 
-	private static final String PRODUCER_BASE_PACKAGE = "ca.concordia.encs.citydata.producers";
+	private static final String PRODUCER_BASE_PACKAGE = "ca.concordia.encs.citydata.producer";
 
 	@GetMapping("/list")
 	public String listProducers() {
@@ -33,14 +32,13 @@ public class ListProducerController {
 
 		try {
 			// This scanner implementation works both on the filesystem and inside a JAR
-			ClassPathScanningCandidateComponentProvider scanner =
-					new ClassPathScanningCandidateComponentProvider(false);
+			ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(
+					false);
 
-			scanner.addIncludeFilter(new RegexPatternTypeFilter(
-					java.util.regex.Pattern.compile(".*")));
+			scanner.addIncludeFilter(new RegexPatternTypeFilter(java.util.regex.Pattern.compile(".*")));
 
-			for (org.springframework.beans.factory.config.BeanDefinition bd
-					: scanner.findCandidateComponents(PRODUCER_BASE_PACKAGE)) {
+			for (org.springframework.beans.factory.config.BeanDefinition bd : scanner
+					.findCandidateComponents(PRODUCER_BASE_PACKAGE)) {
 
 				final String className = bd.getBeanClassName();
 				final Class<?> clazz = Class.forName(className);

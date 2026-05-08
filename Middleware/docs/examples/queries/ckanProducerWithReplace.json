@@ -1,5 +1,5 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.CKANProducer",
+    "use": "ca.concordia.encs.citydata.producer.CKANProducer",
     "withParams": [
         {
             "name": "url",
@@ -12,7 +12,7 @@
     ],
     "apply": [
         {
-            "name": "ca.concordia.encs.citydata.operations.StringReplaceOperation",
+            "name": "ca.concordia.encs.citydata.operation.StringReplaceOperation",
             "withParams": [
                 {
                     "name": "searchFor",

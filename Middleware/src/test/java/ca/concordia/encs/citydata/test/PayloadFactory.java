@@ -18,7 +18,7 @@ public abstract class PayloadFactory {
 
 	public static String getBasicQuery() {
 		JsonObject payload = new JsonObject();
-		payload.addProperty("use", "ca.concordia.encs.citydata.producers.RandomStringProducer");
+		payload.addProperty("use", "ca.concordia.encs.citydata.producer.RandomStringProducer");
 
 		JsonArray withParams = new JsonArray();
 		JsonObject param1 = new JsonObject();
@@ -30,7 +30,7 @@ public abstract class PayloadFactory {
 
 		JsonArray apply = new JsonArray();
 		JsonObject operation1 = new JsonObject();
-		operation1.addProperty("name", "ca.concordia.encs.citydata.operations.StringReplaceOperation");
+		operation1.addProperty("name", "ca.concordia.encs.citydata.operation.StringReplaceOperation");
 
 		JsonArray operation1Params = new JsonArray();
 		JsonObject operation1Param1 = new JsonObject();
@@ -47,7 +47,7 @@ public abstract class PayloadFactory {
 		apply.add(operation1);
 
 		JsonObject operation2 = new JsonObject();
-		operation2.addProperty("name", "ca.concordia.encs.citydata.operations.StringReplaceOperation");
+		operation2.addProperty("name", "ca.concordia.encs.citydata.operation.StringReplaceOperation");
 
 		JsonArray operation2Params = new JsonArray();
 		JsonObject operation2Param1 = new JsonObject();

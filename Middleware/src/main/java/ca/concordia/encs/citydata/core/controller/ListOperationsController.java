@@ -27,7 +27,7 @@ import ca.concordia.encs.citydata.core.util.StringUtils;
 @RequestMapping("/operations")
 public class ListOperationsController {
 
-	private static final String OPERATIONS_BASE_PACKAGE = "ca.concordia.encs.citydata.operations";
+	private static final String OPERATIONS_BASE_PACKAGE = "ca.concordia.encs.citydata.operation";
 
 	@GetMapping("/list")
 	public String listOperations() {
@@ -35,8 +35,8 @@ public class ListOperationsController {
 
 		try {
 			// This scanner implementation works both on the filesystem and inside a JAR
-			ClassPathScanningCandidateComponentProvider scanner =
-					new ClassPathScanningCandidateComponentProvider(false);
+			ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(
+					false);
 
 			scanner.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(".*")));
 

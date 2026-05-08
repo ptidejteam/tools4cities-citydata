@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
 import ca.concordia.encs.citydata.core.config.AppConfig;
-import ca.concordia.encs.citydata.core.contracts.IDatastoreManager;
-import ca.concordia.encs.citydata.datastores.DatastoreManager;
+import ca.concordia.encs.citydata.core.contract.IDatastoreManager;
+import ca.concordia.encs.citydata.datastore.DatastoreManager;
 import ca.concordia.encs.citydata.test.AbstractTest;
 import ca.concordia.encs.citydata.test.config.TestConfig;
 

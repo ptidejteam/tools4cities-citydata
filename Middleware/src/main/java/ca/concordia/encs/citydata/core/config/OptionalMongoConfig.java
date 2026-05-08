@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import ca.concordia.encs.citydata.datastores.MongoDataStore;
+import ca.concordia.encs.citydata.datastore.MongoDataStore;
 
 /**
  * This is the Spring Boot configuration file which contains configuration

@@ -7,9 +7,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 import ca.concordia.encs.citydata.core.config.RsaKeyProperties;
-import ca.concordia.encs.citydata.datastores.DiskDatastore;
-import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
-import ca.concordia.encs.citydata.datastores.MongoDataStore;
+import ca.concordia.encs.citydata.datastore.DiskDatastore;
+import ca.concordia.encs.citydata.datastore.InMemoryDataStore;
+import ca.concordia.encs.citydata.datastore.MongoDataStore;
 
 /**
  * This is the Spring Boot application entry point.

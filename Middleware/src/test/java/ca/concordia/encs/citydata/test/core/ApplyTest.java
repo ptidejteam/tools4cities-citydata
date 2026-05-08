@@ -22,7 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.config.AppConfig;
-import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
+import ca.concordia.encs.citydata.core.util.ReflectionUtils;
 import ca.concordia.encs.citydata.test.AbstractTest;
 import ca.concordia.encs.citydata.test.PayloadFactory;
 

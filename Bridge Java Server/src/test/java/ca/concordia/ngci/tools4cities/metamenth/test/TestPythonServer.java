@@ -194,7 +194,7 @@ public class TestPythonServer {
 
 	@Test
 	public void testMeter() {
-		IMeter meter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter meter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		Assert.assertEquals(meter.getMeterType(), MeterType.ELECTRICITY.getValue());
 		Assert.assertNotNull(meter.getUID());
@@ -206,7 +206,7 @@ public class TestPythonServer {
 
 	@Test
 	public void testMeterWithMeasurements() {
-		IMeter meter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter meter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		for (int i = 0; i < 10; i++) {
 			meter.addMeterMeasure(pythonEntryPoint.createMeterMeasure(i + 1, null));
@@ -225,7 +225,7 @@ public class TestPythonServer {
 
 	@Test
 	public void testGetMeterMeasureByDate() {
-		IMeter meter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter meter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		LocalDate startDate = LocalDate.now().minusDays(10);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -268,7 +268,7 @@ public class TestPythonServer {
 		IBinaryMeasure measurement = (IBinaryMeasure) pythonEntryPoint.createMeasurement(measure, "Binary");
 		IRoom room = pythonEntryPoint.createRoom(measurement, "Room 001", RoomType.OFFICE.getValue(), "hei.ies.ies");
 
-		IMeter meter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter meter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		meter.setMeterLocation("hei.ies.ies");
 		room.setMeter(meter);
@@ -412,7 +412,7 @@ public class TestPythonServer {
 		IBinaryMeasure measurement = (IBinaryMeasure) pythonEntryPoint.createMeasurement(measure, "Binary");
 		IRoom room = pythonEntryPoint.createRoom(measurement, "Room 001", RoomType.OFFICE.getValue(), "hei.ies.ies");
 
-		IMeter meter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter meter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		meter.setMeterLocation("hei.ies.ies");
 		room.setMeter(meter);
@@ -432,7 +432,7 @@ public class TestPythonServer {
 		IBinaryMeasure measurement = (IBinaryMeasure) pythonEntryPoint.createMeasurement(measure, "Binary");
 		IRoom room = pythonEntryPoint.createRoom(measurement, "Room 001", RoomType.KITCHEN.getValue(), "hei.ies.ies");
 
-		IMeter meter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter meter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		meter.setMeterLocation("hei.ies.ies");
 		ISensor sensor = pythonEntryPoint.createSensor("TMP 01", SensorMeasure.TEMPERATURE.getValue(),
@@ -555,10 +555,10 @@ public class TestPythonServer {
 				"Binary");
 		IBuilding building = pythonEntryPoint.createBuilding(1996, buildingHeight, buildingFloorArea, address,
 				BuildingType.NON_COMMERCIAL.getValue(), floor);
-		IMeter electricityMeter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter electricityMeter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		building.addMeter(electricityMeter);
-		IMeter gasMeter = pythonEntryPoint.createMeter(90, MeasurementUnit.CUBIC_METER.getValue(),
+		IMeter gasMeter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.CUBIC_METER.getValue(),
 				MeterType.GAS.getValue(), MeterMeasureMode.MANUAL.getValue());
 		gasMeter.setDataAccumulated(true);
 		gasMeter.setAccumulationFrequency(MeterAccumulationFrequency.WEEKLY.getValue());
@@ -690,10 +690,10 @@ public class TestPythonServer {
 		IBuilding building = pythonEntryPoint.createBuilding(1996, buildingHeight, buildingFloorArea, address,
 				BuildingType.NON_COMMERCIAL.getValue(), floorOne);
 		building.addFloor(floorTwo);
-		IMeter electricityMeter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter electricityMeter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		building.addMeter(electricityMeter);
-		IMeter gasMeter = pythonEntryPoint.createMeter(90, MeasurementUnit.CUBIC_METER.getValue(),
+		IMeter gasMeter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.CUBIC_METER.getValue(),
 				MeterType.GAS.getValue(), MeterMeasureMode.MANUAL.getValue());
 		gasMeter.setDataAccumulated(true);
 		gasMeter.setAccumulationFrequency(MeterAccumulationFrequency.WEEKLY.getValue());
@@ -774,7 +774,7 @@ public class TestPythonServer {
 		building.addFloor(floorThree);
 
 		//Add electricity meter
-		IMeter electricityMeter = pythonEntryPoint.createMeter(90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
+		IMeter electricityMeter = pythonEntryPoint.createMeter(null, 90, MeasurementUnit.KILOWATTS_PER_HOUR.getValue(),
 				MeterType.ELECTRICITY.getValue(), MeterMeasureMode.AUTOMATIC.getValue());
 		building.addMeter(electricityMeter);
 

@@ -48,5 +48,10 @@
             <version>0.10.9.7</version>
         </dependency>
 
+        <dependency>
+        	<groupId>com.concordia.encs.citydata</groupId>
+        	<artifactId>Middleware</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

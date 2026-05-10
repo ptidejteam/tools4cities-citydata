@@ -27,6 +27,8 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
 
     String filterKey;
     String filterValue;
+    String from;
+    String to;
     Boolean isExactlyEqual = false;
 
     public void setFilterKey(String filterKey) {
@@ -35,6 +37,16 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
 
     public void setFilterValue(String filterValue) {
         this.filterValue = filterValue;
+    }
+
+    public void setFrom(String from) {
+    	System.out.println("setFrom received: '" + from + "'");
+        this.from = from;
+    }
+
+    public void setTo(String to) {
+        System.out.println("setTo received: '" + to + "'");
+        this.to = to;
     }
 
     public void setIsExactlyEqual(Boolean isExactlyEqual) {
@@ -46,10 +58,10 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
         final ArrayList<JsonObject> resultList = new ArrayList<>();
 
         for (JsonObject wrapper : inputs) {
+        	System.out.println("Wrapper keys: " + wrapper.keySet());
+            System.out.println("Wrapper content: " + wrapper.toString());
             if (!wrapper.has("xml")) continue;
-
             final String xmlString = wrapper.get("xml").getAsString();
-
             try {
                 final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
                 final Document doc = builder.parse(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
@@ -62,23 +74,30 @@ public class XmlToJsonFilterOperation extends AbstractOperation<JsonObject> impl
                     obj.addProperty("startDate", getTag(entry, "startDate"));
                     obj.addProperty("endDate",   getTag(entry, "endDate"));
                     obj.addProperty("usage",     getTag(entry, "usage"));
-
-                    // filtering is optional — if filterKey not set, keep all records
                     if (filterKey == null || filterKey.isEmpty()) {
                         resultList.add(obj);
                     } else if (obj.has(filterKey)) {
                         final String objectValue = obj.get(filterKey).getAsString();
-                        if (isExactlyEqual && objectValue.equals(filterValue)) {
+                        if (from != null && to != null) {
+                            if (objectValue.compareTo(from) >= 0 && objectValue.compareTo(to) <= 0) {
+                                resultList.add(obj);
+                                System.out.println("objectValue: " + objectValue);
+                                System.out.println("from: " + from + " | to: " + to);
+                                System.out.println("compareTo from: " + objectValue.compareTo(from));
+                                System.out.println("compareTo to: " + objectValue.compareTo(to));
+                            }
+                        } else if (filterValue != null && isExactlyEqual && objectValue.equals(filterValue)) {
+                        	resultList.add(obj);
+                        } else if (filterValue != null && !isExactlyEqual && objectValue.contains(filterValue)) {
                             resultList.add(obj);
-                        } else if (!isExactlyEqual && objectValue.contains(filterValue)) {
-                            resultList.add(obj);
-                        }
+                        }          
                     }
                 }
             } catch (Exception e) {
                 System.err.println("XmlToJsonFilterOperation parse error: " + e.getMessage());
             }
         }
+        System.out.println("Result size: " + resultList.size());
         return resultList;
     }
 

@@ -37,7 +37,8 @@ public class GeometryProducerTest extends AbstractTest {
 
 	@Test
 	public void testMergeOperationViaAPI() throws Exception {
-		/*		// Get example query using the PayloadFactory
+		/*	TODO: uncomment this test and make it run
+		// Get example query using the PayloadFactory
 				String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
 		
 				mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())

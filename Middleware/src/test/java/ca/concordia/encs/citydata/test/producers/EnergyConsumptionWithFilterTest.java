@@ -98,7 +98,8 @@ public class EnergyConsumptionWithFilterTest extends AbstractTest {
 		}
 	}
 
-	/*	@Test
+	/* TODO: Uncomment this test and make it run	
+		@Test
 		public void testEnergyConsumptionWithAverage() throws Exception {
 			String jsonPayload = PayloadFactory.getExampleQuery("energyConsumptionAverage");
 			mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())

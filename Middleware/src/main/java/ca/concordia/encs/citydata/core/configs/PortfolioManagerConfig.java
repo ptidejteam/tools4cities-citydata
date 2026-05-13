@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuration for Energy Star Portfolio Manager API. Credentials and base URL are loaded from application.properties at startup
- * Author: Minette Zongo
- * Date: 2026-02-24
+ * @author: Minette Zongo
+ * @since: 2026-02-24
  */
 @Configuration
 public class PortfolioManagerConfig {

@@ -17,11 +17,11 @@ import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
+import ca.concordia.encs.citydata.core.implementations.ExceptionProducer;
 import ca.concordia.encs.citydata.core.utils.ProducerUsageData;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.datastores.MongoDataStore;
-import ca.concordia.encs.citydata.producers.ExceptionProducer;
 
 /***
  * This Runner starts with data provided by a producer P1, then applies
@@ -36,6 +36,8 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
 @Component
 public class SequentialRunner extends AbstractRunner implements IRunner {
 
+	private String filePath;
+	private String fileOptions;
 	private final MongoDataStore mongoDataStore = MongoDataStore.getInstance();
 	private final JsonObject steps;
 	private int operationCounter = 0;
@@ -55,11 +57,11 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 
 		// start by extracting Producers, Operations and their params from the query
 		System.out.println("Run started!");
-		final String producerName = ReflectionUtils.getRequiredField(this.steps, "use").getAsString();
+		final String producerClassName = ReflectionUtils.getRequiredField(this.steps, "use").getAsString();
 		final JsonArray producerParams = ReflectionUtils.getRequiredField(this.steps, "withParams").getAsJsonArray();
 
 		// instantiate a new Producer instance and set its params
-		final Object producerInstance = ReflectionUtils.instantiateClass(producerName);
+		final Object producerInstance = ReflectionUtils.instantiateProducer(producerClassName, filePath);
 		ReflectionUtils.setParameters(producerInstance, producerParams);
 
 		// set query to producer so we can check it later against other queries
@@ -79,20 +81,20 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 
 	@SuppressWarnings("JavaReflectionInvocation")
 	@Override
-	public void applyNextOperation(IProducer<?> producer) throws Exception {
+	public void applyNextOperation(final IProducer<?> producer) throws Exception {
 		/*
 		 * get list of operations and choose which one to execute next based on the
 		 * sequential operation counter
 		 */
 		final JsonArray operationsToApply = ReflectionUtils.getRequiredField(this.steps, "apply").getAsJsonArray();
 		final int totalOperations = operationsToApply.size();
-		if (producer != null && totalOperations > 0) {
 
+		if (producer != null && totalOperations > 0) {
 			final JsonObject currentOperation = operationsToApply.get(this.operationCounter).getAsJsonObject();
 
 			// instantiate current operation
-			final String operationName = ReflectionUtils.getRequiredField(currentOperation, "name").getAsString();
-			final Object operationInstance = ReflectionUtils.instantiateClass(operationName);
+			final String operationClassName = ReflectionUtils.getRequiredField(currentOperation, "name").getAsString();
+			final Object operationInstance = ReflectionUtils.instantiateOperation(operationClassName);
 
 			// extract operation parameters and set them
 			final JsonArray operationParams = ReflectionUtils.getRequiredField(currentOperation, "withParams")

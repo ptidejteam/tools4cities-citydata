@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DatasetNotFound;
-import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
+import ca.concordia.encs.citydata.core.implementations.CSVProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
 /**
@@ -26,11 +26,20 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * must be provided by the CityData instance. If no file is found, this producer
  * will return a message telling the user no data is available.
  *
- * @author Gabriel C. Ullmann, Minette Zongo
+ * @author Gabriel C. Ullmann, Minette Zongo, Sikandar Ejaz
  * @since 2025-05-28
  */
 
-public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> implements IProducer<JsonArray> {
+public class EnergyConsumptionProducer extends CSVProducer {
+
+	public EnergyConsumptionProducer(String filePath) {
+		super(filePath);
+	}
+
+	public EnergyConsumptionProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+	}
+
 	private String city;
 	private String startDatetime;
 	private String endDatetime;
@@ -40,7 +49,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 	public void setCity(String city) {
 		this.city = city;
 		if (this.city != null) {
-			this.cityConsumptionDataset = "docs/examples/data/" + this.city + "_energy_consumption.parquet";
+			this.cityConsumptionDataset = "./src/test/resources/" + this.city + "_energy_consumption.parquet";
 		} else {
 			throw new InvalidParameterException("Please provide a city name to the producer.");
 		}
@@ -58,7 +67,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 		this.clientId = clientId;
 	}
 
-	private String buildQuery() {
+	public String buildQuery() {
 		final Object[] arr = new Object[4];
 		final String baseQuery = "SELECT Identifiant as clientId, dateinterval as timestamp, energieactivelivree_kwh as consumptionKwh FROM '%s'";
 		String preparedStmt = baseQuery + " WHERE Identifiant is not null";
@@ -82,7 +91,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 		return String.format(preparedStmt, arr);
 	}
 
-	private void validateParams() {
+	public void validateParams() {
 		final int MAX_QUERY_DAYS = 30;
 		final LocalDateTime localStartDate = StringUtils.parseDate(this.startDatetime);
 		final LocalDateTime localEndDate = StringUtils.parseDate(this.endDatetime);
@@ -148,8 +157,8 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 			resultRow.addProperty("error", e.getMessage());
 			resultsArray.add(resultRow);
 		} finally {
-			final ArrayList<JsonArray> updatedResult = this.getResult();
-			updatedResult.add(resultsArray);
+			final ArrayList<String> updatedResult = this.getResult();
+			updatedResult.add(resultsArray.toString());
 			this.setResult(updatedResult);
 			this.applyOperation();
 		}

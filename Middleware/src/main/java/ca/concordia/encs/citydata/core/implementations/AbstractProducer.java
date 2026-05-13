@@ -38,13 +38,23 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2025-05-27
  */
 
-public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
-
+public sealed abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> permits JSONProducer,
+		CSVProducer, ExceptionProducer, FirebaseProducer, PortfolioManagerProducer, PortfolioManagerMetadataProducer {
 	private String filePath;
 	private RequestOptions fileOptions;
 	private IOperation<E> operation;
 	private final Set<IRunner> runners = new HashSet<>();
 	private ArrayList<E> result = new ArrayList<>();
+
+	public AbstractProducer(final String filePath, final RequestOptions fileOptions) {
+		this.filePath = filePath;
+		this.fileOptions = fileOptions;
+		this.setMetadata("role", "producer");
+	}
+
+	public AbstractProducer(final String filePath) {
+		this(filePath, null);
+	}
 
 	public String getFilePath() {
 		return filePath;
@@ -70,8 +80,13 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		return runners;
 	}
 
-	public void setResult(ArrayList<E> result) {
-		this.result = result;
+	public void setResult(ArrayList<?> result) {
+		this.result = (ArrayList<E>) result;
+	}
+
+	@Override
+	public ArrayList<E> getResult() {
+		return this.result;
 	}
 
 	public AbstractProducer() {
@@ -111,11 +126,6 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			this.result = this.operation.apply(this.result);
 		}
 		this.notifyObservers();
-	}
-
-	@Override
-	public ArrayList<E> getResult() {
-		return this.result;
 	}
 
 	public boolean isEmpty() {
@@ -209,5 +219,56 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			jsonArray.add(result);
 		}
 		return jsonArray.toString();
+	}
+
+	/**
+	 * The method tries to find a "Data" folder in the current working directory.
+	 * It checks for a configured path in application.properties under the key "data.path.route".
+	 * If that key is set, it will try to use that path first (supporting "~" for user home).
+	 * If no valid "Data" folder is found, it returns null.
+	 */
+
+	public Path fetchData() {
+		java.util.Properties props = new java.util.Properties();
+		try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+			if (in != null) {
+				props.load(in);
+			}
+		} catch (java.io.IOException e) {
+			// ignore and use defaults
+		}
+
+		String configured = props.getProperty("data.path.route");
+		if (configured != null && !configured.isBlank()) {
+			configured = configured.trim();
+			if (configured.startsWith("~")) {
+				configured = configured.replaceFirst("^~", System.getProperty("user.home"));
+			}
+			Path configuredPath = Paths.get(configured).toAbsolutePath().normalize();
+			if (Files.exists(configuredPath)) {
+				return configuredPath;
+			}
+		}
+
+		// Trying to build a list of candidate locations where a Data folder might live (relative to the working dir and /or  its parents)
+		Path cwd = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize();
+		java.util.List<Path> candidates = new java.util.ArrayList<>();
+		candidates.add(cwd.resolve("Data"));
+		candidates.add(cwd.resolve("..").resolve("Data").normalize());
+		candidates.add(cwd.resolve("..").resolve("..").resolve("Data").normalize());
+		candidates.add(cwd.resolve("tools4cities-middleware").resolve("Data").normalize());
+		if (cwd.getParent() != null) {
+			candidates.add(cwd.getParent().resolve("Data").normalize());
+			if (cwd.getParent().getParent() != null) {
+				candidates.add(cwd.getParent().getParent().resolve("Data").normalize());
+			}
+		}
+
+		for (Path p : candidates) {
+			if (p != null && Files.exists(p)) {
+				return p.toAbsolutePath().normalize();
+			}
+		}
+		return null;
 	}
 }

@@ -19,8 +19,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.core.implementations.ExceptionProducer;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
-import ca.concordia.encs.citydata.producers.ExceptionProducer;
 import ca.concordia.encs.citydata.runners.SequentialRunner;
 
 /**

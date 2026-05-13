@@ -9,16 +9,16 @@ import json
 # USER CONFIGURATION
 # ==========================
 # Configuration
-#BASE_URL = "https://ngci.encs.concordia.ca/citydata"
-#USERNAME = "workshop"  # Production username
-#PASSWORD = "workshop2026"  # Production password
-BASE_URL = "http://localhost:8080/citydata"
-USERNAME = "temp"  # Local username
-PASSWORD = "temp"  # Local password
+B ASE_URL = "https://ngci.encs.concordia.ca/citydata"
+USERNAME = "workshop"  # Production username
+PASSWORD = "workshop2026"  # Production password
+#BASE_URL = "http://localhost:8080/citydata"
+#USERNAME = "temp"  # Local username
+#PASSWORD = "temp"  # Local password
  
 METERS = {
-    "electricity": "299278275",  # ID for "Compteur d'électricité du réseau"
-    "natural_gas": "279802875"   # ID for "Énergir 1039"
+    "electricity": "299278275",
+    "natural_gas": "279802875"
 }            
 
 # Authentication

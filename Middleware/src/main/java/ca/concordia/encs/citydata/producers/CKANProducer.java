@@ -138,7 +138,6 @@ public class CKANProducer extends JSONProducer {
 			}
 		} catch (InterruptedException e) {
 			final ArrayList<JsonObject> errorMessageList = new ArrayList<>();
-			//errorMessageList.add(e.getMessage());
 			this.setResult(errorMessageList);
 		}
 

@@ -74,7 +74,8 @@ public class RetrofitResultsTest extends AbstractTest {
 		}
 	}
 
-	/*@Test
+	/* TODO: Discuss with the team if we keep this test or we remove it 
+	@Test
 	public void testBrokenInput() throws Exception {
 		JsonObject jsonPayloadObject = JsonParser.parseString(retrofitResultsProducer).getAsJsonObject();
 		jsonPayloadObject.get("withParams").getAsJsonArray().get(0).getAsJsonObject().addProperty("value", "");

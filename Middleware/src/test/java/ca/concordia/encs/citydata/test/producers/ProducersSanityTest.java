@@ -71,7 +71,8 @@ public class ProducersSanityTest {
 		System.out.println(result);
 	}
 
-	/*	@Test
+	/* TODO: uncomment and make it run
+	@Test
 		 GeometryProducer wraps JSONProducer and applies MergeOperation
 			public void testGeometryProducer() {
 				final GeometryProducer producer = new GeometryProducer();

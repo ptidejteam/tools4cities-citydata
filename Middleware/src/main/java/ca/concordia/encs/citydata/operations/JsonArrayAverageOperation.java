@@ -38,6 +38,7 @@ public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> impl
 
 		// compute the average
 		for (JsonArray list : inputs) {
+			floatAverage = 0.0f;
 			for (JsonElement element : list) {
 				floatAverage += element.getAsJsonObject().get(keyName).getAsFloat();
 			}

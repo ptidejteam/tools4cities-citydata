@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.CSVProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This Producer outputs metadata about a building, such as floors, zones and sensors.
@@ -17,6 +18,10 @@ public class CalibrationProducer extends CSVProducer {
 
 	public CalibrationProducer(String filePath) {
 		super(filePath);
+	}
+
+	public CalibrationProducer(String filePath, RequestOptions options) {
+		super(filePath, options);
 	}
 
 	@Override

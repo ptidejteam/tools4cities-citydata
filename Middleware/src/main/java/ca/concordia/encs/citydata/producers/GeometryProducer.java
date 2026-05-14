@@ -1,6 +1,9 @@
 package ca.concordia.encs.citydata.producers;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+
+import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
@@ -15,9 +18,6 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  */
 
 public class GeometryProducer extends JSONProducer {
-	public GeometryProducer(String filePath, RequestOptions fileOptions) {
-		super(filePath, fileOptions);
-	}
 
 	private JSONProducer jsonProducer;
 
@@ -33,6 +33,19 @@ public class GeometryProducer extends JSONProducer {
 	@Override
 	public void setOperation(IOperation operation) {
 		this.jsonProducer.setOperation(operation);
+	}
+
+	public GeometryProducer() {
+		super(null, null);
+	}
+
+	public GeometryProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+	}
+
+	@Override
+	public ArrayList<JsonObject> getResult() {
+		return this.jsonProducer.getResult();
 	}
 
 	@Override

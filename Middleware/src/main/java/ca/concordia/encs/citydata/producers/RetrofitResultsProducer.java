@@ -31,6 +31,10 @@ public class RetrofitResultsProducer extends JSONProducer {
 		super(filePath);
 	}
 
+	public RetrofitResultsProducer(String filePath, RequestOptions options) {
+		super(filePath, options);
+	}
+
 	private JsonArray buildingIds;
 	private IOperation<JsonObject> jsonProducerOperation;
 	private IRunner runnerObserver;

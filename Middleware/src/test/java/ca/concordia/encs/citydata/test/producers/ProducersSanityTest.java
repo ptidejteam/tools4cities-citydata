@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.operations.StandardFilteringOperation;
@@ -34,7 +35,7 @@ public class ProducersSanityTest {
 		producer1.validateParams();
 		producer1.buildQuery();
 		producer1.fetch();
-		ArrayList<String> result = producer1.getResult();
+		ArrayList<JsonArray> result = producer1.getResult();
 		System.out.println(result);
 	}
 

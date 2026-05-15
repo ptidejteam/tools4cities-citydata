@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Async Runner</title>
+	<style>
+	body { font-family: Arial, sans-serif; margin: 20px; }
+	label { font-weight: bold; }
+	textarea, input { width: 100%; padding: 8px; margin: 5px 0; }
+	button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; margin: 5px; }
+	button:hover { background: #0056b3; }
+	#result { margin-top: 20px; padding: 10px; background: #f5f5f5; border: 1px solid #ddd; }
+	.error { background: #ffebee; border-color: #f44336; }
+	.success { background: #e8f5e9; border-color: #4caf50; }
+	.section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+	</style>
+</head>
+<body>
+	<h2>Async Runner</h2>
+
+	<div class="section">
+	<h3>Start New Async Operation</h3>
+	<div>
+	<label for="token">Bearer Token:</label>
+	<input type="text" id="token" placeholder="Enter your authentication token">
+	</div>
+
+	<form id="form">
+	<label for="steps">JSON Steps:</label>
+	<textarea id="steps" rows="10" placeholder="Enter JSON here">
+	
+	{
+	"step1": "value1"
+	}
+	
+	</textarea>
+	<button type="submit">Run Async</button>
+	</form>
+	</div>
+
+	<div class="section">
+	<h3>Check Existing Runner Status</h3>
+	<div>
+	<label for="checkToken">Bearer Token:</label>
+	<input type="text" id="checkToken" placeholder="Enter your authentication token">
+	</div>
+	<div>
+	<label for="runnerId">Runner ID:</label>
+	<input type="text" id="runnerId" placeholder="Enter Runner ID (UUID)">
+	</div>
+	<button type="button" id="checkButton">Check Status</button>
+	</div>
+
+	<div id="result"></div>
+	
+	<script>
+	// Start new async operation
+	document.getElementById('form').addEventListener('submit', async (e) => {
+	    e.preventDefault();
+
+	    const steps = document.getElementById('steps').value;
+	    const token = document.getElementById('token').value.trim();
+	    const resultDiv = document.getElementById('result');
+
+	    if (!token) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>Please enter a Bearer token</pre>';
+	        return;
+	    }
+
+	    try {
+	        // Use relative URL instead of absolute
+	        const response = await fetch('apply/async', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Authorization': 'Bearer ' + token
+	            },
+	            body: steps
+	        });
+
+	        const data = await response.text();
+
+	        if (response.ok) {
+	            resultDiv.className = 'success';
+	            resultDiv.innerHTML = '<h3>Success:</h3><pre>' + data + '</pre>';
+
+	            // Extract runner ID from response and populate the check section
+	            const match = data.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+	            if (match) {
+	                document.getElementById('runnerId').value = match[0];
+	                document.getElementById('checkToken').value = token;
+	                document.getElementById('checkButton').scrollIntoView({ behavior: 'smooth' });
+	            }
+	        } else {
+	            resultDiv.className = 'error';
+	            resultDiv.innerHTML = '<h3>Error (' + response.status + '):</h3><pre>' + data + '</pre>';
+	        }
+	    } catch (error) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>' + error.message + '</pre>';
+	    }
+	});
+
+	// Check existing runner status
+	document.getElementById('checkButton').addEventListener('click', async () => {
+	    const runnerId = document.getElementById('runnerId').value.trim();
+	    const token = document.getElementById('checkToken').value.trim();
+	    const resultDiv = document.getElementById('result');
+
+	    if (!token) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>Please enter a Bearer token</pre>';
+	        return;
+	    }
+
+	    if (!runnerId) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>Please enter a Runner ID</pre>';
+	        return;
+	    }
+
+	    try {
+	        // Use relative URL instead of absolute
+	        const response = await fetch('apply/async/' + runnerId, {
+	            method: 'GET',
+	            headers: {
+	                'Authorization': 'Bearer ' + token
+	            }
+	        });
+
+	        const data = await response.text();
+
+	        if (response.ok) {
+	            resultDiv.className = 'success';
+	            resultDiv.innerHTML = '<h3>Result:</h3><pre>' + data + '</pre>';
+	        } else if (response.status === 404) {
+	            resultDiv.className = 'error';
+	            resultDiv.innerHTML = '<h3>Not Ready Yet:</h3><pre>' + data + '</pre><p><em>Tip: The operation might still be running. Try again in a few moments.</em></p>';
+	        } else {
+	            resultDiv.className = 'error';
+	            resultDiv.innerHTML = '<h3>Error (' + response.status + '):</h3><pre>' + data + '</pre>';
+	        }
+	    } catch (error) {
+	        resultDiv.className = 'error';
+	        resultDiv.innerHTML = '<h3>Error:</h3><pre>' + error.message + '</pre>';
+	    }
+	});
+	</script>
+</body>
+</html>

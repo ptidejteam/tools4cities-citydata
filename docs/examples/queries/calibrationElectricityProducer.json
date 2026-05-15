@@ -1,0 +1,16 @@
+{
+  "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
+  "withParams": [
+    { "name": "filePath", "value": "src/test/resources/OMHM_electricity.csv" }
+  ],
+  "apply": [
+    {
+      "name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
+      "withParams": [
+        { "name": "addressFilter", "value": "8431 Allée Léo-Bricault Montréal H1Z 0B3;8441 Allée Léo-Bricault Montréal H1Z 0B3;8425 Avenue 25e Montréal H1Z 4A9" },
+        { "name": "startDateFilter", "value": "2022-01-31" },
+        { "name": "endDateFilter",   "value": "2022-12-31" }
+      ]
+    }
+  ]
+}

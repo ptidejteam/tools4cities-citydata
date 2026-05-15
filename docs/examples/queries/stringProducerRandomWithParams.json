@@ -1,0 +1,24 @@
+{
+    "use": "ca.concordia.encs.citydata.producers.RandomStringProducer",
+    "withParams": [
+        {
+            "name": "stringLength",
+            "value": 50
+        }
+    ],
+    "apply": [
+        {
+            "name": "ca.concordia.encs.citydata.operations.StringReplaceOperation",
+            "withParams": [
+                {
+                    "name": "searchFor",
+                    "value": "a"
+                },
+                {
+                    "name": "replaceBy",
+                    "value": "==HELLO=="
+                }
+            ]
+        }
+    ]
+}

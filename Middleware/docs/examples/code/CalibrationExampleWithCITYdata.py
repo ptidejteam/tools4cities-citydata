@@ -12,8 +12,8 @@ BASE_URL = "https://ngci.encs.concordia.ca/citydata"
 USERNAME = username  # Production username created by CITYdata team
 PASSWORD = password  # Production password created by CITYdata team
 # BASE_URL = "http://localhost:8080/citydata"
-# USERNAME = username  # Local username created with the script (cf. README)
-# PASSWORD = password  # Local password created with the script (cf. README)
+# USERNAME = username  # Local username created with the script (cf. READMe)
+# PASSWORD = password  # Local password created with the script (cf. READMe)
            
 
 
@@ -33,7 +33,7 @@ def print_result(response):
     raw_data = response.get("result", "")
     raw_data = raw_data.strip("[]")
 
-    parts = raw_data.split(", ")
+    parts =raw_data.split(", ")
 
     print("\nResults:\n")
     for i in range(0, len(parts), 3):

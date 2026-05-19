@@ -19,13 +19,9 @@ public class CalibrationProducer extends CSVProducer {
 	public CalibrationProducer(String filePath) {
 		super(filePath);
 	}
-	
+
 	public CalibrationProducer(String filePath, RequestOptions fileOptions) {
 		super(filePath, fileOptions);
-	}
-
-	public CalibrationProducer(String filePath, RequestOptions options) {
-		super(filePath, options);
 	}
 
 	@Override

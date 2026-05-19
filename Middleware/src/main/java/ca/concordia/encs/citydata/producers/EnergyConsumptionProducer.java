@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DatasetNotFound;
-import ca.concordia.encs.citydata.core.implementations.CSVProducer;
+import ca.concordia.encs.citydata.core.implementations.JsonArrayProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
@@ -30,7 +30,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * @since 2025-05-28
  */
 
-public class EnergyConsumptionProducer extends CSVProducer {
+public class EnergyConsumptionProducer extends JsonArrayProducer {
 
 	public EnergyConsumptionProducer(String filePath) {
 		super(filePath);
@@ -157,8 +157,8 @@ public class EnergyConsumptionProducer extends CSVProducer {
 			resultRow.addProperty("error", e.getMessage());
 			resultsArray.add(resultRow);
 		} finally {
-			final ArrayList<String> updatedResult = this.getResult();
-			updatedResult.add(resultsArray.toString());
+			final ArrayList<JsonArray> updatedResult = this.getResult();
+			updatedResult.add(resultsArray);
 			this.setResult(updatedResult);
 			this.applyOperation();
 		}

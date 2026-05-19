@@ -38,8 +38,9 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * @since 2025-05-27
  */
 
-public sealed abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> permits JSONProducer,
-		CSVProducer, ExceptionProducer, FirebaseProducer, PortfolioManagerProducer, PortfolioManagerMetadataProducer {
+public sealed abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E>
+		permits JSONProducer, CSVProducer, ExceptionProducer, FirebaseProducer, PortfolioManagerProducer,
+		PortfolioManagerMetadataProducer, JsonArrayProducer {
 	private String filePath;
 	private RequestOptions fileOptions;
 	private IOperation<E> operation;

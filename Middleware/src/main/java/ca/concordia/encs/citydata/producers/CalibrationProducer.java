@@ -24,10 +24,6 @@ public class CalibrationProducer extends CSVProducer {
 		super(filePath, fileOptions);
 	}
 
-	public CalibrationProducer(String filePath, RequestOptions options) {
-		super(filePath, options);
-	}
-
 	@Override
 	public void fetch() {
 		System.out.println("Fetching file from path: " + this.getFilePath());

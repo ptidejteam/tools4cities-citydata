@@ -9,7 +9,7 @@ import json
 # USER CONFIGURATION
 # ==========================
 # Configuration
-B ASE_URL = "https://ngci.encs.concordia.ca/citydata"
+BASE_URL = "https://ngci.encs.concordia.ca/citydata"
 USERNAME = "workshop"  # Production username
 PASSWORD = "workshop2026"  # Production password
 #BASE_URL = "http://localhost:8080/citydata"

@@ -8,12 +8,12 @@ import json
 # USER CONFIGURATION
 # ==========================
 # Configuration
-BASE_URL = "https://ngci.encs.concordia.ca/citydata"
-USERNAME = username  # Production username created by CITYdata team
-PASSWORD = password  # Production password created by CITYdata team
-# BASE_URL = "http://localhost:8080/citydata"
-# USERNAME = username  # Local username created with the script (cf. README)
-# PASSWORD = password  # Local password created with the script (cf. README)
+#BASE_URL = "https://ngci.encs.concordia.ca/citydata"
+#USERNAME = "workshop"  # Production username
+#PASSWORD = "workshop2026"  # Production password
+BASE_URL = "http://localhost:8080"
+USERNAME = "temp"  # Local username
+PASSWORD = "temp"  # Local password
            
 
 
@@ -33,7 +33,7 @@ def print_result(response):
     raw_data = response.get("result", "")
     raw_data = raw_data.strip("[]")
 
-    parts = raw_data.split(", ")
+    parts =raw_data.split(", ")
 
     print("\nResults:\n")
     for i in range(0, len(parts), 3):
@@ -55,37 +55,39 @@ def fetch_consumption(base_url, token):
         "Authorization": f"Bearer {token}"
     }
 
-    # json_input = {
-    #     "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
-    #     "withParams": [
-    #         { "name": "filePath", "value": "src/test/resources/OMHM_natural_gas.csv" }
-    #     ],
-    #     "apply": [
-    #         {
-    #             "name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
-    #             "withParams": [
-    #                 { "name": "addressFilter", "value": "H1W3J9" },
-    #                 { "name": "dateFilter",    "value": "2022-04-30" }
-    #             ]
-    #         }
-    #     ]
-    # }
-
     json_input = {
-        "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
-        "withParams": [
-            { "name": "filePath", "value": "src/test/resources/OMHM_electricity.csv" }
-        ],
-        "apply": [
-            {
-                "name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
-                "withParams": [
-                    { "name": "addressFilter", "value": "H1Z 0B3" },
-                    { "name": "dateFilter",    "value": "2022-02-28" }
-                ]
-            }
-        ]
-    }
+         "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
+         "withParams": [
+             { "name": "filePath", "value": "src/test/resources/OMHM_natural_gas.csv" }
+         ],
+         "apply": [
+             {
+                 "name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
+                 "withParams": [
+                     { "name": "addressFilter", "value": "8431 Allée Léo-Bricault Montréal H1Z 0B3;8441 Allée Léo-Bricault Montréal H1Z 0B3;8425 Avenue 25e Montréal H1Z 4A9" },
+		             { "name": "startDateFilter", "value": "2022-01-31" },
+		             { "name": "endDateFilter",   "value": "2022-12-31" }
+                 ]
+             }
+         ]
+     }
+
+   # json_input = {
+   #	  "use": "ca.concordia.encs.citydata.producers.CalibrationProducer",
+   #	  "withParams": [
+   # 		  { "name": "filePath", "value": "src/test/resources/OMHM_electricity.csv" }
+   #	   ],
+   #	  "apply": [
+   #		  {
+   #			"name": "ca.concordia.encs.citydata.operations.CSVFilterOperation",
+   #			"withParams": [
+   #  				{ "name": "addressFilter", "value": "8431 Allée Léo-Bricault Montréal H1Z 0B3;8441 Allée Léo-Bricault Montréal H1Z 0B3;8425 Avenue 25e Montréal H1Z 4A9" },
+   #   				{ "name": "startDateFilter", "value": "2022-01-31" },
+   #    			{ "name": "endDateFilter",   "value": "2022-12-31" }
+   #   				]
+   #  		  }
+   # 	   ]
+   # }
 
     response = requests.post(sync_url, headers=headers, data=json.dumps(json_input))
 

@@ -29,6 +29,14 @@ public non-sealed class PortfolioManagerMetadataProducer extends AbstractProduce
 	private IOperation<JsonObject> operation;
 	private IRunner runnerObserver;
 
+	public PortfolioManagerMetadataProducer() {
+	    super();
+	}
+
+	public PortfolioManagerMetadataProducer(String filePath, RequestOptions fileOptions) {
+	    super(filePath, fileOptions);
+	}
+	
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}

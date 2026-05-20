@@ -1,27 +1,16 @@
 {
-    "use": "ca.concordia.encs.citydata.producers.PortfolioManagerProducer",
+    "use": "ca.concordia.encs.citydata.core.implementations.PortfolioManagerProducer",
     "withParams": [
-        {
-            "name": "meterId",
-            "value": "299278275"
-        }
+        { "name": "meterId", "value": meter_id }
     ],
     "apply": [
-		{
-		    "use": "ca.concordia.encs.citydata.producers.PortfolioManagerProducer",
-		    "withParams": [
-		        { "name": "meterId", "value": "299278275" }
-		    ],
-		    "apply": [
-		        {
-		            "name": "ca.concordia.encs.citydata.operations.XmlToJsonFilterOperation",
-		            "withParams": [
-		                { "name": "filterKey", "value": "startDate" },
-		                { "name": "from", "value": "2024-11-01" },
-		                { "name": "to", "value": "2024-12-31" }
-		            ]
-		        }
-		    ]
-		}
+        {
+            "name": "ca.concordia.encs.citydata.operations.XmlToJsonFilterOperation",
+            "withParams": [
+                { "name": "filterKey", "value": "startDate" },
+                { "name": "from", "value": "2020-11-01" },
+                { "name": "to", "value": "2023-12-31" }
+            ]
+        }
     ]
 }

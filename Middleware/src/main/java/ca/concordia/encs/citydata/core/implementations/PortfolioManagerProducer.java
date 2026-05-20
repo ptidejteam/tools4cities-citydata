@@ -24,11 +24,20 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 public non-sealed class PortfolioManagerProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 	private String meterId;
 	private final ArrayList<JsonObject> intermediateResult = new ArrayList<>();
+	
+	public PortfolioManagerProducer() {
+        super();
+    }
 
-	public void setMeterId(String meterId) {
-		this.meterId = meterId;
-	}
+    public PortfolioManagerProducer(String filePath, RequestOptions fileOptions) {
+        super(filePath, fileOptions);
+    }
 
+    public void setMeterId(String meterId) {
+        System.out.println(">>> setMeterId called with: " + meterId);
+        this.meterId = meterId;
+    }
+	
 	@SuppressWarnings("unchecked")
 	private ArrayList<JsonObject> getMeterMetadata(SingleStepRunner runner) {
 		final InMemoryDataStore store = InMemoryDataStore.getInstance();

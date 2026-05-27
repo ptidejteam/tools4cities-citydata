@@ -62,3 +62,4 @@ Middleware/src/main/resources/credentials/
 
 #Run/Debug configurations file
 .run/
+/.apt_generated_tests/

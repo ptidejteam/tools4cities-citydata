@@ -9,7 +9,12 @@ import ca.concordia.encs.citydata.producers.BTUProducer;
 
 
 
-
+/**
+ * BTUProducer Tests
+ *
+ * @author @author Peter Yefi, Vinicius Mioto, Tahereh Bijani,  Mohamed Jendoubi
+ * @since 2026-05-27
+ */
 public class BTUProducerTest {
 	
 	private BTUProducer btuProducer = null;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.CSVProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 
 /**
@@ -14,11 +15,17 @@ import ca.concordia.encs.citydata.core.implementations.CSVProducer;
  * makes the processed results available to consumers.
  * @author Peter Yefi, Vinicius Mioto, Tahereh Bijani,  Mohamed Jendoubi  
  * @date: 2026-06-27
+ * @author: Minette Z. Fixed the producer by adding the required constructor from CSVProducer to properly initialize the inherited base producer (CSVProducer)
+ * @date: 2026-05-29
  */
 public class BTUProducer extends CSVProducer{
 
 	public BTUProducer(String filePath) {
 		super(filePath);
+	}
+	
+	public BTUProducer(final String filePath, final RequestOptions fileOptions) {
+		super(filePath, fileOptions);
 	}
 	
 	@Override

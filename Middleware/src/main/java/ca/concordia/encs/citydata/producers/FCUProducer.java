@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.CSVProducer;
+import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This producer reads Flow data from a CSV source, processes it line by line, and produces a result set for the data 
@@ -13,12 +14,19 @@ import ca.concordia.encs.citydata.core.implementations.CSVProducer;
  * makes the processed results available to consumers.
  * @author Peter Yefi, Vinicius Mioto, Tahereh Bijani,  Mohamed Jendoubi  
  * @date: 2026-06-27
+ * @author: Minette Z. Fixed the producer by adding the required constructor from CSVProducer to properly initialize the inherited base producer (CSVProducer)
+ * @date: 2026-05-29
  */
 public class FCUProducer extends CSVProducer{
 
 	public FCUProducer(String filePath) {
 		super(filePath);
 	}
+	
+	public FCUProducer(String filePath, RequestOptions fileOptions) {
+		super(filePath, fileOptions);
+	}
+	
 	
 	@Override
 	public void fetch() {

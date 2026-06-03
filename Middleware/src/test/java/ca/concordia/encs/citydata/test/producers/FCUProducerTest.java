@@ -1,10 +1,20 @@
 package ca.concordia.encs.citydata.test.producers;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ca.concordia.encs.citydata.producers.FCUProducer;
+
+/**
+ * FCUProducer Tests
+ *
+ * @author @author Peter Yefi, Vinicius Mioto, Tahereh Bijani,  Mohamed Jendoubi
+ * @since 2026-05-27
+ * @author: Minette Z. Fixed the test by changing the imports, and using the right assert (assertEquals)
+ * @date: 2026-05-29
+ */
 
 public class FCUProducerTest {
 
@@ -20,7 +30,7 @@ public class FCUProducerTest {
 	void testThatFilePathMatch() {
 		//Arrange and act
 		fcuProducer.fetch();
-		Assert.assertEquals(fcuProducer.getFilePath(), stringFilePath);
+		assertEquals(fcuProducer.getFilePath(), stringFilePath);
 	}
 
 	@Test
@@ -30,10 +40,9 @@ public class FCUProducerTest {
 		String[] rowOne = fcuProducer.getResult().getFirst().split(",");
 		String[] lastRow = fcuProducer.getResult().getLast().split(",");
 
-		Assert.assertEquals(fcuProducer.getResult().size(), 19);
-		Assert.assertEquals(rowOne.length, 13);
-		Assert.assertEquals(rowOne[0], "2022-03-02 02:15:00-05:00");
-		Assert.assertEquals(lastRow[12], "-0.6838173");
-
+		assertEquals(fcuProducer.getResult().size(), 19);
+		assertEquals(rowOne.length, 13);
+		assertEquals(rowOne[0], "2022-03-02 02:15:00-05:00");
+		assertEquals(lastRow[12], "-0.6838173");
 	}
 }

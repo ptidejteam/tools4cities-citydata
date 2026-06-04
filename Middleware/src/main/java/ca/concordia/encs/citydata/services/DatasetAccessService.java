@@ -37,6 +37,21 @@ public class DatasetAccessService {
 		return authorisedUsers.contains(username.trim().toLowerCase());
 	}
 
+	public void checkAuthorisationForPath(String username, String metadataPath) {
+		List<String> lines = readClasspathFileLines(metadataPath);
+
+		if (lines.isEmpty()) {
+			throw new MetadataException("Metadata file is empty: " + metadataPath);
+		}
+
+		List<String> authorisedUsers = lines.stream().skip(1).map(line -> line.trim().toLowerCase())
+				.filter(line -> !line.isEmpty()).collect(Collectors.toList());
+
+		if (!authorisedUsers.contains(username.trim().toLowerCase())) {
+			throw new AccessDeniedException(username, metadataPath);
+		}
+	}
+
 	/**
 	 * Resolves the username of the currently authenticated principal from the Spring Security context.
 	 */

@@ -24,5 +24,4 @@ public class HomepageController {
 		var resource = new ClassPathResource("static/home.html");
 		return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
 	}
-
 }

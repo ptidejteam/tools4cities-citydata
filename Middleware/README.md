@@ -191,7 +191,7 @@ Include your username and password in the request body as JSON, for example:
 
 ## Available Data Sources
 
-- [Dataset Catalog](DATA_SOURCES.md) - Complete list of all available datasets
+- [Dataset Catalog](src/main/resources/DATA_SOURCES.md) - Complete list of all available datasets
 
 ## Demo & Presentations
 

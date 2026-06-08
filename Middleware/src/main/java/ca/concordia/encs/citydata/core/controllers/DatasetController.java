@@ -2,11 +2,9 @@ package ca.concordia.encs.citydata.core.controllers;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,20 +38,12 @@ public class DatasetController {
 	@GetMapping("/list")
 	public ResponseEntity<String> listDatasets() {
 		try {
-			Path filePath = Paths.get("DATA_SOURCES.md");
-			String content = Files.readString(filePath, StandardCharsets.UTF_8);
+			var resource = new ClassPathResource("DATA_SOURCES.md");
+			String content = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
 			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(content);
 		} catch (IOException e) {
-			// Fallback: try relative to project root
-			try {
-				Path filePath = Paths.get("Middleware/DATA_SOURCES.md");
-				String content = Files.readString(filePath, StandardCharsets.UTF_8);
-				return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(content);
-			} catch (IOException e2) {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-						.body("Could not load dataset list. Tried ./DATA_SOURCES.md and Middleware/DATA_SOURCES.md. "
-								+ "Working directory: " + Paths.get("").toAbsolutePath());
-			}
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Could not load DATA_SOURCES.md from classpath.");
 		}
 	}
 

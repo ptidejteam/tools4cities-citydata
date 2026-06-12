@@ -295,7 +295,7 @@
 	   <section class="hero">
 
 		<div class="logo-wrap">
-		  <img src="/assets/logo.png" alt="CITYdata" style="width:300px;height:56px;object-fit:contain;">
+			<img id="logo-img" src="" style="width:300px;height:56px;object-fit:contain;">
 		</div>
 
 	     <p>
@@ -411,46 +411,48 @@
 	 <script>
 		
 	// ── API call ──────────────────────────────────────────
-		async function callApi(route) {
-		  const modal = document.getElementById('apiModal');
-		  const box   = document.getElementById('responseBox');
-		  const badge = document.getElementById('statusBadge');
-		  const title = document.getElementById('modalTitle');
+	const BASE = window.location.pathname.split('/').slice(0, -1).join('/');
+	document.getElementById('logo-img').src = BASE + '/assets/logo.png';
 
-		  title.textContent = route;
-		  box.innerHTML     = '<pre>Fetching…</pre>';
-		  badge.textContent = '…';
-		  badge.className   = '';
-		  modal.classList.add('open');
+	async function callApi(route) {
+	  const modal = document.getElementById('apiModal');
+	  const box   = document.getElementById('responseBox');
+	  const badge = document.getElementById('statusBadge');
+	  const title = document.getElementById('modalTitle');
 
-		  try {
-		    const res  = await fetch(route);
-		    const text = await res.text();
-		    badge.textContent = res.status + ' ' + res.statusText;
-		    badge.className   = res.ok ? 'ok' : 'err';
+	  title.textContent = route;
+	  box.innerHTML     = '<pre>Fetching…</pre>';
+	  badge.textContent = '…';
+	  badge.className   = '';
+	  modal.classList.add('open');
 
-		    try {
-		      const json = JSON.parse(text);
-		      if ((route === '/operations/list' || route === '/producers/list') && Array.isArray(json)) {
-		        box.innerHTML = renderNameParamsTable(json);
-		      } else {
-		        box.innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
-		      }
-		    } catch {
-		      if (route === '/api/datasets/list') {
-		        box.innerHTML = renderMarkdownTable(text);
-		      } else {
-		        box.innerHTML = '<pre>' + text + '</pre>';
-		      }
-		    }
+	  try {
+	    const res  = await fetch(BASE + route);
+	    const text = await res.text();
+	    badge.textContent = res.status + ' ' + res.statusText;
+	    badge.className   = res.ok ? 'ok' : 'err';
 
-		  } catch (e) {
-		    badge.textContent = 'ERROR';
-		    badge.className   = 'err';
-		    box.innerHTML     = '<pre>Request failed.\n\n' + e.message + '</pre>';
-		  }
-		}
+	    try {
+	      const json = JSON.parse(text);
+	      if ((route === '/operations/list' || route === '/producers/list') && Array.isArray(json)) {
+	        box.innerHTML = renderNameParamsTable(json);
+	      } else {
+	        box.innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
+	      }
+	    } catch {
+	      if (route === '/api/datasets/list') {
+	        box.innerHTML = renderMarkdownTable(text);
+	      } else {
+	        box.innerHTML = '<pre>' + text + '</pre>';
+	      }
+	    }
 
+	  } catch (e) {
+	    badge.textContent = 'ERROR';
+	    badge.className   = 'err';
+	    box.innerHTML     = '<pre>Request failed.\n\n' + e.message + '</pre>';
+	  }
+	}
 		function renderNameParamsTable(data) {
 		  const rows = data.map(d => {
 		    const shortName = d.name.split('.').pop();
